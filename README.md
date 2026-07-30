@@ -59,6 +59,7 @@ src/
 
 ```text
 main
+└── dev/작업명       # 최종 테스트
 └── feature/기능명   # 기능 개발
 └── fix/버그명       # 버그 수정
 └── refactor/대상    # 리팩토링
