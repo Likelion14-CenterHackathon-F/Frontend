@@ -1,3 +1,5 @@
+import Button from "@/components/Button/Button";
+
 function Home() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen py-2">
@@ -5,6 +7,9 @@ function Home() {
       <p className="mt-4 text-lg text-gray-600">
         This is a simple example of a React component using Tailwind CSS.
       </p>
+      <Button variant="outline" onClick={() => console.log("Button clicked!")}>
+        Click me
+      </Button>
     </div>
   );
 }
