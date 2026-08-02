@@ -1,7 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 import AppLayout from "@/layouts/AppLayout";
 import HomePage from "@/pages/home";
-import ConsultationDetailPage from "@/pages/consultation-detail";
+import ConsultationHubPage from "@/pages/consultation-hub";
 
 const router = createBrowserRouter([
   {
@@ -13,7 +13,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/consultations",
-        element: <ConsultationDetailPage />,
+        element: <ConsultationHubPage />,
       },
     ],
   },

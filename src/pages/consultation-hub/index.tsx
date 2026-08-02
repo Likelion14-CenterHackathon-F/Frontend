@@ -6,7 +6,7 @@ import PreMaterialSection from "./components/PreMaterialSection";
 import CautionSection from "./components/CautionSection";
 import ConsultationHistorySection from "./components/ConsultationHistorySection";
 
-function ConsultationDetailPage() {
+function ConsultationHubPage() {
   const [isReservation, setIsReservation] = useState<boolean>(false);
 
   return (
@@ -27,4 +27,4 @@ function ConsultationDetailPage() {
   );
 }
 
-export default ConsultationDetailPage;
+export default ConsultationHubPage;
