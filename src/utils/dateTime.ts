@@ -1,18 +1,30 @@
 import type { SupportedLocale, UserPreferences } from "@/types/preferences";
 
+export const TIME_ZONE_STORAGE_KEY = "timeZone";
+
 //브라우저 시간대 감지 함수
 export function detectTimeZone(): string {
-  return Intl.DateTimeFormat().resolvedOptions().timeZone;
+  return Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC";
 }
 
 //올바른 시간대인지 검증 함수
-export function isValidTimeZone(timeZone: string): boolean {
+export function isValidTimeZone(timeZone: unknown): timeZone is string {
+  if (typeof timeZone !== "string") {
+    return false;
+  }
+
   try {
     new Intl.DateTimeFormat("en-US", { timeZone }).format();
     return true;
   } catch {
     return false;
   }
+}
+
+export function getInitialTimeZone(): string {
+  const savedTimeZone = localStorage.getItem(TIME_ZONE_STORAGE_KEY);
+
+  return isValidTimeZone(savedTimeZone) ? savedTimeZone : detectTimeZone();
 }
 
 //날짜 포맷 설정 타입

@@ -9,14 +9,13 @@ import jaOnboarding from "./resources/ja-JP/onboarding.json";
 
 import zhCNOnboarding from "./resources/zh-CN/onboarding.json";
 
-import { resolveSupportedLocale } from "./language";
+import { getInitialLocale } from "./language";
 
 /*
     저장된 언어 확인
     → 초기 언어 결정 (브라우저 시스템 언어 or 지원 언어가 없으면 en-US)
 */
-const savedLocale = localStorage.getItem("locale");
-const initialLocale = savedLocale ?? resolveSupportedLocale();
+const initialLocale = getInitialLocale();
 
 /*
     i18n 초기화 함수

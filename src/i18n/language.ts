@@ -1,10 +1,14 @@
-import type { SupportedLocale } from "@/types/preferences";
+import {
+  isSupportedLocale,
+  type SupportedLocale,
+} from "@/types/preferences";
+
+export const LOCALE_STORAGE_KEY = "locale";
 
 //브라우저 언어 감지 및 데이터 정규화 함수
 export function resolveSupportedLocale(
   languages: readonly string[] = navigator.languages,
 ): SupportedLocale {
-  console.log(languages);
   for (const language of languages) {
     const normalized = language.toLowerCase();
 
@@ -26,4 +30,12 @@ export function resolveSupportedLocale(
   }
 
   return "en-US";
+}
+
+export function getInitialLocale(): SupportedLocale {
+  const savedLocale = localStorage.getItem(LOCALE_STORAGE_KEY);
+
+  return isSupportedLocale(savedLocale)
+    ? savedLocale
+    : resolveSupportedLocale();
 }
