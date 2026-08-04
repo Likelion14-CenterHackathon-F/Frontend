@@ -1,6 +1,5 @@
+import { TIME_ZONE_STORAGE_KEY } from "@/constants/storageKey";
 import type { SupportedLocale, UserPreferences } from "@/types/preferences";
-
-export const TIME_ZONE_STORAGE_KEY = "timeZone";
 
 //브라우저 시간대 감지 함수
 export function detectTimeZone(): string {
