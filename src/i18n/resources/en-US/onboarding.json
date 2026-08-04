@@ -1,0 +1,14 @@
+{
+  "welcome": "Welcome to K-Care Live Aftercare",
+  "language": {
+    "title": "Select language",
+    "description": "AI guidance, captions, and consultation summaries will be provided in the selected language.",
+    "label": "Language"
+  },
+  "timezone": {
+    "title": "Set time zone",
+    "description": "Appointments and notifications will be displayed in the selected time zone.",
+    "label": "Time zone"
+  },
+  "start": "Get started"
+}

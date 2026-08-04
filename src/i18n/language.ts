@@ -1,0 +1,29 @@
+import type { SupportedLocale } from "@/types/preferences";
+
+//브라우저 언어 감지 및 데이터 정규화 함수
+export function resolveSupportedLocale(
+  languages: readonly string[] = navigator.languages,
+): SupportedLocale {
+  console.log(languages);
+  for (const language of languages) {
+    const normalized = language.toLowerCase();
+
+    if (normalized.startsWith("ko")) {
+      return "ko-KR";
+    }
+
+    if (normalized.startsWith("ja")) {
+      return "ja-JP";
+    }
+
+    if (normalized.startsWith("zh")) {
+      return "zh-CN";
+    }
+
+    if (normalized.startsWith("en")) {
+      return "en-US";
+    }
+  }
+
+  return "en-US";
+}

@@ -1,0 +1,14 @@
+{
+  "welcome": "K-Care Live 사후관리에 오신 것을 환영합니다",
+  "language": {
+    "title": "사용 언어 선택",
+    "description": "AI 안내, 자막, 상담 후 요약 등 모든 안내가 선택한 언어로 제공됩니다.",
+    "label": "언어"
+  },
+  "timezone": {
+    "title": "시간대 설정",
+    "description": "예약 시간과 알림이 선택한 시간대 기준으로 표시됩니다.",
+    "label": "시간대"
+  },
+  "start": "시작하기"
+}
