@@ -1,16 +1,34 @@
-import Button from "@/components/button/Button";
+import { usePreferencesStore } from "@/stores/usePreferencesStore";
+import { useTranslation } from "react-i18next";
 
 function HomePage() {
+  const { t } = useTranslation("onboarding");
+
+  const { locale, timeZone } = usePreferencesStore();
+
+  const context = {
+    locale,
+    timeZone,
+  };
+
+  console.log(context);
+
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen py-2">
-      <h1 className="text-4xl font-bold">Welcome to the Home Page</h1>
-      <p className="mt-4 text-lg text-gray-600">
-        This is a simple example of a React component using Tailwind CSS.
-      </p>
-      <Button variant="outline" onClick={() => console.log("Button clicked!")}>
-        Click me
-      </Button>
-    </div>
+    <main>
+      <h1>{t("welcome")}</h1>
+
+      <section>
+        <h2>{t("language.title")}</h2>
+        <p>{t("language.description")}</p>
+      </section>
+
+      <section>
+        <h2>{t("timezone.title")}</h2>
+        <p>{t("timezone.description")}</p>
+      </section>
+
+      <button type="button">{t("start")}</button>
+    </main>
   );
 }
 

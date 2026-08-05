@@ -1,0 +1,14 @@
+{
+  "welcome": "欢迎使用 K-Care Live 术后护理服务",
+  "language": {
+    "title": "选择使用语言",
+    "description": "AI 指导、字幕和咨询后摘要等所有内容都将以您选择的语言提供。",
+    "label": "语言"
+  },
+  "timezone": {
+    "title": "设置时区",
+    "description": "预约时间和通知将按照您选择的时区显示。",
+    "label": "时区"
+  },
+  "start": "开始使用"
+}
