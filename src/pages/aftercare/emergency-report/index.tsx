@@ -86,7 +86,7 @@ function EmergencyReportPage() {
           </span>
         </Row>
         <Row label={t("procedure.materials")}>
-          {report.materials.map((material) => (
+          {report.materials.map((material: string) => (
             <span key={material} className="block">
               {material}
             </span>
@@ -97,7 +97,7 @@ function EmergencyReportPage() {
       <Section title={t("medication.title")} titleEn="Medication &amp; Allergies">
         <Row label={t("medication.medications")}>
           <ul className="list-disc pl-4">
-            {report.medications.map((medication) => (
+            {report.medications.map((medication: string) => (
               <li key={medication}>{medication}</li>
             ))}
           </ul>
