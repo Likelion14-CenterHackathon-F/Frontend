@@ -1,4 +1,4 @@
-import { useMemo, useState, type FormEvent } from "react";
+import { useMemo, useState, type ChangeEvent, type FormEvent } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
@@ -99,7 +99,9 @@ function AuthVerifyPage() {
             placeholder={t("birthDate.year")}
             options={yearOptions}
             value={year}
-            onChange={(event) => handleYearChange(event.target.value)}
+            onChange={(event: ChangeEvent<HTMLSelectElement>) =>
+            handleYearChange(event.target.value)
+          }
           />
           <Select
             variant="chip"
@@ -108,7 +110,9 @@ function AuthVerifyPage() {
             options={monthOptions}
             value={month}
             disabled={!year}
-            onChange={(event) => handleMonthChange(event.target.value)}
+            onChange={(event: ChangeEvent<HTMLSelectElement>) =>
+            handleMonthChange(event.target.value)
+          }
           />
           <Select
             variant="chip"
@@ -117,7 +121,7 @@ function AuthVerifyPage() {
             options={dayOptions}
             value={day}
             disabled={!month}
-            onChange={(event) => {
+            onChange={(event: ChangeEvent<HTMLSelectElement>) => {
               setDay(event.target.value);
               setHasMismatch(false);
             }}
