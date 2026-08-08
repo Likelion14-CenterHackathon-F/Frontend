@@ -118,3 +118,48 @@ export function formatTimeZoneName(
 
   return parts.find((part) => part.type === "timeZoneName")?.value ?? timeZone;
 }
+
+/*
+UTC 기준 시차 표시 함수
+ex) "GMT+9"
+*/
+export function formatTimeZoneOffset(
+  value: DateValue,
+  { locale, timeZone }: DateTimeContext,
+): string {
+  const parts = new Intl.DateTimeFormat(locale, {
+    timeZone,
+    timeZoneName: "shortOffset",
+  }).formatToParts(toDate(value));
+
+  return parts.find((part) => part.type === "timeZoneName")?.value ?? "GMT";
+}
+
+/*
+날짜만 포맷하는 함수
+ex) "2026년 7월 30일", "July 30, 2026"
+*/
+export function formatDate(
+  value: DateValue,
+  { locale, timeZone }: DateTimeContext,
+): string {
+  return new Intl.DateTimeFormat(locale, {
+    timeZone,
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  }).format(toDate(value));
+}
+
+/*
+IANA 시간대 이름에서 도시 부분만 꺼내는 함수
+ex) "Asia/Tokyo" → "Tokyo", "America/New_York" → "New York"
+
+브라우저 표준 API로는 시간대에서 도시명을 지역화해 얻을 수 없어
+IANA 식별자를 그대로 읽기 좋게 다듬는다.
+*/
+export function getTimeZoneCity(timeZone: string): string {
+  const city = timeZone.split("/").at(-1) ?? timeZone;
+
+  return city.replaceAll("_", " ");
+}
