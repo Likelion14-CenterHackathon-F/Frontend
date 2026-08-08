@@ -47,6 +47,29 @@ function toDate(value: DateValue): Date {
 }
 
 /*
+"YYYY-MM-DD" 문자열을 로컬 달력 날짜로 파싱하는 함수.
+new Date("2025-07-10")은 UTC 자정으로 해석돼 시간대에 따라 하루가 밀리므로 직접 조립한다.
+*/
+export function parseCalendarDate(value: string): Date {
+  const [year, month, day] = value.split("-").map(Number);
+
+  return new Date(year, month - 1, day);
+}
+
+/*
+시간 없이 날짜만 포맷하는 함수.
+시술일처럼 시각 개념이 없는 달력 날짜용이라 timeZone 변환을 적용하지 않는다.
+ex) 2025년 7월 10일, July 10, 2025
+*/
+export function formatDate(value: DateValue, locale: SupportedLocale): string {
+  return new Intl.DateTimeFormat(locale, {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  }).format(toDate(value));
+}
+
+/*
 예약 날짜와 시간 포맷하는 함수
 ex) 2025년 7월 16일 (수) 오후 2:00, Wednesday, July 16, 2025 at 1:00 AM
 */
