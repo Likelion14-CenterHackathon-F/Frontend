@@ -1,1 +1,49 @@
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css");
 @import "tailwindcss";
+
+/* 디자인 토큰. 각 토큰의 사용처는 README 참고 */
+@theme {
+  --color-primary: #684bdb;
+  --color-primary-10: #684bdb1a; /* 아이콘 버튼 배경 */
+  --color-primary-deep: #513ba7; /* 카드 뱃지 */
+
+  --color-text-01: #2a2a2a; /* 제목, 버튼 라벨 */
+  --color-text-03: #74717f; /* 본문 */
+  --color-text-04: #979797; /* 입력 placeholder */
+  --color-text-muted: #605c73; /* 카드 보조 설명 */
+  --color-icon-in: #2d2d2d; /* 아이콘 */
+
+  --color-neutral-black: #000008;
+  --color-neutral-white: #ffffff;
+  --color-neutral-500: #a8b7d4;
+
+  --color-surface-soft: #fafafa; /* 밝은 버튼 배경 */
+  --color-border-soft: #f6f4f4; /* 입력 테두리 */
+
+  --font-sans:
+    "Pretendard Variable", Pretendard, system-ui, "Apple SD Gothic Neo",
+    sans-serif;
+
+  /* 자간은 전 크기 -0.025em 공통 */
+  --text-display: 3rem; /* 48px */
+  --text-display--line-height: 1.35;
+  --text-display--letter-spacing: -0.025em;
+
+  --text-title: 2.25rem; /* 36px */
+  --text-title--line-height: 1.35;
+  --text-title--letter-spacing: -0.025em;
+
+  --text-heading: 1.25rem; /* 20px */
+  --text-heading--line-height: 1.25;
+  --text-heading--letter-spacing: -0.025em;
+
+  --text-body: 1rem; /* 16px */
+  --text-body--line-height: 1.5;
+  --text-body--letter-spacing: -0.025em;
+
+  --text-caption: 0.875rem; /* 14px */
+  --text-caption--line-height: 1.55;
+  --text-caption--letter-spacing: -0.025em;
+
+  --tracking-tight: -0.025em;
+}
