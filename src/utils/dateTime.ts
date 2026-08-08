@@ -26,27 +26,6 @@ export function getInitialTimeZone(): string {
   return isValidTimeZone(savedTimeZone) ? savedTimeZone : detectTimeZone();
 }
 
-/*
-"2025-07-10" 같은 달력 날짜 문자열을 Date로 바꾸는 함수.
-시각 개념이 없으므로 로컬 자정 기준으로 만든다.
-*/
-export function parseCalendarDate(value: string): Date {
-  const [year, month, day] = value.split("-").map(Number);
-
-  return new Date(year, month - 1, day);
-}
-
-/*
-parseCalendarDate의 반대. Date를 "2025-07-10" 형태로 바꾼다.
-toISOString은 UTC로 변환되어 하루가 밀릴 수 있으므로 쓰지 않는다.
-*/
-export function formatCalendarDate(date: Date): string {
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
-
-  return `${date.getFullYear()}-${month}-${day}`;
-}
-
 //날짜 포맷 설정 타입
 export type DateTimeContext = {
   locale: SupportedLocale;
@@ -75,6 +54,17 @@ export function parseCalendarDate(value: string): Date {
   const [year, month, day] = value.split("-").map(Number);
 
   return new Date(year, month - 1, day);
+}
+
+/*
+parseCalendarDate의 반대. Date를 "2025-07-10" 형태로 바꾼다.
+toISOString은 UTC로 변환되어 하루가 밀릴 수 있으므로 쓰지 않는다.
+*/
+export function formatCalendarDate(date: Date): string {
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+
+  return `${date.getFullYear()}-${month}-${day}`;
 }
 
 /*
