@@ -42,7 +42,7 @@ function OnboardingPage() {
     }
 
     // TODO: 본인확인 API(POST /api/patients/access-links/verify)와 연동
-    navigate("/");
+    navigate("/home");
   };
 
   const handleLocaleChange = (nextLocale: SupportedLocale) => {
