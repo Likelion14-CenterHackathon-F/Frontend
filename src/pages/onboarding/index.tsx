@@ -1,78 +1,77 @@
-import { useMemo, type ReactNode } from "react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
-import Button from "@/components/Button/Button";
-import Card from "@/components/Card/Card";
-import Select from "@/components/Select/Select";
-import { LANGUAGE_OPTIONS, getTimezoneOptions } from "@/constants/settings";
 import { usePreferencesStore } from "@/stores/usePreferencesStore";
 import type { SupportedLocale } from "@/types/preferences";
 
-interface SettingCardProps {
-  title: string;
-  description: string;
-  children: ReactNode;
-}
+import BirthDateStep, { type BirthDate } from "./components/BirthDateStep";
+import IntroStep from "./components/IntroStep";
+import LanguageStep from "./components/LanguageStep";
+import OnboardingLayout from "./components/OnboardingLayout";
+import RegionStep from "./components/RegionStep";
 
-function SettingCard({ title, description, children }: SettingCardProps) {
-  return (
-    <Card title={title}>
-      <p className="text-xs text-[#1F2937]">{description}</p>
-      {children}
-    </Card>
-  );
-}
+const STEPS = ["intro", "language", "region", "birthDate"] as const;
+
+type Step = (typeof STEPS)[number];
+
+const DEFAULT_BIRTH_DATE: BirthDate = { year: 1998, month: 7, day: 21 };
 
 function OnboardingPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
+
   const locale = usePreferencesStore((state) => state.locale);
   const timeZone = usePreferencesStore((state) => state.timeZone);
   const setLocale = usePreferencesStore((state) => state.setLocale);
-  const setTimeZone = usePreferencesStore((state) => state.setTimeZone);
 
-  const timezoneOptions = useMemo(() => getTimezoneOptions(), []);
-  const canStart = Boolean(locale && timeZone);
+  const [stepIndex, setStepIndex] = useState(0);
+  const [birthDate, setBirthDate] = useState(DEFAULT_BIRTH_DATE);
+
+  const step: Step = STEPS[stepIndex];
+
+  // 인트로로는 돌아가지 않는다
+  const canGoPrevious = stepIndex > 1;
+
+  const goPrevious = () => setStepIndex((index) => index - 1);
+
+  const goNext = () => {
+    if (stepIndex < STEPS.length - 1) {
+      setStepIndex((index) => index + 1);
+      return;
+    }
+
+    // TODO: 본인확인 API(POST /api/patients/access-links/verify)와 연동
+    navigate("/");
+  };
+
+  const handleLocaleChange = (nextLocale: SupportedLocale) => {
+    void setLocale(nextLocale);
+  };
+
+  if (step === "intro") {
+    return <IntroStep onStart={goNext} />;
+  }
 
   return (
-    <div className="flex min-h-dvh flex-col px-6 pt-28 pb-10">
-      <h1 className="text-base font-semibold text-[#1F2937]">
-        {t("welcome")}
-      </h1>
+    <OnboardingLayout
+      title={t(`${step}.title`)}
+      description={t(`${step}.description`)}
+      previousLabel={t("previous")}
+      confirmLabel={t(`${step}.confirm`)}
+      onPrevious={canGoPrevious ? goPrevious : undefined}
+      onConfirm={goNext}
+    >
+      {step === "language" && (
+        <LanguageStep value={locale} onChange={handleLocaleChange} />
+      )}
 
-      <div className="mt-16 flex flex-col gap-8">
-        <SettingCard title={t("language.title")} description={t("language.description")}>
-          <Select
-            label={t("language.label")}
-            placeholder={t("selectPlaceholder")}
-            options={LANGUAGE_OPTIONS}
-            value={locale}
-            onChange={(event) =>
-              void setLocale(event.target.value as SupportedLocale)
-            }
-          />
-        </SettingCard>
+      {step === "region" && <RegionStep locale={locale} timeZone={timeZone} />}
 
-        <SettingCard title={t("timezone.title")} description={t("timezone.description")}>
-          <Select
-            label={t("timezone.label")}
-            placeholder={t("selectPlaceholder")}
-            options={timezoneOptions}
-            value={timeZone}
-            onChange={(event) => setTimeZone(event.target.value)}
-          />
-        </SettingCard>
-      </div>
-
-      <Button
-        className="mt-auto self-center"
-        disabled={!canStart}
-        onClick={() => navigate("/auth/verify")}
-      >
-        {t("start")}
-      </Button>
-    </div>
+      {step === "birthDate" && (
+        <BirthDateStep value={birthDate} onChange={setBirthDate} />
+      )}
+    </OnboardingLayout>
   );
 }
 
