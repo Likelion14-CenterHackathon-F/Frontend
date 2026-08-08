@@ -20,9 +20,10 @@ npm run lint     # ESLint 실행
 
 현재 구현된 라우트는 다음과 같습니다.
 
-| 경로 | 설명    |
-| ---- | ------- |
-| `/`  | 홈 화면 |
+| 경로           | 설명                                       |
+| -------------- | ------------------------------------------ |
+| `/`            | 홈 화면                                    |
+| `/onboarding`  | 온보딩 (언어 → 국가·시간대 → 본인확인)     |
 
 ## Tech Stack
 
@@ -54,6 +55,42 @@ src/
 ├── styles/     # 전역 스타일
 └── utils/      # 공통 유틸리티 함수
 ```
+
+## 디자인 토큰
+
+Figma 디자인 시안의 색상과 타이포그래피를 `src/styles/index.css`의 `@theme` 블록에 정의해 두었습니다. Tailwind CSS 4는 설정 파일(`tailwind.config.js`) 대신 이 블록을 읽어 유틸리티 클래스를 자동으로 만들어 줍니다.
+
+**화면을 구현할 때는 hex 값을 직접 쓰지 말고 아래 클래스를 사용하세요.**
+
+### 색상
+
+| 토큰            | 값        | 클래스 예시          | 쓰이는 곳                             |
+| --------------- | --------- | -------------------- | ------------------------------------- |
+| `primary`       | `#684bdb` | `text-primary`       | 사후관리 타임라인 월 표시             |
+| `primary-10`    | 위 색 10% | `bg-primary-10`      | 홈 채팅바 아이콘 버튼 배경            |
+| `primary-deep`  | `#513ba7` | `text-primary-deep`  | 홈 카드 뱃지 (`5일차`, `D-2`)         |
+| `text-01`       | `#2a2a2a` | `text-text-01`       | 카드 제목, 버튼 라벨 (가장 진한 본문) |
+| `text-03`       | `#74717f` | `text-text-03`       | 채팅바 `+` 아이콘                     |
+| `text-04`       | `#979797` | `text-text-04`       | 채팅바 입력 안내 문구                 |
+| `text-muted`    | `#605c73` | `text-text-muted`    | 홈 카드 보조 설명                     |
+| `icon-in`       | `#2d2d2d` | `text-icon-in`       | 채팅바 전송 화살표                    |
+| `neutral-black` | `#000008` | `bg-neutral-black`   | 언어 선택, 언어 전환 드로어           |
+| `neutral-white` | `#ffffff` | `text-neutral-white` | 보라색 배경 위 흰 글자                |
+| `neutral-500`   | `#a8b7d4` | `text-neutral-500`   | 언어 선택, 언어 전환 드로어           |
+| `surface-soft`  | `#fafafa` | `bg-surface-soft`    | 온보딩 하단 버튼 배경·테두리          |
+| `border-soft`   | `#f6f4f4` | `border-border-soft` | 홈 채팅바 테두리                      |
+
+### 타이포그래피
+
+폰트는 **Pretendard**를 CDN으로 불러오며, `--font-sans`를 덮어썼기 때문에 별도 클래스 없이 전역에 적용됩니다.
+
+| 토큰      | 크기 | 클래스         | 용도                        |
+| --------- | ---- | -------------- | --------------------------- |
+| `display` | 48px | `text-display` | 화면당 하나뿐인 최상위 문구 |
+| `title`   | 36px | `text-title`   | 화면 제목, 진행 상황 표시   |
+| `heading` | 20px | `text-heading` | 카드 제목, 선택된 항목      |
+| `body`    | 16px | `text-body`    | 본문, 버튼 라벨, 입력창     |
+| `caption` | 14px | `text-caption` | 보조 설명, 캡션, 면책 문구  |
 
 ## 브랜치 전략 (GitHub Flow)
 

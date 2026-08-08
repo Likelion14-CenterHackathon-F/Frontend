@@ -12,18 +12,20 @@
   --color-text-03: #74717f; /* 본문 */
   --color-text-04: #979797; /* 입력 placeholder */
   --color-text-muted: #605c73; /* 카드 보조 설명 */
+  --color-text-sub: #4b4b4b; /* 정보 카드 보조 텍스트 */
+  --color-text-intro: #373444; /* 인트로 시작 버튼 */
+  --color-text-language: #292733; /* 언어 목록 항목 */
+  --color-text-history: #1c1c1c; /* 질문 내역 항목 */
   --color-icon-in: #2d2d2d; /* 아이콘 */
 
   --color-neutral-black: #000008;
   --color-neutral-white: #ffffff;
   --color-neutral-500: #a8b7d4;
 
-  --color-text-sub: #4b4b4b; /* 밝은 카드 위 보조 텍스트 */
-  --color-text-intro: #373444; /* 인트로 시작하기 버튼 글자 */
-
   --color-surface-soft: #fafafa; /* 밝은 버튼 배경 */
   --color-border-soft: #f6f4f4; /* 입력 테두리 */
   --color-border-muted: #ececec; /* 정보 카드 테두리 */
+  --color-language-divider: #e8e8e8; /* 언어 목록 구분선 */
   --color-accent: #ff7706; /* 휠 선택 표시 */
 
   /* 온보딩 배경 그라데이션 */
@@ -32,8 +34,21 @@
   --color-gradient-to: #d4ccf1;
 
   /* 인트로 화면 */
-  --color-intro-haze: #e1dff5; /* 상단을 밝게 덮는 안개 */
+  --color-intro-haze: #e1dff5; /* 상단 안개 */
   --color-intro-title-end: #e5e9fb; /* 제목 그라데이션 끝 */
+
+  --color-history: #fdfbff; /* 질문 내역 배경 */
+
+  /* 홈 화면 */
+  --color-home-from: #f6f6f6;
+  --color-home-to: #e2e2e2;
+  --color-card-glow: #edebf5; /* 홈 카드 가운데 */
+
+  /* 홈 배경에 흩뿌리는 보라 번짐 */
+  --color-glow-01: #9a7cfa;
+  --color-glow-02: #7666dd;
+  --color-glow-03: #6c5ece;
+  --color-glow-04: #b39ff5;
 
   --font-sans:
     "Pretendard Variable", Pretendard, system-ui, "Apple SD Gothic Neo",

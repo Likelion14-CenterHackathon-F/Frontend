@@ -2,9 +2,9 @@ import { useMemo } from "react";
 
 import type { SupportedLocale } from "@/types/preferences";
 import {
-  formatDate,
   formatTimeZoneName,
   formatTimeZoneOffset,
+  formatZonedDate,
   getTimeZoneCity,
 } from "@/utils/dateTime";
 
@@ -22,7 +22,7 @@ function RegionStep({ locale, timeZone }: RegionStepProps) {
       name: formatTimeZoneName(now, context),
       city: getTimeZoneCity(timeZone),
       offset: formatTimeZoneOffset(now, context),
-      today: formatDate(now, context),
+      today: formatZonedDate(now, context),
     };
   }, [locale, timeZone]);
 
