@@ -12,7 +12,7 @@ const router = createBrowserRouter([
         element: <HomePage />,
       },
       {
-        path: "/consultations/:id/waiting",
+        path: "/consultations/:appointmentId/waiting",
         element: <ConsultationWaitingPage />,
       },
     ],

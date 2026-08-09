@@ -1,11 +1,12 @@
-import ConsultationHeader from '@/components/header/ConsultationHeader';
-import WaitingCheckListSection from './components/WaitingCheckListSection';
-import CameraPreview from './components/CameraPreview';
-import { useNavigate } from 'react-router-dom';
-import { useConsultationMedia } from './hooks/useConsultationMedia';
+import ConsultationHeader from "@/components/header/ConsultationHeader";
+import WaitingCheckListSection from "./components/WaitingCheckListSection";
+import CameraPreview from "./components/CameraPreview";
+import { useNavigate, useParams } from "react-router-dom";
+import { useConsultationMedia } from "./hooks/useConsultationMedia";
 
 function ConsultationWaitingPage() {
   const navigate = useNavigate();
+  const { id } = useParams<{ id: string }>();
 
   const {
     stream,
@@ -21,11 +22,11 @@ function ConsultationWaitingPage() {
   } = useConsultationMedia();
 
   function enterConsultation() {
-    console.log('상담방 입장');
+    console.log("상담방 입장");
 
-    // 예시
-    // navigate(`/consultations/${consultationId}/room`);
+    navigate(`/consultations/${id}/room`);
   }
+
   return (
     <div className="flex min-h-dvh flex-col">
       <ConsultationHeader title="상담 대기실" onBack={() => navigate(-1)} />
@@ -45,17 +46,22 @@ function ConsultationWaitingPage() {
         />
 
         <WaitingCheckListSection />
-
-        <footer className="mt-auto pb-[calc(28px+env(safe-area-inset-bottom))] pt-3.5">
-          <button
-            type="button"
-            onClick={enterConsultation}
-            className="w-full rounded-4xl bg-[#2A2A2A] text-center text-white text-[16px] font-medium p-5"
-          >
-            입장하기
-          </button>
-        </footer>
       </main>
+
+      <footer className="mt-auto pb-[calc(28px+env(safe-area-inset-bottom))] px-5 pt-4">
+        <button
+          type="button"
+          disabled={isLoading || !stream}
+          onClick={enterConsultation}
+          className={`w-full rounded-4xl ${
+            isLoading || !stream
+              ? "bg-white text-gray-400 border border-gray-400"
+              : "bg-[#2A2A2A] text-white"
+          }  text-center text-[16px] font-medium p-5`}
+        >
+          입장하기
+        </button>
+      </footer>
     </div>
   );
 }
