@@ -1,0 +1,279 @@
+import { useCallback, useEffect, useRef, useState } from "react";
+import AgoraRTC, {
+  type ConnectionState,
+  type IAgoraRTCClient,
+  type IAgoraRTCRemoteUser,
+  type ICameraVideoTrack,
+  type IMicrophoneAudioTrack,
+  type IRemoteVideoTrack,
+} from "agora-rtc-sdk-ng";
+
+import type { JoinConsultationResponse } from "@/types/consultation.type";
+
+type RoomConnectionState = ConnectionState | "IDLE" | "FAILED";
+
+interface UseAgoraRTCResult {
+  localVideoTrack: ICameraVideoTrack | null;
+  remoteVideoTrack: IRemoteVideoTrack | null;
+  microphoneOn: boolean;
+  cameraOn: boolean;
+  speakerOn: boolean;
+  connectionState: RoomConnectionState;
+  errorMessage: string;
+  tokenWillExpire: boolean;
+  join: () => Promise<void>;
+  leave: () => Promise<void>;
+  toggleMicrophone: () => Promise<void>;
+  toggleCamera: () => Promise<void>;
+  toggleSpeaker: () => void;
+  switchCamera: () => Promise<void>;
+}
+
+export function useAgoraRTC(
+  roomInfo: JoinConsultationResponse | null,
+): UseAgoraRTCResult {
+  const [client] = useState<IAgoraRTCClient>(() =>
+    AgoraRTC.createClient({
+      mode: "rtc",
+      codec: "vp8",
+    }),
+  );
+  const microphoneTrackRef = useRef<IMicrophoneAudioTrack | null>(null);
+  const cameraTrackRef = useRef<ICameraVideoTrack | null>(null);
+  const remoteUserRef = useRef<IAgoraRTCRemoteUser | null>(null);
+  const joiningRef = useRef<Promise<void> | null>(null);
+  const joinedRef = useRef(false);
+  const speakerOnRef = useRef(true);
+
+  const [localVideoTrack, setLocalVideoTrack] =
+    useState<ICameraVideoTrack | null>(null);
+  const [remoteVideoTrack, setRemoteVideoTrack] =
+    useState<IRemoteVideoTrack | null>(null);
+  const [microphoneOn, setMicrophoneOn] = useState(true);
+  const [cameraOn, setCameraOn] = useState(true);
+  const [speakerOn, setSpeakerOn] = useState(true);
+  const [connectionState, setConnectionState] =
+    useState<RoomConnectionState>("IDLE");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [tokenWillExpire, setTokenWillExpire] = useState(false);
+
+  const handleUserPublished = useCallback(
+    async (user: IAgoraRTCRemoteUser, mediaType: "audio" | "video") => {
+      if (!roomInfo || Number(user.uid) === roomInfo.sttPublisherAgoraUid) {
+        return;
+      }
+
+      try {
+        await client.subscribe(user, mediaType);
+        remoteUserRef.current = user;
+
+        if (mediaType === "video") {
+          setRemoteVideoTrack(user.videoTrack ?? null);
+        }
+
+        if (mediaType === "audio" && user.audioTrack) {
+          user.audioTrack.setVolume(speakerOnRef.current ? 100 : 0);
+          user.audioTrack.play();
+        }
+      } catch (error) {
+        console.error("상대방 미디어 구독에 실패했습니다.", error);
+        setErrorMessage("상대방 영상 연결에 실패했습니다.");
+      }
+    },
+    [client, roomInfo],
+  );
+
+  const handleUserUnpublished = useCallback(
+    (user: IAgoraRTCRemoteUser, mediaType: "audio" | "video") => {
+      if (mediaType === "video" && remoteUserRef.current?.uid === user.uid) {
+        setRemoteVideoTrack(null);
+      }
+    },
+    [],
+  );
+
+  const handleUserLeft = useCallback((user: IAgoraRTCRemoteUser) => {
+    if (remoteUserRef.current?.uid !== user.uid) return;
+
+    remoteUserRef.current = null;
+    setRemoteVideoTrack(null);
+  }, []);
+
+  const handleConnectionStateChange = useCallback(
+    (currentState: ConnectionState) => {
+      setConnectionState(currentState);
+    },
+    [],
+  );
+
+  const handleTokenWillExpire = useCallback(() => {
+    // TODO: 토큰 갱신 API가 추가되면 renewToken(newRtcToken)을 호출합니다.
+    setTokenWillExpire(true);
+  }, []);
+
+  const removeListeners = useCallback(() => {
+    client.off("user-published", handleUserPublished);
+    client.off("user-unpublished", handleUserUnpublished);
+    client.off("user-left", handleUserLeft);
+    client.off("connection-state-change", handleConnectionStateChange);
+    client.off("token-privilege-will-expire", handleTokenWillExpire);
+  }, [
+    handleConnectionStateChange,
+    handleTokenWillExpire,
+    handleUserLeft,
+    handleUserPublished,
+    handleUserUnpublished,
+    client,
+  ]);
+
+  const leave = useCallback(async () => {
+    removeListeners();
+
+    microphoneTrackRef.current?.stop();
+    microphoneTrackRef.current?.close();
+    cameraTrackRef.current?.stop();
+    cameraTrackRef.current?.close();
+
+    microphoneTrackRef.current = null;
+    cameraTrackRef.current = null;
+    remoteUserRef.current = null;
+    joiningRef.current = null;
+    joinedRef.current = false;
+
+    setLocalVideoTrack(null);
+    setRemoteVideoTrack(null);
+    setMicrophoneOn(true);
+    setCameraOn(true);
+    setTokenWillExpire(false);
+
+    if (client.connectionState !== "DISCONNECTED") {
+      await client.leave();
+    }
+
+    setConnectionState("DISCONNECTED");
+  }, [client, removeListeners]);
+
+  const join = useCallback(async () => {
+    if (!roomInfo || joinedRef.current) return;
+    if (joiningRef.current) return joiningRef.current;
+
+    const joinTask = (async () => {
+      setConnectionState("CONNECTING");
+      setErrorMessage("");
+
+      client.on("user-published", handleUserPublished);
+      client.on("user-unpublished", handleUserUnpublished);
+      client.on("user-left", handleUserLeft);
+      client.on("connection-state-change", handleConnectionStateChange);
+      client.on("token-privilege-will-expire", handleTokenWillExpire);
+
+      try {
+        await client.join(
+          roomInfo.agoraAppId,
+          roomInfo.rtcChannelName,
+          roomInfo.rtcToken,
+          roomInfo.agoraUid,
+        );
+
+        const [microphoneTrack, cameraTrack] =
+          await AgoraRTC.createMicrophoneAndCameraTracks();
+
+        microphoneTrackRef.current = microphoneTrack;
+        cameraTrackRef.current = cameraTrack;
+        setLocalVideoTrack(cameraTrack);
+
+        await client.publish([microphoneTrack, cameraTrack]);
+        joinedRef.current = true;
+        setConnectionState("CONNECTED");
+      } catch (error) {
+        console.error("Agora 상담방 연결에 실패했습니다.", error);
+        setErrorMessage(
+          "화상 상담 연결에 실패했습니다. 카메라와 마이크 권한을 확인해 주세요.",
+        );
+        setConnectionState("FAILED");
+        await leave();
+        throw error;
+      } finally {
+        joiningRef.current = null;
+      }
+    })();
+
+    joiningRef.current = joinTask;
+    return joinTask;
+  }, [
+    handleConnectionStateChange,
+    handleTokenWillExpire,
+    handleUserLeft,
+    handleUserPublished,
+    handleUserUnpublished,
+    client,
+    leave,
+    roomInfo,
+  ]);
+
+  const toggleMicrophone = useCallback(async () => {
+    const track = microphoneTrackRef.current;
+    if (!track) return;
+
+    const next = !microphoneOn;
+    await track.setEnabled(next);
+    setMicrophoneOn(next);
+  }, [microphoneOn]);
+
+  const toggleCamera = useCallback(async () => {
+    const track = cameraTrackRef.current;
+    if (!track) return;
+
+    const next = !cameraOn;
+    await track.setEnabled(next);
+    setCameraOn(next);
+  }, [cameraOn]);
+
+  const toggleSpeaker = useCallback(() => {
+    const next = !speakerOnRef.current;
+    speakerOnRef.current = next;
+    remoteUserRef.current?.audioTrack?.setVolume(next ? 100 : 0);
+    setSpeakerOn(next);
+  }, []);
+
+  const switchCamera = useCallback(async () => {
+    const track = cameraTrackRef.current;
+    if (!track) return;
+
+    const cameras = await AgoraRTC.getCameras();
+    if (cameras.length < 2) return;
+
+    const currentLabel = track.getTrackLabel();
+    const currentIndex = cameras.findIndex(
+      (camera) => camera.label === currentLabel,
+    );
+    const nextCamera = cameras[(currentIndex + 1) % cameras.length];
+
+    await track.setDevice(nextCamera.deviceId);
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      void leave();
+    };
+  }, [leave]);
+
+  return {
+    localVideoTrack,
+    remoteVideoTrack,
+    microphoneOn,
+    cameraOn,
+    speakerOn,
+    connectionState,
+    errorMessage,
+    tokenWillExpire,
+    join,
+    leave,
+    toggleMicrophone,
+    toggleCamera,
+    toggleSpeaker,
+    switchCamera,
+  };
+}
+
+export type { RoomConnectionState };
