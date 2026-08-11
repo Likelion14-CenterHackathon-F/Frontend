@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 import ConsultationHeader from "@/components/header/ConsultationHeader";
 import ConsultationTabs from "./components/ConsultationTabs";
@@ -11,12 +12,13 @@ import { ongoingConsultations } from "@/constants/consultationMockData";
 type ConsultationTab = "history" | "ongoing";
 
 function ConsultationHubPage() {
+  const { t } = useTranslation("consultationHub");
   const [activeTab, setActiveTab] = useState<ConsultationTab>("history");
 
   return (
     <div className="flex min-h-dvh flex-col">
       <ConsultationHeader
-        title="상담 일정"
+        title={t("header.title")}
         onBack={() => console.log("메인 홈페이지로 이동 버튼")}
       />
 
@@ -41,7 +43,7 @@ function ConsultationHubPage() {
           fullWidth
           className="h-[62px] rounded-[37px] bg-[#EDECF2] text-base font-medium tracking-[-0.4px] text-[#9795A0] disabled:cursor-not-allowed"
         >
-          입장하기
+          {t("footer.enter")}
         </Button>
       </footer>
     </div>

@@ -1,13 +1,21 @@
+import { useTranslation } from "react-i18next";
+
+import { usePreferencesStore } from "@/stores/usePreferencesStore";
+import {
+  formatAppointmentDateTime,
+  formatTimeZoneName,
+} from "@/utils/dateTime";
+
 export type ConsultationStatus = "completed" | "reserved" | "inProgress";
+export type MedicalStaffRole = "doctor" | "nurse";
 
 export interface Consultation {
   id: number;
   status: ConsultationStatus;
   medicalStaffName: string;
-  medicalStaffRole: "의사" | "간호사";
+  medicalStaffRole: MedicalStaffRole;
   subject: string;
   scheduledAt: string;
-  timezone: string;
 }
 
 interface ConsultationCardProps {
@@ -19,7 +27,17 @@ export default function ConsultationCard({
   consultation,
   onClick,
 }: ConsultationCardProps) {
+  const { t } = useTranslation("consultationHub");
+  const { locale, timeZone } = usePreferencesStore();
   const isReserved = consultation.status === "reserved";
+  const formattedDate = formatAppointmentDateTime(consultation.scheduledAt, {
+    locale,
+    timeZone,
+  });
+  const timeZoneName = formatTimeZoneName(consultation.scheduledAt, {
+    locale,
+    timeZone,
+  });
 
   return (
     <li>
@@ -35,13 +53,14 @@ export default function ConsultationCard({
               isReserved ? "text-[#614BB8]" : "text-[#6A6581]",
             ].join(" ")}
           >
-            {isReserved ? "예약확정" : "상담 완료"}
+            {t(`status.${consultation.status}`)}
           </span>
 
           <span className="text-[#B3ABD2]">·</span>
 
           <span className="text-[#6A6581]">
-            {consultation.medicalStaffName} {consultation.medicalStaffRole}
+            {consultation.medicalStaffName}{" "}
+            {t(`staffRole.${consultation.medicalStaffRole}`)}
           </span>
         </div>
 
@@ -51,10 +70,11 @@ export default function ConsultationCard({
 
         <div className="mt-[11px] flex flex-col gap-1">
           <span className="text-[13px] font-medium text-[#9795A0]">
-            {consultation.timezone}
+            {timeZoneName}
           </span>
 
           <time
+            dateTime={consultation.scheduledAt}
             className={[
               "leading-[1.4] tracking-[-0.4px]",
               isReserved
@@ -62,8 +82,8 @@ export default function ConsultationCard({
                 : "text-[15px] font-medium text-[#9795A0]",
             ].join(" ")}
           >
-            {consultation.scheduledAt}
-            {isReserved && " 상담 예정"}
+            {formattedDate}
+            {isReserved && ` ${t("reservation.scheduledSuffix")}`}
           </time>
         </div>
       </button>

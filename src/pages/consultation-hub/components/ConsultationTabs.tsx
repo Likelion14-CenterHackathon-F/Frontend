@@ -1,3 +1,5 @@
+import { useTranslation } from "react-i18next";
+
 type ConsultationTab = "history" | "ongoing";
 
 interface ConsultationTabsProps {
@@ -6,8 +8,13 @@ interface ConsultationTabsProps {
 }
 
 function ConsultationTabs({ activeTab, onChange }: ConsultationTabsProps) {
+  const { t } = useTranslation("consultationHub");
+
   return (
-    <nav aria-label="상담 분류" className="flex h-[52px] items-end gap-6 px-5">
+    <nav
+      aria-label={t("tabs.label")}
+      className="flex h-[52px] items-end gap-6 px-5"
+    >
       <button
         type="button"
         onClick={() => onChange("history")}
@@ -22,7 +29,7 @@ function ConsultationTabs({ activeTab, onChange }: ConsultationTabsProps) {
               : "font-medium text-[#7B7A80]",
           ].join(" ")}
         >
-          상담내역
+          {t("tabs.history")}
         </span>
 
         <span
@@ -48,7 +55,7 @@ function ConsultationTabs({ activeTab, onChange }: ConsultationTabsProps) {
               : "font-medium text-[#7B7A80]",
           ].join(" ")}
         >
-          진행중
+          {t("tabs.ongoing")}
         </span>
 
         <span
