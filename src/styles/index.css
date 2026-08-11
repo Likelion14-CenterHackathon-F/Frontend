@@ -20,6 +20,31 @@
   --color-surface-soft: #fafafa; /* 밝은 버튼 배경 */
   --color-border-soft: #f6f4f4; /* 입력 테두리 */
 
+  /* 사후관리 화면 */
+  --color-care-bg: #f9f9f9; /* 화면 바탕 */
+  --color-care-title: #32303a; /* 경과일, 카드 제목 */
+  --color-care-sub: #6a6581; /* 카드 부제목, 시술일·시술명 */
+  --color-care-note: #65646d; /* 리포트 카드 설명 */
+  --color-care-date: #626167; /* 우측 상단 날짜 */
+  --color-care-year: #bababa; /* 우측 상단 연도 */
+  --color-report-label: #4e8d96; /* 리포트 카드의 "의료 문서" */
+
+  /* 주간 날짜 띠 */
+  --color-week-past: #7f7fa8; /* 지난 날짜 */
+  --color-week-future: #b7b7b9; /* 다가올 날짜 */
+
+  /* 회복 단계 타임라인 */
+  --color-phase-weekday: #8b8b8b; /* 날짜 칩의 요일 */
+  --color-phase-text: #717171; /* 펼치지 않은 단계의 설명 */
+  --color-phase-border: #b3abd2; /* 현재 단계 카드 테두리 */
+
+  /* 하단 유의사항 */
+  --color-notice-bg: #e9e9ef;
+  --color-notice-title: #4b4b4e;
+  --color-notice-text: #504e59;
+  --color-alert-bg: #efeff4; /* 즉시 연락 안내 카드 */
+  --color-alert-icon: #fd7575; /* 즉시 연락 안내 아이콘 */
+
   --font-sans:
     "Pretendard Variable", Pretendard, system-ui, "Apple SD Gothic Neo",
     sans-serif;
@@ -46,4 +71,39 @@
   --text-caption--letter-spacing: -0.025em;
 
   --tracking-tight: -0.025em;
+}
+
+/*
+현재 회복 단계 카드 라운드 처리.
+*/
+@property --border-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@keyframes border-spin {
+  to {
+    --border-angle: 360deg;
+  }
+}
+
+/*
+배경을 두 겹 쌓아 만든 테두리. 안쪽(padding-box)은 흰 면, 바깥(border-box)은
+회전하는 원뿔 그라데이션이고, border는 투명이라 바깥 겹이 테두리 자리에만 보인다.
+*/
+@utility border-spin {
+  border: 2px solid transparent;
+  background:
+    linear-gradient(var(--color-neutral-white), var(--color-neutral-white))
+      padding-box,
+    conic-gradient(
+        from var(--border-angle),
+        var(--color-phase-border) 0%,
+        var(--color-primary) 15%,
+        var(--color-phase-border) 35%,
+        var(--color-phase-border) 100%
+      )
+      border-box;
+  animation: border-spin 4s linear infinite;
 }
