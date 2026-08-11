@@ -1,12 +1,12 @@
 import { TIME_ZONE_STORAGE_KEY } from "@/constants/storageKey";
 import type { SupportedLocale, UserPreferences } from "@/types/preferences";
 
-//브라우저 시간대 감지 함수
+//현재 브라우저/ 실행 환경의 기본 타임존을 불러온ㄷ
 export function detectTimeZone(): string {
   return Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC";
 }
 
-//올바른 시간대인지 검증 함수
+//올바른 시간대인지 검증하는 함수
 export function isValidTimeZone(timeZone: unknown): timeZone is string {
   if (typeof timeZone !== "string") {
     return false;
@@ -67,6 +67,62 @@ export function formatDate(value: DateValue, locale: SupportedLocale): string {
     month: "long",
     day: "numeric",
   }).format(toDate(value));
+}
+
+/*
+연도 없이 월과 일만 포맷하는 함수
+ex) "7월 29일", "July 29"
+*/
+export function formatMonthDay(
+  value: DateValue,
+  locale: SupportedLocale,
+): string {
+  return new Intl.DateTimeFormat(locale, {
+    month: "long",
+    day: "numeric",
+  }).format(toDate(value));
+}
+
+/*
+연도와 월을 포맷하는 함수
+ex) "2026년 7월", "July 2026"
+*/
+export function formatYearMonth(
+  value: DateValue,
+  locale: SupportedLocale,
+): string {
+  return new Intl.DateTimeFormat(locale, {
+    year: "numeric",
+    month: "long",
+  }).format(toDate(value));
+}
+
+/*
+숫자만 써서 짧게 포맷하는 함수
+ex) "26. 07. 10.", "07/10/26"
+*/
+export function formatNumericDate(
+  value: DateValue,
+  locale: SupportedLocale,
+): string {
+  return new Intl.DateTimeFormat(locale, {
+    year: "2-digit",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(toDate(value));
+}
+
+/*
+요일만 짧게 포맷하는 함수
+ex) "목", "Thu"
+*/
+export function formatWeekday(
+  value: DateValue,
+  locale: SupportedLocale,
+): string {
+  return new Intl.DateTimeFormat(locale, { weekday: "short" }).format(
+    toDate(value),
+  );
 }
 
 /*
