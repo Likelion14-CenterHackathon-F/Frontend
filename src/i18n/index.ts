@@ -16,6 +16,24 @@ import jaConsultationWaiting from "./resources/ja-JP/consultationWaiting.json";
 import zhCNOnboarding from "./resources/zh-CN/onboarding.json";
 import zhCNConsultationHub from "./resources/zh-CN/consultationHub.json";
 import zhCNConsultationWaiting from "./resources/zh-CN/consultationWaiting.json";
+import koHome from "./resources/ko-KR/home.json";
+import koAiChat from "./resources/ko-KR/aiChat.json";
+import koSettings from "./resources/ko-KR/settings.json";
+
+import enOnboarding from "./resources/en-US/onboarding.json";
+import enHome from "./resources/en-US/home.json";
+import enAiChat from "./resources/en-US/aiChat.json";
+import enSettings from "./resources/en-US/settings.json";
+
+import jaOnboarding from "./resources/ja-JP/onboarding.json";
+import jaHome from "./resources/ja-JP/home.json";
+import jaAiChat from "./resources/ja-JP/aiChat.json";
+import jaSettings from "./resources/ja-JP/settings.json";
+
+import zhCNOnboarding from "./resources/zh-CN/onboarding.json";
+import zhCNHome from "./resources/zh-CN/home.json";
+import zhCNAiChat from "./resources/zh-CN/aiChat.json";
+import zhCNSettings from "./resources/zh-CN/settings.json";
 
 import { getInitialLocale } from "./language";
 
@@ -39,28 +57,40 @@ void i18n
 
     defaultNS: "onboarding",
 
-    ns: ["onboarding", "consultationHub", "consultationWaiting"],
+    ns: ["onboarding","home", "aiChat", "settings", "consultationHub", "consultationWaiting"],
 
     resources: {
       "ko-KR": {
         onboarding: koOnboarding,
         consultationHub: koConsultationHub,
         consultationWaiting: koConsultationWaiting,
+        home: enHome,
+        aiChat: enAiChat,
+        settings: enSettings,
       },
       "en-US": {
         onboarding: enOnboarding,
         consultationHub: enConsultationHub,
         consultationWaiting: enConsultationWaiting,
+        home: enHome,
+        aiChat: enAiChat,
+        settings: enSettings,
       },
       "ja-JP": {
         onboarding: jaOnboarding,
         consultationHub: jaConsultationHub,
         consultationWaiting: jaConsultationWaiting,
+        home: jaHome,
+        aiChat: jaAiChat,
+        settings: jaSettings,
       },
       "zh-CN": {
         onboarding: zhCNOnboarding,
         consultationHub: zhCNConsultationHub,
         consultationWaiting: zhCNConsultationWaiting,
+        home: koHome,
+        aiChat: koAiChat,
+        settings: koSettings,
       },
     },
 
