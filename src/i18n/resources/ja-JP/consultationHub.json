@@ -1,0 +1,56 @@
+{
+  "header": {
+    "title": "相談予定"
+  },
+  "tabs": {
+    "label": "相談区分",
+    "history": "相談履歴",
+    "ongoing": "進行中"
+  },
+  "empty": {
+    "imageAlt": "相談履歴なし",
+    "title": "相談履歴がありません",
+    "description": "医療スタッフとビデオ相談を始めましょう。",
+    "reservationButton": "ビデオ相談を予約する"
+  },
+  "status": {
+    "completed": "相談完了",
+    "reserved": "予約確定",
+    "inProgress": "相談中"
+  },
+  "staffRole": {
+    "doctor": "医師",
+    "nurse": "看護師"
+  },
+  "reservation": {
+    "sectionTitle": "予約済みの相談",
+    "scheduledSuffix": "相談予定"
+  },
+  "guide": {
+    "title": "相談方法のご案内",
+    "items": {
+      "video": {
+        "title": "リアルタイムビデオ相談（医療スタッフと1対1）",
+        "description": "相談内容は字幕と要約として記録され、担当の医療スタッフと病院のみが確認できます。"
+      },
+      "requirements": {
+        "title": "必要なもの",
+        "description": "安定したインターネット接続（Wi-Fiまたは5G推奨）"
+      },
+      "agreement": {
+        "title": "記録と同意",
+        "description": "相談中の字幕と要約が保存されます。続行すると、これに同意したものとみなされます。"
+      }
+    }
+  },
+  "notice": {
+    "title": "ビデオ相談前の注意事項",
+    "items": {
+      "device": "明るい場所でカメラとマイクを確認してから相談に入ってください。",
+      "recording": "相談内容は字幕と要約として記録され、担当の医療スタッフと病院のみが確認できます。"
+    }
+  },
+  "footer": {
+    "enter": "入室する"
+  }
+}

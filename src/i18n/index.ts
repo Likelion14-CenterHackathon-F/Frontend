@@ -2,6 +2,20 @@ import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 
 import koOnboarding from "./resources/ko-KR/onboarding.json";
+import koConsultationHub from "./resources/ko-KR/consultationHub.json";
+import koConsultationWaiting from "./resources/ko-KR/consultationWaiting.json";
+
+import enOnboarding from "./resources/en-US/onboarding.json";
+import enConsultationHub from "./resources/en-US/consultationHub.json";
+import enConsultationWaiting from "./resources/en-US/consultationWaiting.json";
+
+import jaOnboarding from "./resources/ja-JP/onboarding.json";
+import jaConsultationHub from "./resources/ja-JP/consultationHub.json";
+import jaConsultationWaiting from "./resources/ja-JP/consultationWaiting.json";
+
+import zhCNOnboarding from "./resources/zh-CN/onboarding.json";
+import zhCNConsultationHub from "./resources/zh-CN/consultationHub.json";
+import zhCNConsultationWaiting from "./resources/zh-CN/consultationWaiting.json";
 import koHome from "./resources/ko-KR/home.json";
 import koAiChat from "./resources/ko-KR/aiChat.json";
 import koSettings from "./resources/ko-KR/settings.json";
@@ -43,32 +57,40 @@ void i18n
 
     defaultNS: "onboarding",
 
-    ns: ["onboarding", "home", "aiChat", "settings"],
+    ns: ["onboarding","home", "aiChat", "settings", "consultationHub", "consultationWaiting"],
 
     resources: {
       "ko-KR": {
         onboarding: koOnboarding,
-        home: koHome,
-        aiChat: koAiChat,
-        settings: koSettings,
+        consultationHub: koConsultationHub,
+        consultationWaiting: koConsultationWaiting,
+        home: enHome,
+        aiChat: enAiChat,
+        settings: enSettings,
       },
       "en-US": {
         onboarding: enOnboarding,
+        consultationHub: enConsultationHub,
+        consultationWaiting: enConsultationWaiting,
         home: enHome,
         aiChat: enAiChat,
         settings: enSettings,
       },
       "ja-JP": {
         onboarding: jaOnboarding,
+        consultationHub: jaConsultationHub,
+        consultationWaiting: jaConsultationWaiting,
         home: jaHome,
         aiChat: jaAiChat,
         settings: jaSettings,
       },
       "zh-CN": {
         onboarding: zhCNOnboarding,
-        home: zhCNHome,
-        aiChat: zhCNAiChat,
-        settings: zhCNSettings,
+        consultationHub: zhCNConsultationHub,
+        consultationWaiting: zhCNConsultationWaiting,
+        home: koHome,
+        aiChat: koAiChat,
+        settings: koSettings,
       },
     },
 
