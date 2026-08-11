@@ -1,0 +1,51 @@
+{
+  "header": {
+    "title": "Consultation waiting room"
+  },
+  "preview": {
+    "connecting": "Connecting to your camera.",
+    "cameraOff": "Your camera is off.",
+    "controls": {
+      "cameraOff": "Turn off camera",
+      "cameraOn": "Turn on camera",
+      "microphoneOff": "Mute microphone",
+      "microphoneOn": "Unmute microphone",
+      "switchCamera": "Switch front or rear camera"
+    }
+  },
+  "checklist": {
+    "title": "Before entering",
+    "items": {
+      "purpose": "This video consultation is for recovery support, not diagnosis or treatment.",
+      "recording": "Captions and the consultation summary will be saved to your care record.",
+      "orientation": "Rotate your device to landscape mode."
+    }
+  },
+  "footer": {
+    "enter": "Enter",
+    "entering": "Entering..."
+  },
+  "mediaError": {
+    "unsupported": "This browser does not support camera access.",
+    "unavailable": "Camera access is not available in this environment.",
+    "permissionDenied": "Allow access to your camera and microphone.",
+    "deviceNotFound": "No available camera or microphone was found.",
+    "deviceInUse": "Check whether another app is using your camera or microphone.",
+    "unsupportedSettings": "These camera settings are not supported.",
+    "startFailed": "The camera could not be started."
+  },
+  "joinError": {
+    "invalidAppointment": "The consultation appointment information is invalid.",
+    "notJoinableTime": "You cannot enter the waiting room at this time.",
+    "appointmentNotFound": "The video consultation appointment could not be found.",
+    "slotNotFound": "The appointment time information could not be found.",
+    "alreadyCompleted": "This video consultation has already ended.",
+    "configMissing": "There is a problem with the video consultation server configuration.",
+    "tokenIssueFailed": "Failed to connect to the video consultation. Try again.",
+    "authRequired": "Sign-in is required.",
+    "accessTokenExpired": "Your sign-in has expired. Sign in again.",
+    "invalidAccessToken": "Your sign-in information is invalid.",
+    "invalidRequest": "The request to enter the consultation room is invalid.",
+    "unknown": "A problem occurred while entering the consultation room."
+  }
+}

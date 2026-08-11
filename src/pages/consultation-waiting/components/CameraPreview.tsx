@@ -5,6 +5,7 @@ import type { FacingMode } from '../hooks/useConsultationMedia';
 import cameraIcon from '@/assets/icons/consultation/camera.svg';
 import microphoneIcon from '@/assets/icons/consultation/microphone.svg';
 import switchCameraIcon from '@/assets/icons/consultation/switch-camera.svg';
+import { useTranslation } from 'react-i18next';
 
 interface CameraPreviewProps {
   stream: MediaStream | null;
@@ -31,6 +32,7 @@ function CameraPreview({
   onToggleMicrophone,
   onSwitchCamera,
 }: CameraPreviewProps) {
+  const { t } = useTranslation('consultationWaiting');
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
@@ -68,7 +70,7 @@ function CameraPreview({
       />
 
       {isLoading && (
-        <PreviewMessage>카메라를 연결하고 있습니다.</PreviewMessage>
+        <PreviewMessage>{t('preview.connecting')}</PreviewMessage>
       )}
 
       {!isLoading && errorMessage && (
@@ -76,12 +78,16 @@ function CameraPreview({
       )}
 
       {!isLoading && !errorMessage && !cameraOn && (
-        <PreviewMessage>카메라가 꺼져 있습니다.</PreviewMessage>
+        <PreviewMessage>{t('preview.cameraOff')}</PreviewMessage>
       )}
 
       <div className="absolute right-3 top-3 flex flex-col gap-2.5">
         <MediaControlButton
-          label={cameraOn ? '카메라 끄기' : '카메라 켜기'}
+          label={
+            cameraOn
+              ? t('preview.controls.cameraOff')
+              : t('preview.controls.cameraOn')
+          }
           active={cameraOn}
           onClick={onToggleCamera}
         >
@@ -89,7 +95,11 @@ function CameraPreview({
         </MediaControlButton>
 
         <MediaControlButton
-          label={microphoneOn ? '마이크 끄기' : '마이크 켜기'}
+          label={
+            microphoneOn
+              ? t('preview.controls.microphoneOff')
+              : t('preview.controls.microphoneOn')
+          }
           active={microphoneOn}
           emphasized={microphoneOn && isSpeaking}
           onClick={onToggleMicrophone}
@@ -97,7 +107,10 @@ function CameraPreview({
           <img src={microphoneIcon} alt="" className="size-5 object-contain" />
         </MediaControlButton>
 
-        <MediaControlButton label="전후면 카메라 전환" onClick={onSwitchCamera}>
+        <MediaControlButton
+          label={t('preview.controls.switchCamera')}
+          onClick={onSwitchCamera}
+        >
           <img
             src={switchCameraIcon}
             alt=""

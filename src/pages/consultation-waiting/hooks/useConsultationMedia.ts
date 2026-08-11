@@ -1,6 +1,7 @@
 // src/hooks/useConsultationMedia.ts
 
 import { useEffect, useRef, useState } from 'react';
+import i18n from '@/i18n';
 
 export type FacingMode = 'user' | 'environment';
 
@@ -34,7 +35,7 @@ export function useConsultationMedia() {
 
       try {
         if (!navigator.mediaDevices?.getUserMedia) {
-          throw new Error('이 브라우저는 카메라를 지원하지 않습니다.');
+          throw new Error(i18n.t('mediaError.unsupported', { ns: 'consultationWaiting' }));
         }
 
         const nextStream = await navigator.mediaDevices.getUserMedia({
@@ -204,23 +205,23 @@ export function useConsultationMedia() {
 
 function getMediaErrorMessage(error: unknown) {
   if (!(error instanceof DOMException)) {
-    return '카메라를 실행할 수 없는 환경입니다.';
+    return i18n.t('mediaError.unavailable', { ns: 'consultationWaiting' });
   }
 
   switch (error.name) {
     case 'NotAllowedError':
-      return '카메라와 마이크 권한을 허용해 주세요.';
+      return i18n.t('mediaError.permissionDenied', { ns: 'consultationWaiting' });
 
     case 'NotFoundError':
-      return '사용 가능한 카메라 또는 마이크가 없습니다.';
+      return i18n.t('mediaError.deviceNotFound', { ns: 'consultationWaiting' });
 
     case 'NotReadableError':
-      return '다른 앱에서 카메라 또는 마이크를 사용 중인지 확인해 주세요.';
+      return i18n.t('mediaError.deviceInUse', { ns: 'consultationWaiting' });
 
     case 'OverconstrainedError':
-      return '지원하지 않는 카메라 설정입니다.';
+      return i18n.t('mediaError.unsupportedSettings', { ns: 'consultationWaiting' });
 
     default:
-      return '카메라를 실행할 수 없습니다.';
+      return i18n.t('mediaError.startFailed', { ns: 'consultationWaiting' });
   }
 }

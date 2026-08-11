@@ -6,6 +6,7 @@ import { useJoinConsultation } from "./useMutation/useJoinConsultation";
 import { useConsultationStore } from "@/stores/useConsultationStore";
 import { getJoinErrorMessage } from "@/utils/getJoinErrorMessage";
 import type { ApiErrorResponse } from "@/types/consultation.type";
+import i18n from "@/i18n";
 
 interface UseEnterConsultationParams {
   appointmentId?: string;
@@ -25,7 +26,11 @@ export function useEnterConsultation({
     const parsedAppointmentId = Number(appointmentId);
 
     if (!appointmentId || !Number.isInteger(parsedAppointmentId)) {
-      setErrorMessage("올바르지 않은 상담 예약 정보입니다.");
+      setErrorMessage(
+        i18n.t("joinError.invalidAppointment", {
+          ns: "consultationWaiting",
+        }),
+      );
       return;
     }
 
@@ -44,7 +49,7 @@ export function useEnterConsultation({
     } catch (error) {
       const message = axios.isAxiosError<ApiErrorResponse>(error)
         ? getJoinErrorMessage(error.response?.data.code)
-        : "상담방 입장 중 문제가 발생했습니다.";
+        : i18n.t("joinError.unknown", { ns: "consultationWaiting" });
 
       setErrorMessage(message);
     }
