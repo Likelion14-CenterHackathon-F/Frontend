@@ -1,0 +1,24 @@
+{
+  "menu": "打开菜单",
+  "changeLanguage": "更改语言",
+  "progress": {
+    "day": "第{{day}}天 · ",
+    "total": "共{{total}}天"
+  },
+  "greeting": "您好，{{name}}",
+  "disclaimer": "此为参考指引而非医疗诊断。如出现危险症状请立即联系医院。",
+  "chat": {
+    "placeholder": "今天感觉怎么样？",
+    "attach": "添加照片",
+    "send": "发送"
+  },
+  "aftercare": {
+    "badge": "第{{day}}天",
+    "title": "我的术后管理"
+  },
+  "consultation": {
+    "badge": "D-{{days}}",
+    "scheduled": "预约 {{date}}",
+    "title": "医生视频咨询"
+  }
+}
