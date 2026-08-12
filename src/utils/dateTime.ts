@@ -108,11 +108,13 @@ ex) "오후 2:00", "10:00 PM"
 export function formatAppointmentTime(
   value: DateValue,
   { locale, timeZone }: DateTimeContext,
+  hourCycle: string = "locale",
 ): string {
   return new Intl.DateTimeFormat(locale, {
     timeZone,
     hour: "numeric",
     minute: "2-digit",
+    ...(hourCycle === "h23" && { hourCycle: "h23" }),
   }).format(toDate(value));
 }
 

@@ -67,10 +67,14 @@ function ConsultationTimeSlots({
                       : "border-calendar-control-border bg-transparent font-normal text-calendar-text",
                   )}
                 >
-                  {formatAppointmentTime(slot.startsAt, {
-                    locale,
-                    timeZone: userTimeZone,
-                  })}
+                  {formatAppointmentTime(
+                    slot.startsAt,
+                    {
+                      locale,
+                      timeZone: userTimeZone,
+                    },
+                    "h23",
+                  )}
                 </button>
               );
             })}
