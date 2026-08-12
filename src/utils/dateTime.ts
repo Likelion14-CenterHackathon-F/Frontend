@@ -216,3 +216,16 @@ export function getTimeZoneCity(timeZone: string): string {
 
   return city.replaceAll("_", " ");
 }
+
+// timeZone에 맞는 Date 객체를 반환
+export function getCurrentMonthInTimeZone(timeZone: string) {
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone,
+    year: "numeric",
+    month: "numeric",
+  }).formatToParts(new Date());
+  const year = Number(parts.find((part) => part.type === "year")?.value);
+  const month = Number(parts.find((part) => part.type === "month")?.value);
+
+  return new Date(year, month - 1, 1);
+}

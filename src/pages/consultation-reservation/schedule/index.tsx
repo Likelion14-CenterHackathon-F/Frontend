@@ -10,23 +10,15 @@ import {
 import { useConsultationReservationStore } from "@/stores/useConsultationReservationStore";
 import { usePreferencesStore } from "@/stores/usePreferencesStore";
 import type { LocalDateString } from "@/types/consultationReservation.type";
-import { formatCalendarDate, parseCalendarDate } from "@/utils/dateTime";
+import {
+  formatCalendarDate,
+  getCurrentMonthInTimeZone,
+  parseCalendarDate,
+} from "@/utils/dateTime";
 import { groupConsultationSlots } from "@/utils/groupConsultationSlots";
 
 import ConsultationCalendar from "./components/ConsultationCalendar";
 import ConsultationTimeSlots from "./components/ConsultationTimeSlots";
-
-function getCurrentMonthInTimeZone(timeZone: string) {
-  const parts = new Intl.DateTimeFormat("en-US", {
-    timeZone,
-    year: "numeric",
-    month: "numeric",
-  }).formatToParts(new Date());
-  const year = Number(parts.find((part) => part.type === "year")?.value);
-  const month = Number(parts.find((part) => part.type === "month")?.value);
-
-  return new Date(year, month - 1, 1);
-}
 
 function ConsultationSchedulePage() {
   const navigate = useNavigate();
@@ -41,6 +33,9 @@ function ConsultationSchedulePage() {
   const { selectedDate, selectedSlot, setSelectedDate, setSelectedSlot } =
     useConsultationReservationStore();
 
+  console.log("currentMonth", currentMonth);
+
+  //월별 가능한 날짜 배열 저장
   const monthlyAvailableDates = useMemo(
     () =>
       getMockAvailableDates(
@@ -50,29 +45,35 @@ function ConsultationSchedulePage() {
     [visibleMonth],
   );
 
+  //선택한 날짜의 슬롯 조회
   const dailySlots = useMemo(
     () => (selectedDate ? getMockDailySlots(selectedDate) : null),
     [selectedDate],
   );
 
+  //사용자의 시간대 기준으로 슬롯 그룹화
   const slotGroups = useMemo(
     () =>
       dailySlots ? groupConsultationSlots(dailySlots.slots, timeZone) : [],
     [dailySlots, timeZone],
   );
 
+  //문자열 날짜를 캘린더용 객체 Date로 변환
   const selectedDay = selectedDate
     ? parseCalendarDate(selectedDate)
     : undefined;
 
+  //다음 단계 진행 가능 여부
   const canProceed =
     selectedDate !== null && selectedSlot !== null && selectedSlot.available;
 
+  //날짜 선택 핸들러 Date 객체 -> string
   const handleSelectDate = (date: Date | undefined) => {
     setSelectedDate(
       date ? (formatCalendarDate(date) as LocalDateString) : null,
     );
   };
+
   const handleNext = () => {
     if (canProceed) navigate("../pre-consultation");
   };
