@@ -1,23 +1,27 @@
 import { create } from "zustand";
 
 import type {
+  ConsultationAttachment,
   ConsultationReservationSlot,
   LocalDateString,
+  SymptomType,
 } from "@/types/consultationReservation.type";
 
 interface ConsultationReservationState {
   selectedDate: LocalDateString | null;
   selectedSlot: ConsultationReservationSlot | null;
 
+  selectedSymptoms: SymptomType[];
   symptomDescription: string;
-  imageFiles: File[];
+  imageFiles: ConsultationAttachment[];
 
   setSelectedDate: (date: LocalDateString | null) => void;
 
   setSelectedSlot: (slot: ConsultationReservationSlot | null) => void;
 
+  toggleSymptom: (symptom: SymptomType) => void;
   setSymptomDescription: (value: string) => void;
-  setImageFiles: (files: File[]) => void;
+  setImageFiles: (files: ConsultationAttachment[]) => void;
 
   resetSchedule: () => void;
   reset: () => void;
@@ -26,12 +30,13 @@ interface ConsultationReservationState {
 const initialState = {
   selectedDate: null,
   selectedSlot: null,
+  selectedSymptoms: [] as SymptomType[],
   symptomDescription: "",
-  imageFiles: [] as File[],
+  imageFiles: [] as ConsultationAttachment[],
 };
 
 export const useConsultationReservationStore =
-  create<ConsultationReservationState>((set) => ({
+  create<ConsultationReservationState>((set, get) => ({
     ...initialState,
 
     setSelectedDate: (selectedDate) => {
@@ -45,6 +50,14 @@ export const useConsultationReservationStore =
 
     setSelectedSlot: (selectedSlot) => {
       set({ selectedSlot });
+    },
+
+    toggleSymptom: (symptom) => {
+      set((state) => ({
+        selectedSymptoms: state.selectedSymptoms.includes(symptom)
+          ? state.selectedSymptoms.filter((item) => item !== symptom)
+          : [...state.selectedSymptoms, symptom],
+      }));
     },
 
     setSymptomDescription: (symptomDescription) => {
@@ -63,6 +76,9 @@ export const useConsultationReservationStore =
     },
 
     reset: () => {
+      get().imageFiles.forEach(({ previewUrl }) => {
+        URL.revokeObjectURL(previewUrl);
+      });
       set(initialState);
     },
   }));
