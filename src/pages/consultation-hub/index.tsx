@@ -6,7 +6,7 @@ import ConsultationTabs from "./components/ConsultationTabs";
 import ConsultationGuide from "./components/ConsultationGuide";
 import ConsultationHistoryList from "./components/ConsultationHistoryList";
 import ConsultationReservationList from "./components/ConsultationReservationList";
-import { ongoingConsultations } from "@/constants/consultationMockData";
+import { ongoingConsultations } from "@/mocks/consultationMockData";
 import ConsultationFooter from "@/components/Footer/ConsultationFooter";
 
 type ConsultationTab = "history" | "ongoing";
