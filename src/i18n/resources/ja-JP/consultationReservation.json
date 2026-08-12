@@ -62,5 +62,17 @@
       "submit": "予約する"
     },
     "submit": "予約する"
+  },
+  "confirmed": {
+    "title": "相談予約が確定しました",
+    "entryNotice": "ビデオ相談には10分前から入室できます",
+    "infoTitle": "相談予約情報",
+    "summary": {
+      "date": "予約日時",
+      "reason": "相談理由",
+      "doctor": "担当医"
+    },
+    "mockDoctor": "パク・ジテ医師",
+    "cancel": "予約をキャンセル"
   }
 }

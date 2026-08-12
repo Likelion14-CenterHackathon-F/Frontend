@@ -33,8 +33,6 @@ function ConsultationSchedulePage() {
   const { selectedDate, selectedSlot, setSelectedDate, setSelectedSlot } =
     useConsultationReservationStore();
 
-  console.log("currentMonth", currentMonth);
-
   //월별 가능한 날짜 배열 저장
   const monthlyAvailableDates = useMemo(
     () =>

@@ -62,5 +62,17 @@
       "submit": "预约"
     },
     "submit": "预约"
+  },
+  "confirmed": {
+    "title": "咨询预约已确认",
+    "entryNotice": "视频咨询开始前10分钟即可进入",
+    "infoTitle": "咨询预约信息",
+    "summary": {
+      "date": "预约时间",
+      "reason": "咨询原因",
+      "doctor": "负责医生"
+    },
+    "mockDoctor": "朴智泰医生",
+    "cancel": "取消预约"
   }
 }

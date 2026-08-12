@@ -1,5 +1,6 @@
 import { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 import ConsultationFooter from "@/components/Footer/ConsultationFooter";
 import { useConsultationReservationStore } from "@/stores/useConsultationReservationStore";
@@ -11,6 +12,7 @@ import SubTitleSection from "./components/SubTitleSection";
 import SymptomSection from "./components/SymptomSection";
 
 function PreConsultationPage() {
+  const navigate = useNavigate();
   const { t } = useTranslation("consultationReservation");
   const [isConfirmSheetOpen, setIsConfirmSheetOpen] = useState(false);
   const [hasAgreed, setHasAgreed] = useState(false);
@@ -43,6 +45,7 @@ function PreConsultationPage() {
 
     // 예약 생성 API 연결 시 현재 store의 예약 일시와 사전 자료를 전송합니다.
     handleCloseConfirmSheet();
+    navigate("/consultations/mock-appointment/confirmed", { replace: true });
   };
 
   return (

@@ -9,6 +9,7 @@ import LanguageSettingsPage from "@/pages/settings/language";
 import ConsultationReservationLayout from "@/pages/consultation-reservation/layout";
 import ConsultationSchedulePage from "@/pages/consultation-reservation/schedule";
 import PreConsultationPage from "@/pages/consultation-reservation/pre-consultation";
+import ConsultationConfirmedPage from "@/pages/consultation-confirmed";
 
 const router = createBrowserRouter([
   {
@@ -45,6 +46,10 @@ const router = createBrowserRouter([
             ],
           },
 
+          {
+            path: ":appointmentId/confirmed",
+            element: <ConsultationConfirmedPage />,
+          },
           {
             path: ":appointmentId/waiting",
             element: <ConsultationWaitingPage />,

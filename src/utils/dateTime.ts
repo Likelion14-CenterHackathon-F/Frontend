@@ -101,6 +101,37 @@ export function formatAppointmentDateTime(
   }).format(toDate(value));
 }
 
+export function formatConfirmedDateTime(
+  value: DateValue,
+  { locale, timeZone }: DateTimeContext,
+): string {
+  const date = toDate(value);
+  const dateParts = new Intl.DateTimeFormat(locale, {
+    timeZone,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    weekday: "short",
+  }).formatToParts(date);
+  const getPart = (type: Intl.DateTimeFormatPartTypes) =>
+    dateParts.find((part) => part.type === type)?.value ?? "";
+  const year = getPart("year");
+  const month = getPart("month");
+  const day = getPart("day");
+  const weekday = getPart("weekday");
+  const dateText =
+    locale === "en-US"
+      ? `${month}.${day}.${year}`
+      : `${year}.${month}.${day}`;
+  const timeText = new Intl.DateTimeFormat(locale, {
+    timeZone,
+    hour: "numeric",
+    minute: "2-digit",
+  }).format(date);
+
+  return `${dateText} (${weekday}) ${timeText}`;
+}
+
 /*
 날짜 없이 시간만 포맷하는 함수
 ex) "오후 2:00", "10:00 PM"

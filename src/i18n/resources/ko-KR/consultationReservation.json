@@ -62,5 +62,17 @@
       "submit": "예약하기"
     },
     "submit": "예약하기"
+  },
+  "confirmed": {
+    "title": "상담 예약이 확정되었어요",
+    "entryNotice": "화상 상담은 10분 전에 입장할 수 있어요",
+    "infoTitle": "상담 예약 정보",
+    "summary": {
+      "date": "예약 일시",
+      "reason": "상담 사유",
+      "doctor": "담당 의료진"
+    },
+    "mockDoctor": "박지태 의사",
+    "cancel": "예약 취소하기"
   }
 }
