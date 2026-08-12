@@ -124,7 +124,7 @@ function AftercarePage() {
           </>
         )}
 
-        <div className="mt-7.5">
+        <div className="mt-7.5 px-5">
           <ReportCard
             label={t("report.label")}
             title={t("report.title")}
