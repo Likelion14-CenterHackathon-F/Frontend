@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 
 import ConsultationHeader from "@/components/header/ConsultationHeader";
 import ConsultationTabs from "./components/ConsultationTabs";
-import Button from "@/components/button/Button";
+import Button from "@/components/Button/Button";
 import ConsultationGuide from "./components/ConsultationGuide";
 import ConsultationHistoryList from "./components/ConsultationHistoryList";
 import ConsultationReservationList from "./components/ConsultationReservationList";

@@ -2,7 +2,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
 import noHistoryIcon from "@/assets/icons/consultation/no-history.svg";
-import Button from "@/components/button/Button";
+import Button from "@/components/Button/Button";
 
 function EmptyConsultation() {
   const { t } = useTranslation("consultationHub");
