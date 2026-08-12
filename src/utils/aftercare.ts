@@ -30,28 +30,12 @@ export interface RecoveryPhase {
   toDay: number | null;
 }
 
-/*
-두 날짜가 같은 날인지 비교하기 위한 키. 20260730 형태의 숫자라 크기 비교도 된다.
-시각을 버리고 로컬 달력 기준으로만 따진다.
-*/
 export function toDayKey(date: Date): number {
   return (
     date.getFullYear() * 10000 + (date.getMonth() + 1) * 100 + date.getDate()
   );
 }
 
-/** 회복 구간이 시작되는 날짜. 시술 당일이 D+0이므로 fromDay를 그대로 더한다. */
-export function getPhaseStartDate(
-  procedureDate: string,
-  phase: RecoveryPhase,
-): Date {
-  const date = parseCalendarDate(procedureDate);
-  date.setDate(date.getDate() + phase.fromDay);
-
-  return date;
-}
-
-/** 오늘을 가운데 두고 앞뒤로 며칠씩 잘라낸 날짜 목록. 주간 날짜 띠에 쓴다. */
 export function getWeekAround(
   today: Date,
   { before, after }: { before: number; after: number },

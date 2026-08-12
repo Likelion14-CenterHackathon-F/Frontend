@@ -84,31 +84,17 @@ export function formatMonthDay(
 }
 
 /*
-연도와 월을 포맷하는 함수
-ex) "2026년 7월", "July 2026"
+연도를 두 자리로 줄여 짧게 포맷하는 함수
+ex) "26년 7월 10일", "26年7月10日"
 */
-export function formatYearMonth(
-  value: DateValue,
-  locale: SupportedLocale,
-): string {
-  return new Intl.DateTimeFormat(locale, {
-    year: "numeric",
-    month: "long",
-  }).format(toDate(value));
-}
-
-/*
-숫자만 써서 짧게 포맷하는 함수
-ex) "26. 07. 10.", "07/10/26"
-*/
-export function formatNumericDate(
+export function formatShortDate(
   value: DateValue,
   locale: SupportedLocale,
 ): string {
   return new Intl.DateTimeFormat(locale, {
     year: "2-digit",
-    month: "2-digit",
-    day: "2-digit",
+    month: "long",
+    day: "numeric",
   }).format(toDate(value));
 }
 
