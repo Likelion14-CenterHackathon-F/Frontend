@@ -1,0 +1,12 @@
+{
+  "back": "戻る",
+  "language": {
+    "title": "言語"
+  },
+  "history": {
+    "title": "質問履歴",
+    "close": "メニューを閉じる",
+    "today": "今日",
+    "lastWeek": "過去7日間"
+  }
+}

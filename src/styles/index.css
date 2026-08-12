@@ -1,4 +1,5 @@
 @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css");
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap");
 @import "tailwindcss";
 
 /* 디자인 토큰. 각 토큰의 사용처는 README 참고 */
@@ -11,6 +12,10 @@
   --color-text-03: #74717f; /* 본문 */
   --color-text-04: #979797; /* 입력 placeholder */
   --color-text-muted: #605c73; /* 카드 보조 설명 */
+  --color-text-sub: #4b4b4b; /* 정보 카드 보조 텍스트 */
+  --color-text-intro: #373444; /* 인트로 시작 버튼 */
+  --color-text-language: #292733; /* 언어 목록 항목 */
+  --color-text-history: #1c1c1c; /* 질문 내역 항목 */
   --color-icon-in: #2d2d2d; /* 아이콘 */
 
   --color-neutral-black: #000008;
@@ -44,10 +49,38 @@
   --color-notice-text: #504e59;
   --color-alert-bg: #efeff4; /* 즉시 연락 안내 카드 */
   --color-alert-icon: #fd7575; /* 즉시 연락 안내 아이콘 */
+  --color-border-muted: #ececec; /* 정보 카드 테두리 */
+  --color-language-divider: #e8e8e8; /* 언어 목록 구분선 */
+  --color-accent: #ff7706; /* 휠 선택 표시 */
+
+  /* 온보딩 배경 그라데이션 */
+  --color-gradient-from: #6258a0;
+  --color-gradient-via: #9386e0;
+  --color-gradient-to: #d4ccf1;
+
+  /* 인트로 화면 */
+  --color-intro-haze: #e1dff5; /* 상단 안개 */
+  --color-intro-title-end: #e5e9fb; /* 제목 그라데이션 끝 */
+
+  --color-history: #fdfbff; /* 질문 내역 배경 */
+
+  /* 홈 화면 */
+  --color-home-from: #f6f6f6;
+  --color-home-to: #e2e2e2;
+  --color-card-glow: #edebf5; /* 홈 카드 가운데 */
+
+  /* 홈 배경에 흩뿌리는 보라 번짐 */
+  --color-glow-01: #9a7cfa;
+  --color-glow-02: #7666dd;
+  --color-glow-03: #6c5ece;
+  --color-glow-04: #b39ff5;
 
   --font-sans:
     "Pretendard Variable", Pretendard, system-ui, "Apple SD Gothic Neo",
     sans-serif;
+
+  /* 인트로 제목용. 영문은 Poppins, 한글 등은 Pretendard로 넘어간다. */
+  --font-display: Poppins, var(--font-sans);
 
   /* 자간은 전 크기 -0.025em 공통 */
   --text-display: 3rem; /* 48px */
@@ -73,9 +106,6 @@
   --tracking-tight: -0.025em;
 }
 
-/*
-현재 회복 단계 카드 라운드 처리.
-*/
 @property --border-angle {
   syntax: "<angle>";
   inherits: false;
@@ -88,10 +118,6 @@
   }
 }
 
-/*
-배경을 두 겹 쌓아 만든 테두리. 안쪽(padding-box)은 흰 면, 바깥(border-box)은
-회전하는 원뿔 그라데이션이고, border는 투명이라 바깥 겹이 테두리 자리에만 보인다.
-*/
 @utility border-spin {
   border: 2px solid transparent;
   background:
