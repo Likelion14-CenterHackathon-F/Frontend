@@ -1,0 +1,24 @@
+{
+  "menu": "Open menu",
+  "changeLanguage": "Change language",
+  "progress": {
+    "day": "Day {{day}} ",
+    "total": "of {{total}}"
+  },
+  "greeting": "Hello, {{name}}!",
+  "disclaimer": "For guidance only. Contact your hospital if warning signs appear.",
+  "chat": {
+    "placeholder": "How are you feeling today?",
+    "attach": "Attach a photo",
+    "send": "Send"
+  },
+  "aftercare": {
+    "badge": "Day {{day}}",
+    "title": "My Aftercare"
+  },
+  "consultation": {
+    "badge": "D-{{days}}",
+    "scheduled": "Scheduled {{date}}",
+    "title": "Video Consultation"
+  }
+}

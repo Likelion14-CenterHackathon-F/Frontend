@@ -57,6 +57,17 @@ export function parseCalendarDate(value: string): Date {
 }
 
 /*
+parseCalendarDate의 반대. Date를 "2025-07-10" 형태로 바꾼다.
+toISOString은 UTC로 변환되어 하루가 밀릴 수 있으므로 쓰지 않는다.
+*/
+export function formatCalendarDate(date: Date): string {
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+
+  return `${date.getFullYear()}-${month}-${day}`;
+}
+
+/*
 시간 없이 날짜만 포맷하는 함수.
 시술일처럼 시각 개념이 없는 달력 날짜용이라 timeZone 변환을 적용하지 않는다.
 ex) 2025년 7월 10일, July 10, 2025
@@ -182,4 +193,66 @@ export function formatTimeZoneName(
   }).formatToParts(toDate(value));
 
   return parts.find((part) => part.type === "timeZoneName")?.value ?? timeZone;
+}
+
+/*
+UTC 기준 시차 표시 함수
+ex) "GMT+9"
+*/
+export function formatTimeZoneOffset(
+  value: DateValue,
+  { locale, timeZone }: DateTimeContext,
+): string {
+  const parts = new Intl.DateTimeFormat(locale, {
+    timeZone,
+    timeZoneName: "shortOffset",
+  }).formatToParts(toDate(value));
+
+  return parts.find((part) => part.type === "timeZoneName")?.value ?? "GMT";
+}
+
+/*
+요일까지 짧게 붙여 포맷하는 함수
+ex) "26. 7. 30. (목)", "Thu, 07/30/26"
+*/
+export function formatCompactDate(
+  value: DateValue,
+  { locale, timeZone }: DateTimeContext,
+): string {
+  return new Intl.DateTimeFormat(locale, {
+    timeZone,
+    year: "2-digit",
+    month: "2-digit",
+    day: "2-digit",
+    weekday: "short",
+  }).format(toDate(value));
+}
+
+/*
+시간대를 반영해 날짜만 포맷하는 함수
+ex) "2026년 7월 30일", "July 30, 2026"
+*/
+export function formatZonedDate(
+  value: DateValue,
+  { locale, timeZone }: DateTimeContext,
+): string {
+  return new Intl.DateTimeFormat(locale, {
+    timeZone,
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  }).format(toDate(value));
+}
+
+/*
+IANA 시간대 이름에서 도시 부분만 꺼내는 함수
+ex) "Asia/Tokyo" → "Tokyo", "America/New_York" → "New York"
+
+브라우저 표준 API로는 시간대에서 도시명을 지역화해 얻을 수 없어
+IANA 식별자를 그대로 읽기 좋게 다듬는다.
+*/
+export function getTimeZoneCity(timeZone: string): string {
+  const city = timeZone.split("/").at(-1) ?? timeZone;
+
+  return city.replaceAll("_", " ");
 }
