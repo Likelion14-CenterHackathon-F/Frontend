@@ -1,17 +1,16 @@
-// schedule/components/ConsultationCalendar.tsx
-
 import { DayPicker, getDefaultClassNames } from "@daypicker/react";
-import { ko } from "@daypicker/react/locale";
+import { enUS, ja, ko, zhCN } from "@daypicker/react/locale";
 
 import type { AvailableConsultationDate } from "@/types/consultationReservation.type";
+import type { SupportedLocale } from "@/types/preferences";
 import { parseCalendarDate } from "@/utils/dateTime";
 
 interface ConsultationCalendarProps {
+  locale: SupportedLocale;
   startMonth: Date;
   month: Date;
   selected?: Date;
   availableDates: AvailableConsultationDate[];
-
   onMonthChange: (month: Date) => void;
   onSelect: (date: Date | undefined) => void;
 }
@@ -24,7 +23,15 @@ function isSameDate(left: Date, right: Date) {
   );
 }
 
+const dayPickerLocales = {
+  "ko-KR": ko,
+  "en-US": enUS,
+  "ja-JP": ja,
+  "zh-CN": zhCN,
+};
+
 export default function ConsultationCalendar({
+  locale,
   startMonth,
   month,
   selected,
@@ -33,21 +40,17 @@ export default function ConsultationCalendar({
   onSelect,
 }: ConsultationCalendarProps) {
   const defaultClassNames = getDefaultClassNames();
-
   const selectableDates = availableDates
     .filter(({ availableCount }) => availableCount > 0)
     .map(({ date }) => parseCalendarDate(date));
 
-  const isUnavailableDate = (date: Date) => {
-    return !selectableDates.some((selectableDate) =>
-      isSameDate(date, selectableDate),
-    );
-  };
+  const isUnavailableDate = (date: Date) =>
+    !selectableDates.some((selectableDate) => isSameDate(date, selectableDate));
 
   return (
     <DayPicker
       mode="single"
-      locale={ko}
+      locale={dayPickerLocales[locale]}
       weekStartsOn={0}
       startMonth={startMonth}
       month={month}
@@ -59,109 +62,48 @@ export default function ConsultationCalendar({
       fixedWeeks
       classNames={{
         root: "relative w-full",
-
         months: "w-full",
         month: "w-full",
-
-        month_caption: "flex h-14 items-center justify-center",
-
-        caption_label: [
-          "text-xl",
-          "font-semibold",
-          "tracking-tight",
-          "text-calendar-text",
-        ].join(" "),
-
+        month_caption: "flex h-14 items-center justify-center px-12",
+        caption_label:
+          "text-calendar-text max-w-[calc(100%-96px)] truncate text-center text-xl font-semibold tracking-tight",
         nav: [
-          "absolute",
-          "left-1/2",
-          "top-0",
-          "z-10",
-          "flex",
-          "h-14",
-          "w-[190px]",
-          "-translate-x-1/2",
-          "items-center",
-          "justify-between",
+          "absolute left-1/2 top-0 z-10",
+          "flex h-14 w-full max-w-[300px]",
+          "-translate-x-1/2 items-center justify-between",
         ].join(" "),
-
         button_previous: [
           defaultClassNames.button_previous,
-          "flex size-10 items-center justify-center",
-          "rounded-full",
-          "text-calendar-text",
-          "aria-disabled:pointer-events-none",
-          "aria-disabled:cursor-not-allowed",
-          "aria-disabled:text-calendar-text/30",
-          "aria-disabled:opacity-100",
+          "flex size-10 items-center justify-center rounded-full text-calendar-text",
+          "aria-disabled:pointer-events-none aria-disabled:cursor-not-allowed aria-disabled:text-calendar-text/30 aria-disabled:opacity-100",
         ].join(" "),
-
         button_next: [
           defaultClassNames.button_next,
-          "flex size-10 items-center justify-center",
-          "rounded-full",
-          "text-calendar-text",
-          "aria-disabled:pointer-events-none",
-          "aria-disabled:cursor-not-allowed",
-          "aria-disabled:text-calendar-text/30",
-          "aria-disabled:opacity-100",
+          "flex size-10 items-center justify-center rounded-full text-calendar-text",
+          "aria-disabled:pointer-events-none aria-disabled:cursor-not-allowed aria-disabled:text-calendar-text/30 aria-disabled:opacity-100",
         ].join(" "),
-
         chevron: [defaultClassNames.chevron, "size-6 fill-current"].join(" "),
         month_grid: "w-full table-fixed border-collapse",
         weekdays: "flex w-full",
-
-        weekday: [
-          "flex h-14 w-[14.285714%]",
-          "items-center justify-center",
-          "text-base font-light tracking-tight",
-          "text-calendar-text",
-          "first:text-calendar-sunday",
-        ].join(" "),
-
+        weekday:
+          "text-calendar-text flex h-14 w-[14.285714%] items-center justify-center text-base font-light tracking-tight first:text-calendar-sunday",
         week: "flex w-full",
-
-        day: [
-          "flex h-14 w-[14.285714%]",
-          "items-center justify-center",
-          "text-base tracking-tight",
-          "text-calendar-text",
-        ].join(" "),
-
-        day_button: [
-          "flex h-14 w-[50px] items-center justify-center",
-          "rounded-[20px]",
-          "bg-surface-soft",
-          "font-normal",
-          "focus-visible:outline-none",
-          "focus-visible:ring-2",
-          "focus-visible:ring-primary/30",
-          "focus-visible:ring-inset",
-        ].join(" "),
-
-        selected: [
-          "[&>button]:bg-primary",
-          "[&>button]:font-medium",
-          "[&>button]:text-neutral-white",
-        ].join(" "),
-
-        disabled: [
-          "pointer-events-none",
-          "text-calendar-text",
-          "opacity-30",
-        ].join(" "),
-
+        day: "text-calendar-text flex h-14 w-[14.285714%] items-center justify-center text-base tracking-tight",
+        day_button:
+          "bg-surface-soft flex h-14 w-[50px] items-center justify-center rounded-[20px] font-normal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:ring-inset",
+        selected:
+          "[&>button]:bg-primary [&>button]:font-medium [&>button]:text-neutral-white",
+        disabled: "text-calendar-text pointer-events-none opacity-30",
         outside: "opacity-30",
       }}
       formatters={{
         formatCaption: (date) =>
-          `${date.getFullYear()}년 ${String(date.getMonth() + 1).padStart(
-            2,
-            "0",
-          )}월`,
-
+          new Intl.DateTimeFormat(locale, {
+            year: "numeric",
+            month: "long",
+          }).format(date),
         formatWeekdayName: (date) =>
-          ["일", "월", "화", "수", "목", "금", "토"][date.getDay()],
+          new Intl.DateTimeFormat(locale, { weekday: "narrow" }).format(date),
       }}
     />
   );

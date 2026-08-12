@@ -1,49 +1,66 @@
-// schedule/components/ConsultationTimeSlots.tsx
+import { useTranslation } from "react-i18next";
 
 import type { ConsultationReservationSlot } from "@/types/consultationReservation.type";
-
+import type { SupportedLocale } from "@/types/preferences";
 import { cn } from "@/utils/cn";
 import type { ConsultationSlotGroup } from "@/utils/groupConsultationSlots";
 
+const KOREA_TIME_ZONE = "Asia/Seoul";
+
 interface ConsultationTimeSlotsProps {
-  timezoneId: string;
+  locale: SupportedLocale;
+  userTimeZone: string;
   groups: ConsultationSlotGroup[];
   selectedSlotId?: number;
   onSelect: (slot: ConsultationReservationSlot) => void;
 }
 
-function formatSlotTime(startsAt: string, timezoneId: string) {
-  const parts = new Intl.DateTimeFormat("ko-KR", {
-    timeZone: timezoneId,
+function formatTime(
+  startsAt: string,
+  locale: SupportedLocale,
+  timeZone: string,
+  includeMinutes = true,
+) {
+  return new Intl.DateTimeFormat(locale, {
+    timeZone,
     hour: "numeric",
-    minute: "2-digit",
-    hour12: true,
-  }).formatToParts(new Date(startsAt));
+    ...(includeMinutes && { minute: "2-digit" }),
+  }).format(new Date(startsAt));
+}
 
-  const hour = parts.find((part) => part.type === "hour")?.value ?? "";
+function formatTimeZoneOffset(startsAt: string, locale: SupportedLocale) {
+  const offset = new Intl.DateTimeFormat(locale, {
+    timeZone: KOREA_TIME_ZONE,
+    timeZoneName: "shortOffset",
+  })
+    .formatToParts(new Date(startsAt))
+    .find((part) => part.type === "timeZoneName")?.value;
 
-  const minute = parts.find((part) => part.type === "minute")?.value ?? "00";
-
-  return `${hour}:${minute}`;
+  return offset?.replace("GMT", "UTC") ?? "UTC+9";
 }
 
 function ConsultationTimeSlots({
-  timezoneId,
+  locale,
+  userTimeZone,
   groups,
   selectedSlotId,
   onSelect,
 }: ConsultationTimeSlotsProps) {
+  const { t } = useTranslation("consultationReservation");
+
   return (
     <div className="flex flex-col gap-8">
       {groups.map((group) => (
         <section key={group.key} className="flex flex-col gap-3">
           <header>
             <h2 className="text-calendar-text text-lg font-semibold tracking-tight">
-              {group.title}
+              {formatTime(group.startsAt, locale, userTimeZone, false)}
             </h2>
-
             <p className="mt-1 text-sm tracking-tight text-action-secondary-text">
-              {group.localTimeLabel + " (UTC+9)"}
+              {t("schedule.localTime", {
+                time: formatTime(group.startsAt, locale, KOREA_TIME_ZONE),
+                offset: formatTimeZoneOffset(group.startsAt, locale),
+              })}
             </p>
           </header>
 
@@ -59,35 +76,17 @@ function ConsultationTimeSlots({
                   aria-pressed={isSelected}
                   onClick={() => onSelect(slot)}
                   className={cn(
-                    "min-h-12 rounded-[30px] border",
-                    "text-base tracking-tight",
-                    "transition-colors",
-
+                    "min-h-12 rounded-[30px] border text-base tracking-tight transition-colors",
                     isSelected
-                      ? [
-                          "border-action-secondary-text",
-                          "bg-action-secondary-text",
-                          "font-medium",
-                          "text-action-primary-text",
-                        ]
-                      : [
-                          "border-calendar-control-border",
-                          "bg-transparent",
-                          "font-normal",
-                          "text-calendar-text",
-                        ],
-
-                    !slot.available && [
-                      "cursor-not-allowed",
-                      "bg-action-disabled",
-                      "text-action-disabled-text",
-                      "opacity-60",
-                    ],
+                      ? "border-action-secondary-text bg-action-secondary-text font-medium text-action-primary-text"
+                      : "border-calendar-control-border bg-transparent font-normal text-calendar-text",
+                    !slot.available &&
+                      "cursor-not-allowed bg-action-disabled text-action-disabled-text opacity-60",
                   )}
                 >
                   {slot.available
-                    ? formatSlotTime(slot.startsAt, timezoneId)
-                    : "마감"}
+                    ? formatTime(slot.startsAt, locale, userTimeZone)
+                    : t("schedule.closed")}
                 </button>
               );
             })}
