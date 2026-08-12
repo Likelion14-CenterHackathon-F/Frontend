@@ -1,4 +1,5 @@
 import { TIME_ZONE_STORAGE_KEY } from "@/constants/storageKey";
+import type { LocalDateString } from "@/types/consultationReservation.type";
 import type { SupportedLocale, UserPreferences } from "@/types/preferences";
 
 //브라우저 시간대 감지 함수
@@ -60,11 +61,12 @@ export function parseCalendarDate(value: string): Date {
 parseCalendarDate의 반대. Date를 "2025-07-10" 형태로 바꾼다.
 toISOString은 UTC로 변환되어 하루가 밀릴 수 있으므로 쓰지 않는다.
 */
-export function formatCalendarDate(date: Date): string {
+export function formatCalendarDate(date: Date): LocalDateString {
   const month = String(date.getMonth() + 1).padStart(2, "0");
+
   const day = String(date.getDate()).padStart(2, "0");
 
-  return `${date.getFullYear()}-${month}-${day}`;
+  return `${date.getFullYear()}-${month}-${day}` as LocalDateString;
 }
 
 /*
