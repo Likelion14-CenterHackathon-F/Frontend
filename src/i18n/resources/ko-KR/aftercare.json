@@ -1,5 +1,6 @@
 {
   "dayCount": "{{day}}일째",
+  "today": "오늘,",
   "toggle": {
     "expand": "회복 단계 전체 보기",
     "collapse": "회복 단계 접기"

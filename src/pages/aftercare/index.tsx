@@ -5,17 +5,10 @@ import { useNavigate } from "react-router-dom";
 import { RECOVERY_PHASES, getPatientCase } from "@/apis/patient";
 import logoDark from "@/assets/logo-dark.svg";
 import { usePreferencesStore } from "@/stores/usePreferencesStore";
-import {
-  getDayOffset,
-  getPhaseStartDate,
-  getPhaseStatus,
-  getWeekAround,
-} from "@/utils/aftercare";
+import { getDayOffset, getPhaseStatus, getWeekAround } from "@/utils/aftercare";
 import {
   formatMonthDay,
-  formatNumericDate,
-  formatWeekday,
-  formatYearMonth,
+  formatShortDate,
   parseCalendarDate,
 } from "@/utils/dateTime";
 
@@ -51,21 +44,13 @@ function AftercarePage() {
       (phase) => getPhaseStatus(phase, dayOffset) === "current",
     ) ?? RECOVERY_PHASES[0];
 
-  const timelinePhases: TimelinePhase[] = RECOVERY_PHASES.map((phase) => {
-    const startsAt = getPhaseStartDate(patientCase.procedureDate, phase);
-    const isCurrent = phase.id === currentPhase.id;
-
-    return {
-      id: phase.id,
-      label: t(`phases.${phase.id}.label`),
-      range: t(`phases.${phase.id}.range`),
-      items: t(`phases.${phase.id}.items`, { returnObjects: true }) as string[],
-      // 현재 단계 칩만 오늘 날짜를 가리킨다
-      day: isCurrent ? today.getDate() : startsAt.getDate(),
-      weekday: formatWeekday(isCurrent ? today : startsAt, locale),
-      isCurrent,
-    };
-  });
+  const timelinePhases: TimelinePhase[] = RECOVERY_PHASES.map((phase) => ({
+    id: phase.id,
+    label: t(`phases.${phase.id}.headline`),
+    range: t(`phases.${phase.id}.range`),
+    items: t(`phases.${phase.id}.items`, { returnObjects: true }) as string[],
+    isCurrent: phase.id === currentPhase.id,
+  }));
 
   return (
     <div className="bg-care-bg flex min-h-dvh flex-col">
@@ -100,7 +85,7 @@ function AftercarePage() {
           <PhaseSummaryCard
             label={t(`phases.${currentPhase.id}.label`)}
             headline={t(`phases.${currentPhase.id}.headline`)}
-            procedureDate={formatNumericDate(
+            procedureDate={formatShortDate(
               parseCalendarDate(patientCase.procedureDate),
               locale,
             )}
@@ -115,7 +100,8 @@ function AftercarePage() {
           <>
             <PhaseTimeline
               phases={timelinePhases}
-              monthLabel={formatYearMonth(today, locale)}
+              todayLabel={t("today")}
+              todayDate={formatMonthDay(today, locale)}
             />
             <AlertCard
               title={t("alert.title")}

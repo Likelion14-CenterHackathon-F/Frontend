@@ -1,5 +1,6 @@
 {
   "dayCount": "Day {{day}}",
+  "today": "Today,",
   "toggle": {
     "expand": "Show all recovery stages",
     "collapse": "Collapse recovery stages"

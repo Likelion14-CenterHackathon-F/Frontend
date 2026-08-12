@@ -1,5 +1,6 @@
 {
   "dayCount": "{{day}}日目",
+  "today": "今日、",
   "toggle": {
     "expand": "回復ステージをすべて表示",
     "collapse": "回復ステージを閉じる"

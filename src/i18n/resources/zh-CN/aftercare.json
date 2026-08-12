@@ -1,5 +1,6 @@
 {
   "dayCount": "第 {{day}} 天",
+  "today": "今天，",
   "toggle": {
     "expand": "查看全部恢复阶段",
     "collapse": "收起恢复阶段"
