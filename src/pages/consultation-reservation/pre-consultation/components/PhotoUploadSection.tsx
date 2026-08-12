@@ -1,4 +1,5 @@
 import { useRef, useState, type ChangeEvent } from "react";
+import { useTranslation } from "react-i18next";
 
 import preCameraIcon from "@/assets/icons/consultation/pre-camera.svg";
 import type { ConsultationAttachment } from "@/types/consultationReservation.type";
@@ -18,6 +19,7 @@ export default function PhotoUploadSection({
   files,
   onChange,
 }: PhotoUploadSectionProps) {
+  const { t } = useTranslation("consultationReservation");
   const inputRef = useRef<HTMLInputElement>(null);
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -29,9 +31,7 @@ export default function PhotoUploadSection({
     );
 
     if (invalidFile) {
-      setErrorMessage(
-        "JPG, PNG, MP4 형식의 50MB 이하 파일만 첨부할 수 있습니다.",
-      );
+      setErrorMessage(t("preConsultation.photos.invalidFile"));
     } else {
       setErrorMessage("");
       const newAttachments = selectedFiles.map((file) => ({
@@ -55,9 +55,7 @@ export default function PhotoUploadSection({
   const handleRemove = (id: string) => {
     const target = files.find((attachment) => attachment.id === id);
 
-    if (target) {
-      URL.revokeObjectURL(target.previewUrl);
-    }
+    if (target) URL.revokeObjectURL(target.previewUrl);
 
     onChange(files.filter((attachment) => attachment.id !== id));
     setErrorMessage("");
@@ -67,10 +65,10 @@ export default function PhotoUploadSection({
     <section className="mt-11">
       <header>
         <h2 className="text-text-01 text-xl font-semibold leading-[1.4] tracking-tight">
-          참고 사진
+          {t("preConsultation.photos.title")}
         </h2>
         <p className="mt-1 text-[15px] leading-[1.4] tracking-tight text-text-secondary">
-          증상 부위, 복용 약 사진 등을 첨부해 주세요.
+          {t("preConsultation.photos.description")}
         </p>
       </header>
 
@@ -78,15 +76,11 @@ export default function PhotoUploadSection({
         {files.length < MAX_FILE_COUNT && (
           <button
             type="button"
-            aria-label="참고 사진 추가"
+            aria-label={t("preConsultation.photos.add")}
             onClick={() => inputRef.current?.click()}
             className="flex size-[110px] shrink-0 flex-col items-center justify-center rounded-[14px] border border-calendar-control-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-action-primary/30"
           >
-            <img
-              src={preCameraIcon}
-              alt="참고 사진 아이콘"
-              className="p-1"
-            ></img>
+            <img src={preCameraIcon} alt="" className="mt-3 p-1" />
             <span className="mt-2 text-xs text-action-disabled-text">
               {files.length}/{MAX_FILE_COUNT}
             </span>
@@ -112,8 +106,7 @@ export default function PhotoUploadSection({
       </div>
 
       <p className="mt-2 text-xs leading-[1.4] tracking-tight text-action-disabled-text">
-        이미지 파일 JPG, PNG, MP4를 기준으로 최대 50MB 이하, 최대 5개까지 등록
-        가능합니다.
+        {t("preConsultation.photos.helper")}
       </p>
       {errorMessage && (
         <p role="alert" className="mt-1 text-xs text-action-danger-text">

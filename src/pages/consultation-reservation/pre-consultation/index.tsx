@@ -1,12 +1,15 @@
+import { useTranslation } from "react-i18next";
+
 import ConsultationFooter from "@/components/Footer/ConsultationFooter";
 import { useConsultationReservationStore } from "@/stores/useConsultationReservationStore";
 
 import NoticeCardSection from "./components/NoticeCardSection";
 import PhotoUploadSection from "./components/PhotoUploadSection";
-import SymptomSection from "./components/SymptomSection";
 import SubTitleSection from "./components/SubTitleSection";
+import SymptomSection from "./components/SymptomSection";
 
 function PreConsultationPage() {
+  const { t } = useTranslation("consultationReservation");
   const {
     selectedSymptoms,
     symptomDescription,
@@ -43,7 +46,7 @@ function PreConsultationPage() {
       </main>
 
       <ConsultationFooter disabled={!canSubmit} onClick={handleSubmit}>
-        예약하기
+        {t("preConsultation.submit")}
       </ConsultationFooter>
     </>
   );

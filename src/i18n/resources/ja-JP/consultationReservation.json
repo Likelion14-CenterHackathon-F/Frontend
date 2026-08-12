@@ -8,5 +8,45 @@
     "localTime": "現地時間 {{time}}（{{offset}}）",
     "emptySlots": "選択した日付に予約可能な時間はありません。",
     "next": "次へ"
+  },
+  "preConsultation": {
+    "title": {
+      "first": "正確な相談のために",
+      "second": "現在の状態を教えてください"
+    },
+    "description": "ご提出いただいた資料は、医療スタッフが相談前に確認します。",
+    "symptoms": {
+      "title": "症状の分類",
+      "description": "発症時期、経過、不快感の程度などをご記入ください。",
+      "inputLabel": "症状の詳細",
+      "placeholder": "・腫れやあざがあります\n・アレルギー反応が出たようです\n・その他の皮膚に関する特記事項",
+      "options": {
+        "pain": "痛み",
+        "swelling": "腫れ",
+        "redness": "赤み",
+        "heat": "熱感",
+        "bleeding": "出血",
+        "itching": "かゆみ",
+        "bruise": "あざ",
+        "other": "その他"
+      }
+    },
+    "photos": {
+      "title": "参考写真",
+      "description": "症状のある部位や服用中のお薬の写真などを添付してください。",
+      "add": "参考写真を追加",
+      "remove": "{{name}}を削除",
+      "helper": "JPG、PNG、MP4ファイルを1件あたり最大50MB、合計5件まで登録できます。",
+      "invalidFile": "50MB以下のJPG、PNG、MP4ファイルのみ添付できます。"
+    },
+    "notice": {
+      "title": "ご案内",
+      "items": {
+        "privacy": "ご提出いただいた資料は、担当の医療スタッフのみ閲覧できます。",
+        "disclaimer": "資料の提出は診断や処方に代わるものではなく、相談準備のための参考資料としてのみ使用されます。",
+        "emergency": "激しい出血、高熱、呼吸困難などの緊急症状がある場合は、直ちに病院または救急機関へご連絡ください。"
+      }
+    },
+    "submit": "予約する"
   }
 }

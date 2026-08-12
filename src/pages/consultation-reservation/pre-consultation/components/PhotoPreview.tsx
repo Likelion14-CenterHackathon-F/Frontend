@@ -1,4 +1,5 @@
 import type { ConsultationAttachment } from "@/types/consultationReservation.type";
+import { useTranslation } from "react-i18next";
 
 interface PhotoPreviewProps {
   attachment: ConsultationAttachment;
@@ -6,6 +7,7 @@ interface PhotoPreviewProps {
 }
 
 function PhotoPreview({ attachment, onRemove }: PhotoPreviewProps) {
+  const { t } = useTranslation("consultationReservation");
   const { file, previewUrl } = attachment;
   const isVideo = file.type === "video/mp4";
 
@@ -29,7 +31,7 @@ function PhotoPreview({ attachment, onRemove }: PhotoPreviewProps) {
 
       <button
         type="button"
-        aria-label={`${file.name} 삭제`}
+        aria-label={t("preConsultation.photos.remove", { name: file.name })}
         onClick={onRemove}
         className="absolute right-1.5 top-1.5 flex size-6 items-center justify-center rounded-full bg-neutral-black/60 text-lg leading-none text-neutral-white"
       >

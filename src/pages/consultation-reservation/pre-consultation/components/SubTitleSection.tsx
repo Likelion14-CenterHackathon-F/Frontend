@@ -1,13 +1,17 @@
+import { useTranslation } from "react-i18next";
+
 function SubTitleSection() {
+  const { t } = useTranslation("consultationReservation");
+
   return (
     <section>
       <h1 className="text-calendar-text text-2xl font-bold leading-[1.4] tracking-tight">
-        정확한 상담을 위해
+        {t("preConsultation.title.first")}
         <br />
-        현재 상태를 알려주세요
+        {t("preConsultation.title.second")}
       </h1>
       <p className="mt-1 text-base leading-[1.4] tracking-tight text-text-secondary">
-        제출하신 자료는 의료진이 상담 전 미리 검토합니다.
+        {t("preConsultation.description")}
       </p>
     </section>
   );

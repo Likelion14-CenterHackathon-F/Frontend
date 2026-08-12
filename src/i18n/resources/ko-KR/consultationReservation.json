@@ -8,5 +8,45 @@
     "localTime": "현지 시간 {{time}} ({{offset}})",
     "emptySlots": "선택한 날짜에 등록된 시간이 없습니다.",
     "next": "다음"
+  },
+  "preConsultation": {
+    "title": {
+      "first": "정확한 상담을 위해",
+      "second": "현재 상태를 알려주세요"
+    },
+    "description": "제출하신 자료는 의료진이 상담 전 미리 검토합니다.",
+    "symptoms": {
+      "title": "증상 분류",
+      "description": "발생 시점, 경과, 불편한 정도 등을 작성해 주세요.",
+      "inputLabel": "증상 상세 내용",
+      "placeholder": "· 붓기나 멍이 들어요\n· 알레르기 반응이 온 것 같아요\n· 피부 관련 특이사항",
+      "options": {
+        "pain": "통증",
+        "swelling": "붓기",
+        "redness": "홍조",
+        "heat": "열감",
+        "bleeding": "출혈",
+        "itching": "가려움",
+        "bruise": "멍",
+        "other": "기타"
+      }
+    },
+    "photos": {
+      "title": "참고 사진",
+      "description": "증상 부위, 복용 약 사진 등을 첨부해 주세요.",
+      "add": "참고 사진 추가",
+      "remove": "{{name}} 삭제",
+      "helper": "JPG, PNG, MP4 파일은 개당 최대 50MB, 최대 5개까지 등록할 수 있습니다.",
+      "invalidFile": "JPG, PNG, MP4 형식의 50MB 이하 파일만 첨부할 수 있습니다."
+    },
+    "notice": {
+      "title": "안내 사항",
+      "items": {
+        "privacy": "제출하신 자료는 담당 의료진만 열람할 수 있습니다.",
+        "disclaimer": "본 자료 제출은 진단 또는 처방을 대체하지 않으며, 상담 준비를 위한 참고 자료로만 활용됩니다.",
+        "emergency": "응급 증상(심한 출혈, 고열, 호흡 곤란)이 있으면 즉시 병원 또는 응급 기관에 연락하세요."
+      }
+    },
+    "submit": "예약하기"
   }
 }

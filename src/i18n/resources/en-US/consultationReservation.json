@@ -8,5 +8,45 @@
     "localTime": "Local time {{time}} ({{offset}})",
     "emptySlots": "There are no times available on the selected date.",
     "next": "Next"
+  },
+  "preConsultation": {
+    "title": {
+      "first": "For an accurate consultation,",
+      "second": "tell us about your current condition"
+    },
+    "description": "Your care team will review the information before the consultation.",
+    "symptoms": {
+      "title": "Symptoms",
+      "description": "Describe when they started, how they progressed, and how uncomfortable they are.",
+      "inputLabel": "Symptom details",
+      "placeholder": "· I have swelling or bruising\n· I think I am having an allergic reaction\n· Other skin-related concerns",
+      "options": {
+        "pain": "Pain",
+        "swelling": "Swelling",
+        "redness": "Redness",
+        "heat": "Warmth",
+        "bleeding": "Bleeding",
+        "itching": "Itching",
+        "bruise": "Bruising",
+        "other": "Other"
+      }
+    },
+    "photos": {
+      "title": "Reference photos",
+      "description": "Attach photos of the affected area or medication you are taking.",
+      "add": "Add a reference photo",
+      "remove": "Remove {{name}}",
+      "helper": "You can upload up to 5 JPG, PNG, or MP4 files, with a maximum size of 50 MB each.",
+      "invalidFile": "Only JPG, PNG, or MP4 files up to 50 MB can be attached."
+    },
+    "notice": {
+      "title": "Important information",
+      "items": {
+        "privacy": "Only the medical staff assigned to your consultation can view your submissions.",
+        "disclaimer": "Your submission does not replace a diagnosis or prescription and will only be used to prepare for the consultation.",
+        "emergency": "For emergency symptoms such as severe bleeding, high fever, or difficulty breathing, contact a hospital or emergency service immediately."
+      }
+    },
+    "submit": "Book consultation"
   }
 }

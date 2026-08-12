@@ -1,3 +1,5 @@
+import { useTranslation } from "react-i18next";
+
 import type { SymptomType } from "@/types/consultationReservation.type";
 import { cn } from "@/utils/cn";
 
@@ -9,16 +11,15 @@ interface SymptomSectionProps {
 }
 
 const MAX_DESCRIPTION_LENGTH = 500;
-
-const symptomOptions: Array<{ value: SymptomType; label: string }> = [
-  { value: "pain", label: "통증" },
-  { value: "swelling", label: "붓기" },
-  { value: "redness", label: "홍조" },
-  { value: "heat", label: "열감" },
-  { value: "bleeding", label: "출혈" },
-  { value: "itching", label: "가려움" },
-  { value: "bruise", label: "멍" },
-  { value: "other", label: "기타" },
+const symptomOptions: SymptomType[] = [
+  "pain",
+  "swelling",
+  "redness",
+  "heat",
+  "bleeding",
+  "itching",
+  "bruise",
+  "other",
 ];
 
 export default function SymptomSection({
@@ -27,27 +28,29 @@ export default function SymptomSection({
   onToggleSymptom,
   onChangeDescription,
 }: SymptomSectionProps) {
+  const { t } = useTranslation("consultationReservation");
+
   return (
     <section className="mt-16">
       <header>
         <h2 className="text-text-01 text-xl font-semibold leading-[1.4] tracking-tight">
-          증상 분류
+          {t("preConsultation.symptoms.title")}
         </h2>
         <p className="mt-1 text-[15px] leading-[1.4] tracking-tight text-text-secondary">
-          발생 시점, 경과, 불편한 정도 등을 작성해 주세요.
+          {t("preConsultation.symptoms.description")}
         </p>
       </header>
 
       <div className="mt-5 grid grid-cols-4 gap-2">
-        {symptomOptions.map(({ value, label }) => {
-          const isSelected = selectedSymptoms.includes(value);
+        {symptomOptions.map((symptom) => {
+          const isSelected = selectedSymptoms.includes(symptom);
 
           return (
             <button
-              key={value}
+              key={symptom}
               type="button"
               aria-pressed={isSelected}
-              onClick={() => onToggleSymptom(value)}
+              onClick={() => onToggleSymptom(symptom)}
               className={cn(
                 "h-[46px] rounded-[30px] border text-sm font-medium leading-[1.4] tracking-tight transition-colors",
                 isSelected
@@ -55,7 +58,7 @@ export default function SymptomSection({
                   : "border-calendar-control-border bg-transparent text-action-secondary-text",
               )}
             >
-              {label}
+              {t(`preConsultation.symptoms.options.${symptom}`)}
             </button>
           );
         })}
@@ -65,10 +68,8 @@ export default function SymptomSection({
         <textarea
           value={description}
           maxLength={MAX_DESCRIPTION_LENGTH}
-          aria-label="증상 상세 내용"
-          placeholder={
-            "· 붓기나 멍이 들어요\n· 알레르기 반응이 온 것 같아요\n· 피부 관련 특이사항"
-          }
+          aria-label={t("preConsultation.symptoms.inputLabel")}
+          placeholder={t("preConsultation.symptoms.placeholder")}
           onChange={(event) => onChangeDescription(event.target.value)}
           className="min-h-38 w-full resize-none rounded-[18px] border border-border-input bg-transparent px-5 pt-[18px] text-[15px] leading-[1.5] tracking-tight text-text-01 placeholder:text-text-04 focus:focus:border-action-secondary-text focus:outline-none"
         />
