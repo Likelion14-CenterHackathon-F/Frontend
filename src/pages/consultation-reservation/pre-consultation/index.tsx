@@ -1,3 +1,4 @@
+import { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import ConsultationFooter from "@/components/Footer/ConsultationFooter";
@@ -5,13 +6,17 @@ import { useConsultationReservationStore } from "@/stores/useConsultationReserva
 
 import NoticeCardSection from "./components/NoticeCardSection";
 import PhotoUploadSection from "./components/PhotoUploadSection";
+import ReservationConfirmSheet from "./components/ReservationConfirmSheet";
 import SubTitleSection from "./components/SubTitleSection";
 import SymptomSection from "./components/SymptomSection";
 
 function PreConsultationPage() {
   const { t } = useTranslation("consultationReservation");
+  const [isConfirmSheetOpen, setIsConfirmSheetOpen] = useState(false);
+  const [hasAgreed, setHasAgreed] = useState(false);
   const {
     selectedSymptoms,
+    selectedSlot,
     symptomDescription,
     imageFiles,
     toggleSymptom,
@@ -25,7 +30,19 @@ function PreConsultationPage() {
   const handleSubmit = () => {
     if (!canSubmit) return;
 
+    setIsConfirmSheetOpen(true);
+  };
+
+  const handleCloseConfirmSheet = useCallback(() => {
+    setIsConfirmSheetOpen(false);
+    setHasAgreed(false);
+  }, []);
+
+  const handleConfirmReservation = () => {
+    if (!hasAgreed || !selectedSlot) return;
+
     // 예약 생성 API 연결 시 현재 store의 예약 일시와 사전 자료를 전송합니다.
+    handleCloseConfirmSheet();
   };
 
   return (
@@ -48,6 +65,16 @@ function PreConsultationPage() {
       <ConsultationFooter disabled={!canSubmit} onClick={handleSubmit}>
         {t("preConsultation.submit")}
       </ConsultationFooter>
+
+      <ReservationConfirmSheet
+        open={isConfirmSheetOpen}
+        selectedSlot={selectedSlot}
+        selectedSymptoms={selectedSymptoms}
+        agreed={hasAgreed}
+        onAgreeChange={setHasAgreed}
+        onClose={handleCloseConfirmSheet}
+        onConfirm={handleConfirmReservation}
+      />
     </>
   );
 }

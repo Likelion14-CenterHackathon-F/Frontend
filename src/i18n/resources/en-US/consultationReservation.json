@@ -47,6 +47,20 @@
         "emergency": "For emergency symptoms such as severe bleeding, high fever, or difficulty breathing, contact a hospital or emergency service immediately."
       }
     },
+    "confirm": {
+      "title": "Is your booking information correct?",
+      "description": "Please review your booking information before confirming.",
+      "summary": {
+        "date": "Date and time",
+        "reason": "Reason",
+        "doctor": "Doctor"
+      },
+      "mockDoctor": "Dr. Jitae Park",
+      "noticeTitle": "Time limit for a smooth consultation",
+      "notice": "To minimize wait times for all patients, consultations are limited to 15 minutes and may end automatically when the time limit is reached.",
+      "agreement": "[Required] I have read and agree to the notice above.",
+      "submit": "Book consultation"
+    },
     "submit": "Book consultation"
   }
 }
