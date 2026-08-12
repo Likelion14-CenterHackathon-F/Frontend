@@ -28,6 +28,22 @@
   --color-language-divider: #e8e8e8; /* 언어 목록 구분선 */
   --color-accent: #ff7706; /* 휠 선택 표시 */
 
+  /* 공통 Action Button */
+  --color-action-primary: #2a2a2a;
+  --color-action-primary-text: #fdfdff;
+
+  --color-action-secondary: #edecf2;
+  --color-action-secondary-text: #4b4b4e;
+
+  --color-action-disabled: #edecf2;
+  --color-action-disabled-text: #9795a0;
+
+  --color-action-danger: #ffebec;
+  --color-action-danger-text: #fe4343;
+
+  /* 고정 하단 영역 */
+  --color-surface-footer: #fcfcfc;
+
   /* 온보딩 배경 그라데이션 */
   --color-gradient-from: #6258a0;
   --color-gradient-via: #9386e0;
