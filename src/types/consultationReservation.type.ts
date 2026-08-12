@@ -41,3 +41,19 @@ export interface ConsultationDailySlots {
   timezoneId: string;
   slots: ConsultationReservationSlot[];
 }
+
+export type SymptomType =
+  | "pain"
+  | "swelling"
+  | "redness"
+  | "heat"
+  | "bleeding"
+  | "itching"
+  | "bruise"
+  | "other";
+
+export interface ConsultationAttachment {
+  id: string;
+  file: File;
+  previewUrl: string;
+}
