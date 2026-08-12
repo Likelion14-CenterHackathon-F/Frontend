@@ -49,18 +49,22 @@ function ConsultationSchedulePage() {
       ),
     [visibleMonth],
   );
+
   const dailySlots = useMemo(
     () => (selectedDate ? getMockDailySlots(selectedDate) : null),
     [selectedDate],
   );
+
   const slotGroups = useMemo(
     () =>
       dailySlots ? groupConsultationSlots(dailySlots.slots, timeZone) : [],
     [dailySlots, timeZone],
   );
+
   const selectedDay = selectedDate
     ? parseCalendarDate(selectedDate)
     : undefined;
+
   const canProceed =
     selectedDate !== null && selectedSlot !== null && selectedSlot.available;
 
@@ -97,7 +101,9 @@ function ConsultationSchedulePage() {
           <li className="mt-1">{t("schedule.instructions.timezone")}</li>
         </ul>
 
-        <div className="mt-9 h-2 bg-action-disabled" />
+        {selectedDate && dailySlots && (
+          <div className="mt-9 h-2 bg-action-disabled" />
+        )}
 
         {selectedDate && dailySlots && (
           <section className="px-5 py-[46px]">

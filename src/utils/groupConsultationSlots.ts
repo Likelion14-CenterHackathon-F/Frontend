@@ -27,7 +27,7 @@ export function groupConsultationSlots(
 ): ConsultationSlotGroup[] {
   const groups = new Map<string, ConsultationReservationSlot[]>();
 
-  slots.forEach((slot) => {
+  slots.filter((slot) => slot.available).forEach((slot) => {
     const key = getLocalHourKey(slot.startsAt, userTimeZone);
     groups.set(key, [...(groups.get(key) ?? []), slot]);
   });

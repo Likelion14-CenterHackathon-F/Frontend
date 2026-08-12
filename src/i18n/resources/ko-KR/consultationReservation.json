@@ -6,7 +6,6 @@
       "timezone": "위 시간은 회원님의 현지 시간대로 표시됩니다."
     },
     "localTime": "현지 시간 {{time}} ({{offset}})",
-    "closed": "마감",
     "emptySlots": "선택한 날짜에 등록된 시간이 없습니다.",
     "next": "다음"
   }

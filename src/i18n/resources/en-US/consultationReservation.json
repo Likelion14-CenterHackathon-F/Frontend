@@ -6,7 +6,6 @@
       "timezone": "The times above are shown in your local time zone."
     },
     "localTime": "Local time {{time}} ({{offset}})",
-    "closed": "Closed",
     "emptySlots": "There are no times available on the selected date.",
     "next": "Next"
   }

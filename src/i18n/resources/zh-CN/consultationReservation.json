@@ -6,7 +6,6 @@
       "timezone": "上方时间按您所在的时区显示。"
     },
     "localTime": "当地时间 {{time}}（{{offset}}）",
-    "closed": "已约满",
     "emptySlots": "所选日期暂无可预约时间。",
     "next": "下一步"
   }

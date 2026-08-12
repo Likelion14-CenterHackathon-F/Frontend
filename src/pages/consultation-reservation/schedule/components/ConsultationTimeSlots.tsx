@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import type { ConsultationReservationSlot } from "@/types/consultationReservation.type";
 import type { SupportedLocale } from "@/types/preferences";
 import { cn } from "@/utils/cn";
+import { formatAppointmentTime, formatTimeZoneOffset } from "@/utils/dateTime";
 import type { ConsultationSlotGroup } from "@/utils/groupConsultationSlots";
 
 const KOREA_TIME_ZONE = "Asia/Seoul";
@@ -13,30 +14,6 @@ interface ConsultationTimeSlotsProps {
   groups: ConsultationSlotGroup[];
   selectedSlotId?: number;
   onSelect: (slot: ConsultationReservationSlot) => void;
-}
-
-function formatTime(
-  startsAt: string,
-  locale: SupportedLocale,
-  timeZone: string,
-  includeMinutes = true,
-) {
-  return new Intl.DateTimeFormat(locale, {
-    timeZone,
-    hour: "numeric",
-    ...(includeMinutes && { minute: "2-digit" }),
-  }).format(new Date(startsAt));
-}
-
-function formatTimeZoneOffset(startsAt: string, locale: SupportedLocale) {
-  const offset = new Intl.DateTimeFormat(locale, {
-    timeZone: KOREA_TIME_ZONE,
-    timeZoneName: "shortOffset",
-  })
-    .formatToParts(new Date(startsAt))
-    .find((part) => part.type === "timeZoneName")?.value;
-
-  return offset?.replace("GMT", "UTC") ?? "UTC+9";
 }
 
 function ConsultationTimeSlots({
@@ -54,12 +31,21 @@ function ConsultationTimeSlots({
         <section key={group.key} className="flex flex-col gap-3">
           <header>
             <h2 className="text-calendar-text text-lg font-semibold tracking-tight">
-              {formatTime(group.startsAt, locale, userTimeZone, false)}
+              {formatAppointmentTime(group.startsAt, {
+                locale,
+                timeZone: userTimeZone,
+              })}
             </h2>
             <p className="mt-1 text-sm tracking-tight text-action-secondary-text">
               {t("schedule.localTime", {
-                time: formatTime(group.startsAt, locale, KOREA_TIME_ZONE),
-                offset: formatTimeZoneOffset(group.startsAt, locale),
+                time: formatAppointmentTime(group.startsAt, {
+                  locale,
+                  timeZone: KOREA_TIME_ZONE,
+                }),
+                offset: formatTimeZoneOffset(group.startsAt, {
+                  locale,
+                  timeZone: KOREA_TIME_ZONE,
+                }).replace("GMT", "UTC"),
               })}
             </p>
           </header>
@@ -72,7 +58,6 @@ function ConsultationTimeSlots({
                 <button
                   key={slot.slotId}
                   type="button"
-                  disabled={!slot.available}
                   aria-pressed={isSelected}
                   onClick={() => onSelect(slot)}
                   className={cn(
@@ -80,13 +65,12 @@ function ConsultationTimeSlots({
                     isSelected
                       ? "border-action-secondary-text bg-action-secondary-text font-medium text-action-primary-text"
                       : "border-calendar-control-border bg-transparent font-normal text-calendar-text",
-                    !slot.available &&
-                      "cursor-not-allowed bg-action-disabled text-action-disabled-text opacity-60",
                   )}
                 >
-                  {slot.available
-                    ? formatTime(slot.startsAt, locale, userTimeZone)
-                    : t("schedule.closed")}
+                  {formatAppointmentTime(slot.startsAt, {
+                    locale,
+                    timeZone: userTimeZone,
+                  })}
                 </button>
               );
             })}

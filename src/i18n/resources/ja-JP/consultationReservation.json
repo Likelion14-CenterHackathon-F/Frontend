@@ -6,7 +6,6 @@
       "timezone": "上の時間はお客様の現地時間帯で表示されます。"
     },
     "localTime": "現地時間 {{time}}（{{offset}}）",
-    "closed": "締切",
     "emptySlots": "選択した日付に予約可能な時間はありません。",
     "next": "次へ"
   }
