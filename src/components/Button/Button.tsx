@@ -25,6 +25,8 @@ const buttonVariants = cva(
       variant: {
         primary: ["bg-action-primary", "text-action-primary-text"],
 
+        neutral: ["bg-action-secondary-text", "text-white"],
+
         secondary: ["bg-action-secondary", "text-action-secondary-text"],
 
         danger: ["bg-action-danger", "text-action-danger-text"],
