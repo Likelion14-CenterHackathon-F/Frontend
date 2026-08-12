@@ -35,6 +35,10 @@
   --color-accent: #ff7706; /* 휠 선택 표시 */
 
   /* 공통 Action Button */
+  --color-surface-notice: #f4f4f6;
+  --color-border-input: #edecf1;
+  --color-text-secondary: #7b7a80;
+
   --color-action-primary: #2a2a2a;
   --color-action-primary-text: #fdfdff;
 
