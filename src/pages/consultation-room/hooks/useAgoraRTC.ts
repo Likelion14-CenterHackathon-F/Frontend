@@ -6,9 +6,11 @@ import AgoraRTC, {
   type ICameraVideoTrack,
   type IMicrophoneAudioTrack,
   type IRemoteVideoTrack,
+  type UID,
 } from "agora-rtc-sdk-ng";
 
 import type { JoinConsultationResponse } from "@/types/consultation.type";
+import { decodeSttMessage } from "../utils/decodeSttMessage";
 
 type RoomConnectionState = ConnectionState | "IDLE" | "FAILED";
 
@@ -21,6 +23,8 @@ interface UseAgoraRTCResult {
   connectionState: RoomConnectionState;
   errorMessage: string;
   tokenWillExpire: boolean;
+  peerAudioPublished: boolean;
+  caption: string | null;
   join: () => Promise<void>;
   leave: () => Promise<void>;
   toggleMicrophone: () => Promise<void>;
@@ -56,6 +60,20 @@ export function useAgoraRTC(
     useState<RoomConnectionState>("IDLE");
   const [errorMessage, setErrorMessage] = useState("");
   const [tokenWillExpire, setTokenWillExpire] = useState(false);
+  const [peerAudioPublished, setPeerAudioPublished] = useState(false);
+  const [caption, setCaption] = useState<string | null>(null);
+  const captionsRef = useRef(new Map<string, string>());
+
+  const handleStreamMessage = useCallback(
+    (uid: UID, payload: Uint8Array) => {
+      if (!roomInfo || Number(uid) !== roomInfo.sttPublisherAgoraUid) return;
+      const message = decodeSttMessage(payload, roomInfo.userLanguage);
+      if (!message) return;
+      captionsRef.current.set(message.sentenceId, message.text);
+      setCaption(message.text);
+    },
+    [roomInfo],
+  );
 
   const handleUserPublished = useCallback(
     async (user: IAgoraRTCRemoteUser, mediaType: "audio" | "video") => {
@@ -72,6 +90,7 @@ export function useAgoraRTC(
         }
 
         if (mediaType === "audio" && user.audioTrack) {
+          setPeerAudioPublished(true);
           user.audioTrack.setVolume(speakerOnRef.current ? 100 : 0);
           user.audioTrack.play();
         }
@@ -117,12 +136,14 @@ export function useAgoraRTC(
     client.off("user-left", handleUserLeft);
     client.off("connection-state-change", handleConnectionStateChange);
     client.off("token-privilege-will-expire", handleTokenWillExpire);
+    client.off("stream-message", handleStreamMessage);
   }, [
     handleConnectionStateChange,
     handleTokenWillExpire,
     handleUserLeft,
     handleUserPublished,
     handleUserUnpublished,
+    handleStreamMessage,
     client,
   ]);
 
@@ -145,6 +166,9 @@ export function useAgoraRTC(
     setMicrophoneOn(true);
     setCameraOn(true);
     setTokenWillExpire(false);
+    setPeerAudioPublished(false);
+    setCaption(null);
+    captionsRef.current.clear();
 
     if (client.connectionState !== "DISCONNECTED") {
       await client.leave();
@@ -166,6 +190,7 @@ export function useAgoraRTC(
       client.on("user-left", handleUserLeft);
       client.on("connection-state-change", handleConnectionStateChange);
       client.on("token-privilege-will-expire", handleTokenWillExpire);
+      client.on("stream-message", handleStreamMessage);
 
       try {
         await client.join(
@@ -206,6 +231,7 @@ export function useAgoraRTC(
     handleUserLeft,
     handleUserPublished,
     handleUserUnpublished,
+    handleStreamMessage,
     client,
     leave,
     roomInfo,
@@ -267,6 +293,8 @@ export function useAgoraRTC(
     connectionState,
     errorMessage,
     tokenWillExpire,
+    peerAudioPublished,
+    caption,
     join,
     leave,
     toggleMicrophone,
