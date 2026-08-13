@@ -19,8 +19,10 @@ function EmptyConsultation() {
       </p>
 
       <Button
-        onClick={() => navigate("/consultation/reservation/schedule")}
-        className="mt-[26px] h-auto rounded-[37px] bg-[#4B4B4E] px-4 py-3 text-[15px] font-semibold tracking-[-0.375px] text-white"
+        variant="neutral"
+        size="compact"
+        className="mt-[26px]"
+        onClick={() => navigate("/consultation/reservation")}
       >
         {t("empty.reservationButton")}
       </Button>

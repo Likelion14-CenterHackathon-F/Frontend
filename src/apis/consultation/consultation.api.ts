@@ -11,7 +11,7 @@ export const joinConsultation = async (
 ) => {
   const { data } = await axiosInstance.post<
     ApiResponse<JoinConsultationResponse>
-  >(`/consultations/${appointmentId}/join`, body);
+  >(`/consultation/${appointmentId}/join`, body);
 
   return data.data;
 };

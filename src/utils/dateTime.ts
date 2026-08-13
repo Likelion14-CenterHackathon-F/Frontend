@@ -1,12 +1,13 @@
 import { TIME_ZONE_STORAGE_KEY } from "@/constants/storageKey";
+import type { LocalDateString } from "@/types/consultationReservation.type";
 import type { SupportedLocale, UserPreferences } from "@/types/preferences";
 
-//브라우저 시간대 감지 함수
+//현재 브라우저/ 실행 환경의 기본 타임존을 불러온ㄷ
 export function detectTimeZone(): string {
   return Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC";
 }
 
-//올바른 시간대인지 검증 함수
+//올바른 시간대인지 검증하는 함수
 export function isValidTimeZone(timeZone: unknown): timeZone is string {
   if (typeof timeZone !== "string") {
     return false;
@@ -60,11 +61,12 @@ export function parseCalendarDate(value: string): Date {
 parseCalendarDate의 반대. Date를 "2025-07-10" 형태로 바꾼다.
 toISOString은 UTC로 변환되어 하루가 밀릴 수 있으므로 쓰지 않는다.
 */
-export function formatCalendarDate(date: Date): string {
+export function formatCalendarDate(date: Date): LocalDateString {
   const month = String(date.getMonth() + 1).padStart(2, "0");
+
   const day = String(date.getDate()).padStart(2, "0");
 
-  return `${date.getFullYear()}-${month}-${day}`;
+  return `${date.getFullYear()}-${month}-${day}` as LocalDateString;
 }
 
 /*
@@ -78,6 +80,48 @@ export function formatDate(value: DateValue, locale: SupportedLocale): string {
     month: "long",
     day: "numeric",
   }).format(toDate(value));
+}
+
+/*
+연도 없이 월과 일만 포맷하는 함수
+ex) "7월 29일", "July 29"
+*/
+export function formatMonthDay(
+  value: DateValue,
+  locale: SupportedLocale,
+): string {
+  return new Intl.DateTimeFormat(locale, {
+    month: "long",
+    day: "numeric",
+  }).format(toDate(value));
+}
+
+/*
+연도를 두 자리로 줄여 짧게 포맷하는 함수
+ex) "26년 7월 10일", "26年7月10日"
+*/
+export function formatShortDate(
+  value: DateValue,
+  locale: SupportedLocale,
+): string {
+  return new Intl.DateTimeFormat(locale, {
+    year: "2-digit",
+    month: "long",
+    day: "numeric",
+  }).format(toDate(value));
+}
+
+/*
+요일만 짧게 포맷하는 함수
+ex) "목", "Thu"
+*/
+export function formatWeekday(
+  value: DateValue,
+  locale: SupportedLocale,
+): string {
+  return new Intl.DateTimeFormat(locale, { weekday: "short" }).format(
+    toDate(value),
+  );
 }
 
 /*
@@ -99,6 +143,37 @@ export function formatAppointmentDateTime(
   }).format(toDate(value));
 }
 
+export function formatConfirmedDateTime(
+  value: DateValue,
+  { locale, timeZone }: DateTimeContext,
+): string {
+  const date = toDate(value);
+  const dateParts = new Intl.DateTimeFormat(locale, {
+    timeZone,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    weekday: "short",
+  }).formatToParts(date);
+  const getPart = (type: Intl.DateTimeFormatPartTypes) =>
+    dateParts.find((part) => part.type === type)?.value ?? "";
+  const year = getPart("year");
+  const month = getPart("month");
+  const day = getPart("day");
+  const weekday = getPart("weekday");
+  const dateText =
+    locale === "en-US"
+      ? `${month}.${day}.${year}`
+      : `${year}.${month}.${day}`;
+  const timeText = new Intl.DateTimeFormat(locale, {
+    timeZone,
+    hour: "numeric",
+    minute: "2-digit",
+  }).format(date);
+
+  return `${dateText} (${weekday}) ${timeText}`;
+}
+
 /*
 날짜 없이 시간만 포맷하는 함수
 ex) "오후 2:00", "10:00 PM"
@@ -106,11 +181,13 @@ ex) "오후 2:00", "10:00 PM"
 export function formatAppointmentTime(
   value: DateValue,
   { locale, timeZone }: DateTimeContext,
+  hourCycle: string = "locale",
 ): string {
   return new Intl.DateTimeFormat(locale, {
     timeZone,
     hour: "numeric",
     minute: "2-digit",
+    ...(hourCycle === "h23" && { hourCycle: "h23" }),
   }).format(toDate(value));
 }
 
@@ -213,4 +290,17 @@ export function getTimeZoneCity(timeZone: string): string {
   const city = timeZone.split("/").at(-1) ?? timeZone;
 
   return city.replaceAll("_", " ");
+}
+
+// timeZone에 맞는 Date 객체를 반환
+export function getCurrentMonthInTimeZone(timeZone: string) {
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone,
+    year: "numeric",
+    month: "numeric",
+  }).formatToParts(new Date());
+  const year = Number(parts.find((part) => part.type === "year")?.value);
+  const month = Number(parts.find((part) => part.type === "month")?.value);
+
+  return new Date(year, month - 1, 1);
 }

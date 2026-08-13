@@ -1,4 +1,4 @@
-import ConsultationHeader from "@/components/header/ConsultationHeader";
+import ConsultationHeader from "@/components/Header/ConsultationHeader";
 import WaitingCheckListSection from "./components/WaitingCheckListSection";
 import CameraPreview from "./components/CameraPreview";
 import { useNavigate, useParams } from "react-router-dom";
@@ -30,7 +30,10 @@ function ConsultationWaitingPage() {
 
   return (
     <div className="flex min-h-dvh flex-col">
-      <ConsultationHeader title={t("header.title")} onBack={() => navigate(-1)} />
+      <ConsultationHeader
+        title={t("header.title")}
+        onBack={() => navigate(-1)}
+      />
 
       <main className="flex flex-1 flex-col gap-4 px-5">
         <CameraPreview
