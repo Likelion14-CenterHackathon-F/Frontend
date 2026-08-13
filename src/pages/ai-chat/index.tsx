@@ -1,79 +1,95 @@
-import { useEffect, useRef, useState, type FormEvent } from "react";
-import { Trans, useTranslation } from "react-i18next";
+import { useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 
+import logo from "@/assets/logo.svg";
+import sidebarLeft from "@/assets/sidebar-left.svg";
 import { useChatStore } from "@/stores/useChatStore";
 
-function GuidanceList({ titleKey, itemsKey }: { titleKey: string; itemsKey: string }) {
-  const { t } = useTranslation("aiChat");
-  const items = t(itemsKey, { returnObjects: true }) as string[];
+import AiAnswer, { type AnswerSection } from "./components/AiAnswer";
+import ChatBackdrop from "./components/ChatBackdrop";
+import ChatComposer from "./components/ChatComposer";
+import PatientMessage from "./components/PatientMessage";
 
-  return (
-    <div className="flex flex-col gap-1.5 rounded border-l-2 border-black bg-[#F9F9F9] py-2.5 pr-3 pl-3.5">
-      <h3 className="text-xs font-bold text-black">{t(titleKey)}</h3>
-      <ul className="flex list-disc flex-col gap-[3px] pl-4">
-        {items.map((item) => (
-          <li key={item} className="text-xs leading-[15.6px] text-[#333]">
-            {item}
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-}
+/* 명세 확정 전까지 쓰는 응답 지연 */
+const ANSWER_DELAY_MS = 1200;
 
-function AiGuidance() {
-  const { t } = useTranslation("aiChat");
+/* 대화가 안내 문구에 이만큼 가까워지면 지워지기 시작한다 */
+const NOTICE_FADE_DISTANCE = 80;
+const NOTICE_MAX_OPACITY = 0.7;
 
-  return (
-    <div className="flex flex-col gap-1.5">
-      <div className="flex w-fit flex-col rounded border border-black bg-[#F9F9F9] px-3 py-3">
-        <h3 className="border-b border-[#DDD] pb-2 text-xs font-bold text-black">
-          {t("analysis.title")}
-        </h3>
-
-        <dl className="flex flex-col gap-1 pt-3 text-xs">
-          <div className="flex gap-1">
-            <dt className="text-[#666]">{t("analysis.statusLabel")}</dt>
-            <dd className="font-bold text-black">{t("analysis.status")}</dd>
-          </div>
-          <div className="flex gap-1">
-            <dt className="text-[#666]">{t("analysis.doctorLabel")}</dt>
-            <dd className="font-bold text-black">{t("analysis.doctor")}</dd>
-          </div>
-        </dl>
-      </div>
-
-      <GuidanceList titleKey="reassuring.title" itemsKey="reassuring.items" />
-      <GuidanceList titleKey="lifestyle.title" itemsKey="lifestyle.items" />
-      <GuidanceList titleKey="redFlags.title" itemsKey="redFlags.items" />
-
-      <div className="flex flex-col gap-1 rounded border-l-2 border-black bg-[#F5F5F5] py-2 pr-4 pl-3">
-        <p className="text-xs leading-[15.6px] font-bold text-[#333]">
-          {t("notice.title")}
-        </p>
-        <p className="text-xs leading-[15.6px] text-[#333]">{t("notice.body")}</p>
-      </div>
-    </div>
-  );
-}
+const ANSWER_KEYS = ["analysis", "reassuring", "lifestyle", "redFlags"];
 
 function AiChatPage() {
   const { t } = useTranslation("aiChat");
+
   const messages = useChatStore((state) => state.messages);
   const addMessage = useChatStore((state) => state.addMessage);
+  const clearMessages = useChatStore((state) => state.clearMessages);
 
   const [draft, setDraft] = useState("");
   const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const [isAnswering, setIsAnswering] = useState(false);
+
+  const [noticeOpacity, setNoticeOpacity] = useState(NOTICE_MAX_OPACITY);
+
   const fileInputRef = useRef<HTMLInputElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
+  const answerTimerRef = useRef<number | null>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
+  const noticeRef = useRef<HTMLParagraphElement>(null);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+  }, [messages, isAnswering]);
 
-  const handleSubmit = (event: FormEvent) => {
-    event.preventDefault();
+  // 화면을 벗어날 때 예약된 응답이 남지 않도록 정리한다
+  useEffect(() => {
+    return () => {
+      if (answerTimerRef.current) window.clearTimeout(answerTimerRef.current);
+    };
+  }, []);
 
+  /*
+    대화가 안내 문구에 가까워질수록 문구를 옅게 만든다.
+    딱 닿는 순간 사라지면 눈에 띄어서, 여유 구간을 두고 서서히 지운다.
+  */
+  useEffect(() => {
+    const update = () => {
+      const content = contentRef.current;
+      const notice = noticeRef.current;
+      if (!content || !notice) return;
+
+      const gap =
+        notice.getBoundingClientRect().top -
+        content.getBoundingClientRect().bottom;
+      const ratio = Math.min(Math.max(gap / NOTICE_FADE_DISTANCE, 0), 1);
+
+      setNoticeOpacity(ratio * NOTICE_MAX_OPACITY);
+    };
+
+    update();
+    window.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update);
+
+    return () => {
+      window.removeEventListener("scroll", update);
+      window.removeEventListener("resize", update);
+    };
+  }, [messages, isAnswering]);
+
+  const answerSections: AnswerSection[] = ANSWER_KEYS.map((key) => ({
+    title: t(`${key}.title`),
+    items: t(`${key}.items`, { returnObjects: true }) as string[],
+    // 분석 결과만 글머리표 없이 문장으로 늘어놓는다
+    isPlain: key === "analysis",
+  }));
+
+  const stopAnswering = () => {
+    if (answerTimerRef.current) window.clearTimeout(answerTimerRef.current);
+    setIsAnswering(false);
+  };
+
+  const handleSubmit = () => {
     const text = draft.trim();
     if (!text && !imageUrl) return;
 
@@ -85,63 +101,93 @@ function AiChatPage() {
       imageUrl: imageUrl ?? undefined,
     });
 
-    // 실제로는 여기서 AI 분석 API를 호출한다. 명세 확정 전까지 고정 응답을 붙인다.
-    addMessage({
-      id: crypto.randomUUID(),
-      role: "ai",
-      kind: "guidance",
-    });
-
     setDraft("");
     setImageUrl(null);
     if (fileInputRef.current) fileInputRef.current.value = "";
+
+    // 실제로는 여기서 분석 API를 호출한다
+    setIsAnswering(true);
+    answerTimerRef.current = window.setTimeout(() => {
+      addMessage({ id: crypto.randomUUID(), role: "ai", kind: "guidance" });
+      setIsAnswering(false);
+    }, ANSWER_DELAY_MS);
+  };
+
+  const handleNewChat = () => {
+    stopAnswering();
+    clearMessages();
+    setDraft("");
+    setImageUrl(null);
   };
 
   return (
-    <div className="flex min-h-dvh flex-col">
-      <div className="flex flex-1 flex-col gap-6 p-4">
-        <div className="rounded border border-[#DDD] bg-[#F5F5F5] px-3 py-3 text-[13px] leading-[18.2px] text-black">
-          <Trans
-            t={t}
-            i18nKey="welcome"
-            components={[<span className="font-bold" />]}
-          />
-        </div>
+    <div className="text-chat-fg relative flex min-h-dvh flex-col">
+      <ChatBackdrop />
 
-        {messages.map((message) =>
-          message.role === "patient" ? (
-            <div key={message.id} className="flex flex-col items-end gap-1">
-              {message.text && (
-                <p className="max-w-[80%] rounded bg-black px-3 py-2.5 text-[13px] leading-[18.2px] text-white">
-                  {message.text}
-                </p>
-              )}
-              {message.imageUrl && (
-                <img
-                  src={message.imageUrl}
-                  alt={t("attachedImage")}
-                  className="size-[60px] rounded border border-[#999] object-cover"
-                />
-              )}
-            </div>
-          ) : (
-            <AiGuidance key={message.id} />
-          ),
+      <header className="relative flex items-center justify-between px-5 pt-2.5">
+        <button
+          type="button"
+          aria-label={t("menu")}
+          className="flex size-12 items-center justify-center rounded-[28px]"
+        >
+          <img aria-hidden src={sidebarLeft} alt="" className="size-5.25" />
+        </button>
+
+        <button
+          type="button"
+          onClick={handleNewChat}
+          className="text-body leading-[1.4] font-semibold tracking-tight"
+        >
+          {t("newChat")}
+        </button>
+      </header>
+
+      <main className="relative flex-1 px-5 pt-6 pb-10">
+        {messages.length === 0 && (
+          <div className="flex flex-col gap-6.5 ps-4">
+            <img aria-hidden src={logo} alt="" className="size-7" />
+            <h1 className="text-2xl leading-[1.4] font-semibold tracking-tight">
+              {t("greeting")}
+            </h1>
+          </div>
         )}
 
-        <div ref={bottomRef} />
-      </div>
+        <div ref={contentRef} className="flex flex-col gap-10">
+          {messages.map((message) =>
+            message.role === "patient" ? (
+              <PatientMessage
+                key={message.id}
+                text={message.text}
+                imageUrl={message.imageUrl}
+                imageAlt={t("attachedImage")}
+              />
+            ) : (
+              <AiAnswer key={message.id} sections={answerSections} />
+            ),
+          )}
 
-      <form
-        onSubmit={handleSubmit}
-        className="sticky bottom-0 flex items-end gap-1.5 bg-white p-2"
-      >
-        <input
-          value={draft}
-          onChange={(event) => setDraft(event.target.value)}
-          placeholder={t("inputPlaceholder")}
-          className="min-w-0 flex-1 rounded border border-[#999] px-3 py-2.5 text-[13px] text-black placeholder:text-[#999]"
-        />
+          {isAnswering && (
+            <div className="flex flex-col gap-6">
+              <img aria-hidden src={logo} alt="" className="size-7" />
+              <p className="text-body leading-normal font-medium opacity-90">
+                {t("thinking")}
+              </p>
+            </div>
+          )}
+        </div>
+
+        <div ref={bottomRef} />
+      </main>
+
+      <div className="sticky bottom-0 flex flex-col gap-4 px-5 pt-6 pb-10">
+        <p
+          ref={noticeRef}
+          aria-hidden={noticeOpacity === 0}
+          style={{ opacity: noticeOpacity }}
+          className="text-caption mx-auto max-w-68 text-center leading-[1.55]"
+        >
+          {t("disclaimer")}
+        </p>
 
         <input
           ref={fileInputRef}
@@ -154,23 +200,19 @@ function AiChatPage() {
           }}
         />
 
-        <button
-          type="button"
-          aria-label={t("attach")}
-          onClick={() => fileInputRef.current?.click()}
-          className="size-9 shrink-0 rounded border border-[#999] bg-white text-base"
-        >
-          📎
-        </button>
-
-        <button
-          type="submit"
-          aria-label={t("send")}
-          className="size-9 shrink-0 rounded border border-black bg-black text-base text-white"
-        >
-          ➤
-        </button>
-      </form>
+        <ChatComposer
+          value={draft}
+          placeholder={t("inputPlaceholder")}
+          attachLabel={t("attach")}
+          sendLabel={t("send")}
+          stopLabel={t("stop")}
+          isAnswering={isAnswering}
+          onChange={setDraft}
+          onSubmit={handleSubmit}
+          onAttach={() => fileInputRef.current?.click()}
+          onStop={stopAnswering}
+        />
+      </div>
     </div>
   );
 }

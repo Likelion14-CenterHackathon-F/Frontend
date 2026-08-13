@@ -1,5 +1,6 @@
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import AppLayout from "@/layouts/AppLayout";
+import AftercarePage from "@/pages/aftercare";
 import AiChatPage from "@/pages/ai-chat";
 import HomePage from "@/pages/home";
 import ConsultationWaitingPage from "@/pages/consultation-waiting";
@@ -55,6 +56,8 @@ const router = createBrowserRouter([
             element: <ConsultationWaitingPage />,
           },
         ],
+        path: "/aftercare",
+        element: <AftercarePage />,
       },
       {
         path: "/",
