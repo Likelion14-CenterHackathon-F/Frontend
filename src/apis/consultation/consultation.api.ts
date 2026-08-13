@@ -12,14 +12,14 @@ export const joinConsultation = async (
 ) => {
   const { data } = await axiosInstance.post<
     ApiResponse<JoinConsultationResponse>
-  >(`/consultation/${appointmentId}/join`, body);
+  >(`/api/consultations/${appointmentId}/join`, body);
 
   return data.data;
 };
 
 export const startSttAgent = async (appointmentId: number) => {
-  const { data } = await axiosInstance.post<
-    ApiResponse<StartSttAgentResponse>
-  >(`/consultation/${appointmentId}/stt/start`);
+  const { data } = await axiosInstance.post<ApiResponse<StartSttAgentResponse>>(
+    `/api/consultations/${appointmentId}/stt/start`,
+  );
   return data.data;
 };

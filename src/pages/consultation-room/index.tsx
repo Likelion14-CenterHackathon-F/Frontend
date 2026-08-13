@@ -51,7 +51,7 @@ function ConsultationRoomPage() {
   } = useAgoraRTC(roomInfo);
 
   const waitingPath = useMemo(
-    () => `/consultations/${appointmentId ?? ""}/waiting`,
+    () => `/consultation/${appointmentId ?? ""}/waiting`,
     [appointmentId],
   );
 
@@ -164,7 +164,10 @@ function ConsultationRoomPage() {
       />
 
       {sttErrorMessage && (
-        <div role="status" className="absolute left-1/2 top-16 w-max max-w-[calc(100%-32px)] -translate-x-1/2 rounded-full bg-black/65 px-4 py-2 text-center text-xs text-white">
+        <div
+          role="status"
+          className="absolute left-1/2 top-16 w-max max-w-[calc(100%-32px)] -translate-x-1/2 rounded-full bg-black/65 px-4 py-2 text-center text-xs text-white"
+        >
           {sttErrorMessage}
         </div>
       )}
