@@ -24,6 +24,20 @@ export interface JoinConsultationResponse {
   forceEndAt: string | null;
 }
 
+export type SttAgentStatus =
+  | "NOT_STARTED"
+  | "STARTING"
+  | "RUNNING"
+  | "STOPPING"
+  | "STOPPED"
+  | "FAILED";
+
+export interface StartSttAgentResponse {
+  sessionId: number;
+  agentId: string;
+  status: SttAgentStatus;
+}
+
 export interface ApiResponse<T> {
   isSuccess: boolean;
   timestamp: string;
