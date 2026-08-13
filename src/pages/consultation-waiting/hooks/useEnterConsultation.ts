@@ -45,7 +45,7 @@ export function useEnterConsultation({
       });
 
       setRoomInfo(roomInfo);
-      navigate(`/consultations/${parsedAppointmentId}/room`);
+      navigate(`/consultation/${parsedAppointmentId}/room`);
     } catch (error) {
       const message = axios.isAxiosError<ApiErrorResponse>(error)
         ? getJoinErrorMessage(error.response?.data.code)
