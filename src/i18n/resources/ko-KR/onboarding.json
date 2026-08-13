@@ -1,14 +1,26 @@
 {
-  "welcome": "K-Care Live 사후관리에 오신 것을 환영합니다",
+  "previous": "이전",
+  "intro": {
+    "title": "시술 후 회복,\nKanage와 함께.",
+    "description": "병원에서 전달된 시술 정보를 바탕으로 회복 단계에\n맞는 관리 안내와 상담 서비스를 제공합니다.",
+    "start": "시작하기"
+  },
   "language": {
-    "title": "사용 언어 선택",
-    "description": "AI 안내, 자막, 상담 후 요약 등 모든 안내가 선택한 언어로 제공됩니다.",
-    "label": "언어"
+    "title": "사용하실 언어를\n선택해주세요",
+    "description": "모든 안내와 상담 지원이 선택한 언어로 제공됩니다",
+    "confirm": "다음"
   },
-  "timezone": {
-    "title": "시간대 설정",
-    "description": "예약 시간과 알림이 선택한 시간대 기준으로 표시됩니다.",
-    "label": "시간대"
+  "region": {
+    "title": "현재 국가와 시간이\n맞는지 확인해 주세요",
+    "description": "현재 위치를 기준으로 자동 설정되었어요",
+    "confirm": "맞아요"
   },
-  "start": "시작하기"
+  "birthDate": {
+    "title": "마지막으로 본인확인을\n진행해 주세요",
+    "description": "안전하게 의료정보를 확인할 수 있도록\n간단한 추가 인증을 진행합니다",
+    "confirm": "시작하기",
+    "year": "연도",
+    "month": "월",
+    "day": "일"
+  }
 }

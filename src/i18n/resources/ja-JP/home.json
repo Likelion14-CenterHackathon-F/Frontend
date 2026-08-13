@@ -1,0 +1,24 @@
+{
+  "menu": "メニューを開く",
+  "changeLanguage": "言語を変更",
+  "progress": {
+    "day": "{{day}}日目 · ",
+    "total": "全{{total}}日"
+  },
+  "greeting": "こんにちは、{{name}}さん",
+  "disclaimer": "医療的な診断ではなく参考のご案内です。危険な症状があればすぐに病院へご連絡ください。",
+  "chat": {
+    "placeholder": "今日の状態はいかがですか？",
+    "attach": "写真を添付",
+    "send": "送信"
+  },
+  "aftercare": {
+    "badge": "{{day}}日目",
+    "title": "私のアフターケア"
+  },
+  "consultation": {
+    "badge": "D-{{days}}",
+    "scheduled": "{{date}} 予定",
+    "title": "医師とのビデオ相談"
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "header": {
+    "title": "상담 대기실"
+  },
+  "preview": {
+    "connecting": "카메라를 연결하고 있습니다.",
+    "cameraOff": "카메라가 꺼져 있습니다.",
+    "controls": {
+      "cameraOff": "카메라 끄기",
+      "cameraOn": "카메라 켜기",
+      "microphoneOff": "마이크 끄기",
+      "microphoneOn": "마이크 켜기",
+      "switchCamera": "전후면 카메라 전환"
+    }
+  },
+  "checklist": {
+    "title": "입장 전 확인 사항",
+    "items": {
+      "purpose": "본 화상 상담은 진단·처방이 아닌 회복 관리 상담입니다.",
+      "recording": "자막과 상담 요약은 케어스 기록에 저장됩니다.",
+      "orientation": "기기를 가로로 돌려주세요."
+    }
+  },
+  "footer": {
+    "enter": "입장하기",
+    "entering": "입장 중..."
+  },
+  "mediaError": {
+    "unsupported": "이 브라우저는 카메라를 지원하지 않습니다.",
+    "unavailable": "카메라를 실행할 수 없는 환경입니다.",
+    "permissionDenied": "카메라와 마이크 권한을 허용해 주세요.",
+    "deviceNotFound": "사용 가능한 카메라 또는 마이크가 없습니다.",
+    "deviceInUse": "다른 앱에서 카메라 또는 마이크를 사용 중인지 확인해 주세요.",
+    "unsupportedSettings": "지원하지 않는 카메라 설정입니다.",
+    "startFailed": "카메라를 실행할 수 없습니다."
+  },
+  "joinError": {
+    "invalidAppointment": "올바르지 않은 상담 예약 정보입니다.",
+    "notJoinableTime": "현재는 상담 대기실에 입장할 수 있는 시간이 아닙니다.",
+    "appointmentNotFound": "화상상담 예약을 찾을 수 없습니다.",
+    "slotNotFound": "예약 시간 정보를 찾을 수 없습니다.",
+    "alreadyCompleted": "이미 종료된 화상상담입니다.",
+    "configMissing": "화상상담 서버 설정에 문제가 발생했습니다.",
+    "tokenIssueFailed": "화상상담 연결에 실패했습니다. 다시 시도해 주세요.",
+    "authRequired": "로그인이 필요합니다.",
+    "accessTokenExpired": "로그인 정보가 만료되었습니다. 다시 로그인해 주세요.",
+    "invalidAccessToken": "유효하지 않은 로그인 정보입니다.",
+    "invalidRequest": "상담방 입장 요청 정보가 올바르지 않습니다.",
+    "unknown": "상담방 입장 중 문제가 발생했습니다."
+  }
+}

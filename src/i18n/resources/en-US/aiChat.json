@@ -1,0 +1,44 @@
+{
+  "welcome": "Hello! I'm the <0>K-Care Live</0> AI. Recovering back home after treatment abroad can bring plenty of worries and questions. I'm here to look after you closely, so tell me any time about your symptoms or anything that concerns you.",
+  "inputPlaceholder": "Describe symptoms or ask a question...",
+  "attach": "Attach photo",
+  "send": "Send",
+  "attachedImage": "Attached photo",
+  "analysis": {
+    "title": "Analysis",
+    "statusLabel": "Status:",
+    "status": "Normal recovery stage",
+    "doctorLabel": "Doctor referral:",
+    "doctor": "Not needed right now — you can relax"
+  },
+  "reassuring": {
+    "title": "🌿 Signs that are nothing to worry about",
+    "items": [
+      "Swelling is expected for 3–7 days after laser treatment",
+      "Bruising darkens first, then fades naturally (a normal process)",
+      "Mild redness can last 1–2 weeks"
+    ]
+  },
+  "lifestyle": {
+    "title": "💊 Daily care that supports recovery",
+    "items": [
+      "Cold compress: 3–4 times a day, 15 minutes each (first 48 hours)",
+      "Keep your face clean and avoid makeup for 3–5 days",
+      "Use SPF 50+ sunscreen whenever you go out",
+      "Avoid strenuous exercise for one week"
+    ]
+  },
+  "redFlags": {
+    "title": "🚨 Warning signs",
+    "items": [
+      "A fever of 38°C or higher",
+      "Pus or foul-smelling discharge",
+      "Swelling that increases sharply after day 3",
+      "Redness that spreads severely"
+    ]
+  },
+  "notice": {
+    "title": "⚠️ Important notice",
+    "body": "This guidance is for aftercare reference only and is not a medical diagnosis. If any of the warning signs above appear, contact your clinic immediately."
+  }
+}

@@ -1,14 +1,26 @@
 {
-  "welcome": "欢迎使用 K-Care Live 术后护理服务",
+  "previous": "上一步",
+  "intro": {
+    "title": "术后恢复，\n与 Kanage 同行。",
+    "description": "根据医院提供的手术信息，为您提供符合恢复阶段的\n护理指引与咨询服务。",
+    "start": "开始使用"
+  },
   "language": {
-    "title": "选择使用语言",
-    "description": "AI 指导、字幕和咨询后摘要等所有内容都将以您选择的语言提供。",
-    "label": "语言"
+    "title": "请选择您\n使用的语言",
+    "description": "所有指引和咨询支持都将以您选择的语言提供",
+    "confirm": "下一步"
   },
-  "timezone": {
-    "title": "设置时区",
-    "description": "预约时间和通知将按照您选择的时区显示。",
-    "label": "时区"
+  "region": {
+    "title": "请确认当前的\n国家和时间是否正确",
+    "description": "已根据您当前的位置自动设置",
+    "confirm": "正确"
   },
-  "start": "开始使用"
+  "birthDate": {
+    "title": "最后请完成\n本人身份验证",
+    "description": "为了安全地确认医疗信息\n将进行简单的附加验证",
+    "confirm": "开始使用",
+    "year": "年",
+    "month": "月",
+    "day": "日"
+  }
 }
