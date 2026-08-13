@@ -49,6 +49,15 @@
   --color-glow-02: #7666dd;
   --color-glow-03: #6c5ece;
   --color-glow-04: #b39ff5;
+  --color-glow-05: #a3b0ea; /* AI 채팅 배경에만 쓰는 푸른 번짐 */
+
+  /* 앱 본문 최대 폭. 데스크톱에서도 폰 화면 비율을 유지한다 */
+  --container-app: 430px;
+
+  /* AI 채팅 */
+  --color-chat-fg: #fdfdff; /* 보라 배경 위 글자 */
+  --color-chat-bubble: #ffffff63; /* 환자 말풍선 (39%) */
+  --color-chat-bar: #ffffffb3; /* 입력창 (70%) */
 
   --font-sans:
     "Pretendard Variable", Pretendard, system-ui, "Apple SD Gothic Neo",
