@@ -73,6 +73,19 @@
       "doctor": "Doctor"
     },
     "mockDoctor": "Dr. Jitae Park",
-    "cancel": "Cancel consultation"
+    "cancel": "Cancel consultation",
+    "cancelSheet": {
+      "title": "Why are you cancelling?",
+      "description": "Please select a reason for cancellation.",
+      "reasons": {
+        "scheduleChange": "Schedule change",
+        "symptomsImproved": "Symptoms improved",
+        "changedMind": "Changed my mind",
+        "bookingMistake": "Booking mistake",
+        "other": "Other"
+      },
+      "close": "Close",
+      "confirm": "Cancel booking"
+    }
   }
 }

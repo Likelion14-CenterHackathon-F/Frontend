@@ -57,3 +57,10 @@ export interface ConsultationAttachment {
   file: File;
   previewUrl: string;
 }
+
+export type ConsultationCancelReason =
+  | "scheduleChange"
+  | "symptomsImproved"
+  | "changedMind"
+  | "bookingMistake"
+  | "other";

@@ -73,6 +73,19 @@
       "doctor": "담당 의료진"
     },
     "mockDoctor": "박지태 의사",
-    "cancel": "예약 취소하기"
+    "cancel": "예약 취소하기",
+    "cancelSheet": {
+      "title": "어떤 사유로 취소하시나요?",
+      "description": "취소 사유를 알려주세요",
+      "reasons": {
+        "scheduleChange": "일정 변경",
+        "symptomsImproved": "증상 호전",
+        "changedMind": "단순 변심",
+        "bookingMistake": "예약 실수",
+        "other": "기타"
+      },
+      "close": "닫기",
+      "confirm": "취소하기"
+    }
   }
 }

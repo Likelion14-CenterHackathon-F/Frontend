@@ -1,5 +1,6 @@
 import { useEffect, useId, useRef, type ReactNode } from "react";
 import { createPortal } from "react-dom";
+import { cn } from "@/utils/cn";
 
 interface BottomSheetProps {
   open: boolean;
@@ -7,6 +8,9 @@ interface BottomSheetProps {
   description?: string;
   children: ReactNode;
   footer?: ReactNode;
+  className?: string;
+  headerClassName?: string;
+  contentClassName?: string;
   onClose: () => void;
 }
 
@@ -16,6 +20,9 @@ function BottomSheet({
   description,
   children,
   footer,
+  className,
+  headerClassName,
+  contentClassName,
   onClose,
 }: BottomSheetProps) {
   const titleId = useId();
@@ -61,9 +68,18 @@ function BottomSheet({
         aria-labelledby={titleId}
         aria-describedby={description ? descriptionId : undefined}
         tabIndex={-1}
-        className="absolute inset-x-0 bottom-0 mx-auto flex max-h-[calc(100dvh-env(safe-area-inset-top))] w-full max-w-[430px] flex-col overflow-hidden rounded-t-[30px] bg-surface-footer outline-none"
+        className={cn(
+          [
+            "absolute inset-x-0 bottom-0 mx-auto",
+            "flex h-auto min-h-[35dvh] max-h-[75dvh]",
+            "w-full max-w-[430px] flex-col overflow-hidden",
+            "rounded-t-[30px] bg-surface-footer outline-none",
+            "pb-[env(safe-area-inset-bottom)]",
+          ],
+          className,
+        )}
       >
-        <header className="shrink-0 px-5 pt-[34px]">
+        <header className={cn("shrink-0 px-5 pt-[34px]", headerClassName)}>
           <h2
             id={titleId}
             className="text-2xl font-semibold leading-[1.4] tracking-tight text-text-01"
@@ -80,7 +96,14 @@ function BottomSheet({
           )}
         </header>
 
-        <div className="min-h-0 flex-1 overflow-y-auto px-5">{children}</div>
+        <div
+          className={cn(
+            "min-h-0 flex-1 overflow-y-auto px-5",
+            contentClassName,
+          )}
+        >
+          {children}
+        </div>
 
         {footer && <div className="shrink-0">{footer}</div>}
       </section>

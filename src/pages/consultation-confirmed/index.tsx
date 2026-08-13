@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Navigate, useNavigate } from "react-router-dom";
 
@@ -8,9 +9,11 @@ import { usePreferencesStore } from "@/stores/usePreferencesStore";
 import { formatConfirmedDateTime } from "@/utils/dateTime";
 
 import ConfirmedConsultationInfo from "./components/ConfirmedConsultationInfo";
+import ConsultationCancelSheet from "./components/ConsultationCancelSheet";
 import ConsultationEntryNotice from "./components/ConsultationEntryNotice";
 
 function ConsultationConfirmedPage() {
+  const [isCancelSheetOpen, setIsCancelSheetOpen] = useState(false);
   const navigate = useNavigate();
   const { t } = useTranslation("consultationReservation");
   const locale = usePreferencesStore((state) => state.locale);
@@ -20,6 +23,9 @@ function ConsultationConfirmedPage() {
   );
   const selectedSymptoms = useConsultationReservationStore(
     (state) => state.selectedSymptoms,
+  );
+  const resetReservation = useConsultationReservationStore(
+    (state) => state.reset,
   );
 
   if (!selectedSlot) {
@@ -34,8 +40,10 @@ function ConsultationConfirmedPage() {
     .map((symptom) => t(`preConsultation.symptoms.options.${symptom}`))
     .join(" · ");
 
-  const handleOpenCancellation = () => {
-    // 다음 단계에서 예약 취소 BottomSheet를 연결합니다.
+  const handleConfirmCancellation = () => {
+    // 예약 취소 API 성공 후 실행합니다.
+    resetReservation();
+    navigate("/consultations", { replace: true });
   };
 
   return (
@@ -69,9 +77,18 @@ function ConsultationConfirmedPage() {
         </section>
       </main>
 
-      <ConsultationFooter variant="danger" onClick={handleOpenCancellation}>
+      <ConsultationFooter
+        variant="danger"
+        onClick={() => setIsCancelSheetOpen(true)}
+      >
         {t("confirmed.cancel")}
       </ConsultationFooter>
+
+      <ConsultationCancelSheet
+        open={isCancelSheetOpen}
+        onClose={() => setIsCancelSheetOpen(false)}
+        onConfirm={handleConfirmCancellation}
+      />
     </div>
   );
 }

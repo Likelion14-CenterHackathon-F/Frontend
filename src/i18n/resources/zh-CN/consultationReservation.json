@@ -73,6 +73,19 @@
       "doctor": "负责医生"
     },
     "mockDoctor": "朴智泰医生",
-    "cancel": "取消预约"
+    "cancel": "取消预约",
+    "cancelSheet": {
+      "title": "您为什么要取消预约？",
+      "description": "请选择取消原因。",
+      "reasons": {
+        "scheduleChange": "日程变更",
+        "symptomsImproved": "症状好转",
+        "changedMind": "改变主意",
+        "bookingMistake": "预约错误",
+        "other": "其他"
+      },
+      "close": "关闭",
+      "confirm": "取消预约"
+    }
   }
 }

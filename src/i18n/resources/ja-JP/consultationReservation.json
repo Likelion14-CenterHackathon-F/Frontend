@@ -73,6 +73,19 @@
       "doctor": "担当医"
     },
     "mockDoctor": "パク・ジテ医師",
-    "cancel": "予約をキャンセル"
+    "cancel": "予約をキャンセル",
+    "cancelSheet": {
+      "title": "キャンセルの理由を教えてください",
+      "description": "キャンセル理由を選択してください。",
+      "reasons": {
+        "scheduleChange": "日程変更",
+        "symptomsImproved": "症状が改善した",
+        "changedMind": "都合が変わった",
+        "bookingMistake": "予約を間違えた",
+        "other": "その他"
+      },
+      "close": "閉じる",
+      "confirm": "キャンセルする"
+    }
   }
 }

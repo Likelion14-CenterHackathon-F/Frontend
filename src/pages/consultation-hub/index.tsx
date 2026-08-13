@@ -22,7 +22,7 @@ function ConsultationHubPage() {
         onBack={() => console.log("메인 홈페이지로 이동 버튼")}
       />
 
-      <main className="flex flex-1 flex-col pb-[calc(90px+env(safe-area-inset-bottom))]">
+      <main className="bg-surface-soft flex flex-1 flex-col pb-[calc(90px+env(safe-area-inset-bottom))]">
         <section>
           <ConsultationTabs activeTab={activeTab} onChange={setActiveTab} />
 
