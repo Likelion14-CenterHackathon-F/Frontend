@@ -8,10 +8,12 @@ import ConsultationHistoryList from "./components/ConsultationHistoryList";
 import ConsultationReservationList from "./components/ConsultationReservationList";
 import { ongoingConsultations } from "@/mocks/consultationMockData";
 import ConsultationFooter from "@/components/Footer/ConsultationFooter";
+import { useNavigate } from "react-router-dom";
 
 type ConsultationTab = "history" | "ongoing";
 
 function ConsultationHubPage() {
+  const navigate = useNavigate();
   const { t } = useTranslation("consultationHub");
   const [activeTab, setActiveTab] = useState<ConsultationTab>("history");
 
@@ -19,7 +21,7 @@ function ConsultationHubPage() {
     <div className="flex min-h-dvh flex-col">
       <ConsultationHeader
         title={t("header.title")}
-        onBack={() => console.log("메인 홈페이지로 이동 버튼")}
+        onBack={() => navigate("/home")}
       />
 
       <main className="bg-surface-soft flex flex-1 flex-col pb-[calc(90px+env(safe-area-inset-bottom))]">

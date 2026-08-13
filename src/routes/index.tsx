@@ -56,6 +56,8 @@ const router = createBrowserRouter([
             element: <ConsultationWaitingPage />,
           },
         ],
+      },
+      {
         path: "/aftercare",
         element: <AftercarePage />,
       },
