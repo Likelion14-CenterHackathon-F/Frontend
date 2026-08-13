@@ -8,7 +8,7 @@ function CaptionOverlay({ caption }: CaptionOverlayProps) {
   return (
     <p
       aria-live="polite"
-      className="max-w-[min(420px,calc(100vw-32px))] rounded-lg bg-black/65 px-3 py-2 text-center text-sm leading-[1.4] tracking-[-0.4px] sm:text-base"
+      className="max-w-[min(420px,calc(100vw-32px))] rounded-lg bg-black/65 px-3 py-2 text-center text-base leading-[1.4] tracking-[-0.4px]"
     >
       {caption}
     </p>
