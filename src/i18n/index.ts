@@ -2,6 +2,16 @@ import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 
 import koOnboarding from "./resources/ko-KR/onboarding.json";
+import koAftercare from "./resources/ko-KR/aftercare.json";
+
+import enOnboarding from "./resources/en-US/onboarding.json";
+import enAftercare from "./resources/en-US/aftercare.json";
+
+import jaOnboarding from "./resources/ja-JP/onboarding.json";
+import jaAftercare from "./resources/ja-JP/aftercare.json";
+
+import zhCNOnboarding from "./resources/zh-CN/onboarding.json";
+import zhCNAftercare from "./resources/zh-CN/aftercare.json";
 import koHome from "./resources/ko-KR/home.json";
 import koAiChat from "./resources/ko-KR/aiChat.json";
 import koSettings from "./resources/ko-KR/settings.json";
@@ -32,8 +42,7 @@ import zhCNConsultationWaiting from "./resources/zh-CN/consultationWaiting.json"
 import { getInitialLocale } from "./language";
 
 /*
-    저장된 언어 확인
-    → 초기 언어 결정 (브라우저 시스템 언어 or 지원 언어가 없으면 en-US)
+    저장 언어 확인하고 없으면 영어로 진행
 */
 const initialLocale = getInitialLocale();
 
@@ -51,6 +60,7 @@ void i18n
 
     defaultNS: "onboarding",
 
+    ns: ["onboarding", "aftercare"],
     ns: [
       "onboarding",
       "home",
@@ -63,6 +73,19 @@ void i18n
     resources: {
       "ko-KR": {
         onboarding: koOnboarding,
+        aftercare: koAftercare,
+      },
+      "en-US": {
+        onboarding: enOnboarding,
+        aftercare: enAftercare,
+      },
+      "ja-JP": {
+        onboarding: jaOnboarding,
+        aftercare: jaAftercare,
+      },
+      "zh-CN": {
+        onboarding: zhCNOnboarding,
+        aftercare: zhCNAftercare,
         home: koHome,
         aiChat: koAiChat,
         settings: koSettings,
