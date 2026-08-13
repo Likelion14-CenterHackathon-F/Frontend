@@ -1,0 +1,91 @@
+{
+  "schedule": {
+    "title": "请选择预约日期和时间",
+    "instructions": {
+      "selectTime": "请从以下可预约时间中选择一个。",
+      "timezone": "上方时间按您所在的时区显示。"
+    },
+    "localTime": "当地时间 {{time}}（{{offset}}）",
+    "emptySlots": "所选日期暂无可预约时间。",
+    "next": "下一步"
+  },
+  "preConsultation": {
+    "title": {
+      "first": "为了更准确地进行咨询",
+      "second": "请告诉我们您目前的情况"
+    },
+    "description": "您提交的资料将由医务人员在咨询前提前查看。",
+    "symptoms": {
+      "title": "症状分类",
+      "description": "请填写症状出现时间、发展情况以及不适程度等。",
+      "inputLabel": "症状详情",
+      "placeholder": "· 出现肿胀或淤青\n· 好像出现了过敏反应\n· 其他皮肤相关情况",
+      "options": {
+        "pain": "疼痛",
+        "swelling": "肿胀",
+        "redness": "发红",
+        "heat": "发热",
+        "bleeding": "出血",
+        "itching": "瘙痒",
+        "bruise": "淤青",
+        "other": "其他"
+      }
+    },
+    "photos": {
+      "title": "参考照片",
+      "description": "请上传症状部位或正在服用的药物照片。",
+      "add": "添加参考照片",
+      "remove": "删除{{name}}",
+      "helper": "最多可上传5个JPG、PNG或MP4文件，每个文件不超过50MB。",
+      "invalidFile": "仅可上传不超过50MB的JPG、PNG或MP4文件。"
+    },
+    "notice": {
+      "title": "注意事项",
+      "items": {
+        "privacy": "您提交的资料仅限负责本次咨询的医务人员查看。",
+        "disclaimer": "提交资料不能替代诊断或处方，仅用于咨询前的准备参考。",
+        "emergency": "如出现严重出血、高烧或呼吸困难等紧急症状，请立即联系医院或急救机构。"
+      }
+    },
+    "confirm": {
+      "title": "预约信息是否正确？",
+      "description": "确认前请检查您的预约信息。",
+      "summary": {
+        "date": "预约时间",
+        "reason": "咨询原因",
+        "doctor": "负责医生"
+      },
+      "mockDoctor": "朴智泰医生",
+      "noticeTitle": "顺利问诊的时间限制说明",
+      "notice": "为尽量减少所有患者的等待时间，咨询时间最多为15分钟，超过时间后可能会自动结束。",
+      "agreement": "【必选】我已阅读并同意以上说明。",
+      "submit": "预约"
+    },
+    "submit": "预约"
+  },
+  "confirmed": {
+    "title": "咨询预约已确认",
+    "entryNotice": "视频咨询开始前10分钟即可进入",
+    "infoTitle": "咨询预约信息",
+    "summary": {
+      "date": "预约时间",
+      "reason": "咨询原因",
+      "doctor": "负责医生"
+    },
+    "mockDoctor": "朴智泰医生",
+    "cancel": "取消预约",
+    "cancelSheet": {
+      "title": "您为什么要取消预约？",
+      "description": "请选择取消原因。",
+      "reasons": {
+        "scheduleChange": "日程变更",
+        "symptomsImproved": "症状好转",
+        "changedMind": "改变主意",
+        "bookingMistake": "预约错误",
+        "other": "其他"
+      },
+      "close": "关闭",
+      "confirm": "取消预约"
+    }
+  }
+}

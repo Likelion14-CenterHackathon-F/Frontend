@@ -1,0 +1,91 @@
+{
+  "schedule": {
+    "title": "예약일시를 선택해 주세요",
+    "instructions": {
+      "selectTime": "아래 가능한 시간 중 하나를 선택하세요.",
+      "timezone": "위 시간은 회원님의 현지 시간대로 표시됩니다."
+    },
+    "localTime": "현지 시간 {{time}} ({{offset}})",
+    "emptySlots": "선택한 날짜에 등록된 시간이 없습니다.",
+    "next": "다음"
+  },
+  "preConsultation": {
+    "title": {
+      "first": "정확한 상담을 위해",
+      "second": "현재 상태를 알려주세요"
+    },
+    "description": "제출하신 자료는 의료진이 상담 전 미리 검토합니다.",
+    "symptoms": {
+      "title": "증상 분류",
+      "description": "발생 시점, 경과, 불편한 정도 등을 작성해 주세요.",
+      "inputLabel": "증상 상세 내용",
+      "placeholder": "· 붓기나 멍이 들어요\n· 알레르기 반응이 온 것 같아요\n· 피부 관련 특이사항",
+      "options": {
+        "pain": "통증",
+        "swelling": "붓기",
+        "redness": "홍조",
+        "heat": "열감",
+        "bleeding": "출혈",
+        "itching": "가려움",
+        "bruise": "멍",
+        "other": "기타"
+      }
+    },
+    "photos": {
+      "title": "참고 사진",
+      "description": "증상 부위, 복용 약 사진 등을 첨부해 주세요.",
+      "add": "참고 사진 추가",
+      "remove": "{{name}} 삭제",
+      "helper": "JPG, PNG, MP4 파일은 개당 최대 50MB, 최대 5개까지 등록할 수 있습니다.",
+      "invalidFile": "JPG, PNG, MP4 형식의 50MB 이하 파일만 첨부할 수 있습니다."
+    },
+    "notice": {
+      "title": "안내 사항",
+      "items": {
+        "privacy": "제출하신 자료는 담당 의료진만 열람할 수 있습니다.",
+        "disclaimer": "본 자료 제출은 진단 또는 처방을 대체하지 않으며, 상담 준비를 위한 참고 자료로만 활용됩니다.",
+        "emergency": "응급 증상(심한 출혈, 고열, 호흡 곤란)이 있으면 즉시 병원 또는 응급 기관에 연락하세요."
+      }
+    },
+    "confirm": {
+      "title": "예약 정보가 맞으신가요?",
+      "description": "확정하기 전, 예약 정보가 맞는지 확인해 주세요.",
+      "summary": {
+        "date": "예약 일시",
+        "reason": "상담 사유",
+        "doctor": "담당 의료진"
+      },
+      "mockDoctor": "박지태 의사",
+      "noticeTitle": "원활한 진료를 위한 시간 제한 안내",
+      "notice": "모든 환자의 대기 시간 최소화를 위해 상담은 최대 15분으로 제한되며, 시간 초과 시 투닥이하게 종료될 수 있습니다.",
+      "agreement": "[필수] 위 안내를 확인했으며, 동의합니다.",
+      "submit": "예약하기"
+    },
+    "submit": "예약하기"
+  },
+  "confirmed": {
+    "title": "상담 예약이 확정되었어요",
+    "entryNotice": "화상 상담은 10분 전에 입장할 수 있어요",
+    "infoTitle": "상담 예약 정보",
+    "summary": {
+      "date": "예약 일시",
+      "reason": "상담 사유",
+      "doctor": "담당 의료진"
+    },
+    "mockDoctor": "박지태 의사",
+    "cancel": "예약 취소하기",
+    "cancelSheet": {
+      "title": "어떤 사유로 취소하시나요?",
+      "description": "취소 사유를 알려주세요",
+      "reasons": {
+        "scheduleChange": "일정 변경",
+        "symptomsImproved": "증상 호전",
+        "changedMind": "단순 변심",
+        "bookingMistake": "예약 실수",
+        "other": "기타"
+      },
+      "close": "닫기",
+      "confirm": "취소하기"
+    }
+  }
+}
