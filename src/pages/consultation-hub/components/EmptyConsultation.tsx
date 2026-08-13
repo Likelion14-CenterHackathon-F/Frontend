@@ -22,7 +22,7 @@ function EmptyConsultation() {
         variant="neutral"
         size="compact"
         className="mt-[26px]"
-        onClick={() => navigate("/consultations/reservation")}
+        onClick={() => navigate("/consultation/reservation")}
       >
         {t("empty.reservationButton")}
       </Button>

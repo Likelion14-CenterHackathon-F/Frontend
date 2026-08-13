@@ -10,11 +10,11 @@ function ConsultationReservationLayout() {
 
   const handleBack = () => {
     if (isSchedulePage) {
-      navigate("/consultations");
+      navigate("/consultation");
       return;
     }
 
-    navigate("/consultations/reservation/schedule");
+    navigate("/consultation/reservation/schedule");
   };
 
   return (

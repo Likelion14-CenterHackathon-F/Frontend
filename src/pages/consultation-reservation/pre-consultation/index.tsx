@@ -45,7 +45,7 @@ function PreConsultationPage() {
 
     // 예약 생성 API 연결 시 현재 store의 예약 일시와 사전 자료를 전송합니다.
     handleCloseConfirmSheet();
-    navigate("/consultations/mock-appointment/confirmed", { replace: true });
+    navigate("/consultation/mock-appointment/confirmed", { replace: true });
   };
 
   return (

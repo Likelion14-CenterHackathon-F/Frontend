@@ -29,7 +29,7 @@ function ConsultationConfirmedPage() {
   );
 
   if (!selectedSlot) {
-    return <Navigate to="/consultations/reservation/schedule" replace />;
+    return <Navigate to="/consultation/reservation/schedule" replace />;
   }
 
   const scheduledAt = formatConfirmedDateTime(selectedSlot.startsAt, {
@@ -43,12 +43,12 @@ function ConsultationConfirmedPage() {
   const handleConfirmCancellation = () => {
     // 예약 취소 API 성공 후 실행합니다.
     resetReservation();
-    navigate("/consultations", { replace: true });
+    navigate("/consultation", { replace: true });
   };
 
   return (
     <div className="flex min-h-dvh flex-col bg-surface-footer">
-      <ConsultationHeader title="" onBack={() => navigate("/consultations")} />
+      <ConsultationHeader title="" onBack={() => navigate("/consultation")} />
 
       <main className="flex-1 px-5 pb-[calc(110px+env(safe-area-inset-bottom))] pt-6">
         <h1 className="text-calendar-text text-2xl font-bold leading-[1.4] tracking-tight">
