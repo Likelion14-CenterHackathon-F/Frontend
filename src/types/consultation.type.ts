@@ -38,6 +38,12 @@ export interface StartSttAgentResponse {
   status: SttAgentStatus;
 }
 
+export interface SttAgentStatusResponse {
+  sessionId: number;
+  agentId: string | null;
+  status: SttAgentStatus;
+}
+
 export interface ApiResponse<T> {
   isSuccess: boolean;
   timestamp: string;
