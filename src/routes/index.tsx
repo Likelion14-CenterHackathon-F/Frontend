@@ -12,6 +12,7 @@ import ConsultationReservationLayout from "@/pages/consultation-reservation/layo
 import ConsultationSchedulePage from "@/pages/consultation-reservation/schedule";
 import PreConsultationPage from "@/pages/consultation-reservation/pre-consultation";
 import ConsultationConfirmedPage from "@/pages/consultation-confirmed";
+import ConsultationSummaryPage from "@/pages/consultation-summary";
 
 const router = createBrowserRouter([
   {
@@ -59,6 +60,10 @@ const router = createBrowserRouter([
           {
             path: ":appointmentId/room",
             element: <ConsultationRoomPage />,
+          },
+          {
+            path: "summary/:summaryId",
+            element: <ConsultationSummaryPage />,
           },
         ],
       },
