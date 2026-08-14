@@ -8,6 +8,7 @@ import type {
   RenewRtcTokenResponse,
   SaveCaptionBatchRequest,
   SaveCaptionBatchResponse,
+  EndConsultationResponse,
 } from "@/types/consultation.type";
 import axiosInstance from "../axiosInstance";
 
@@ -53,5 +54,12 @@ export const saveConsultationCaptionBatch = async (
   const { data } = await axiosInstance.post<
     ApiResponse<SaveCaptionBatchResponse>
   >(`/api/consultations/${appointmentId}/captions/batch`, body);
+  return data.data;
+};
+
+export const endConsultation = async (appointmentId: number) => {
+  const { data } = await axiosInstance.post<
+    ApiResponse<EndConsultationResponse>
+  >(`/api/consultations/${appointmentId}/end`);
   return data.data;
 };

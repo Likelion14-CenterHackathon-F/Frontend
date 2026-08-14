@@ -14,6 +14,7 @@ import { useAgoraRTC } from "./hooks/useAgoraRTC";
 import { useStartSttAgent } from "./hooks/useStartSttAgent";
 import { useSttAgentStatus } from "./hooks/useSttAgentStatus";
 import { useCaptionBatch } from "./hooks/useCaptionBatch";
+import { useEndConsultation } from "./hooks/useEndConsultation";
 import type { ApiErrorResponse } from "@/types/consultation.type";
 
 function formatDuration(seconds: number) {
@@ -31,7 +32,10 @@ function ConsultationRoomPage() {
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
   const sttRequestedRef = useRef(false);
   const [sttErrorMessage, setSttErrorMessage] = useState<string | null>(null);
+  const [endErrorMessage, setEndErrorMessage] = useState<string | null>(null);
   const { mutateAsync: startSttAgent } = useStartSttAgent();
+  const { mutateAsync: endConsultation, isPending: isEnding } =
+    useEndConsultation();
   const {
     enqueue: enqueueCaption,
     flush: flushCaptions,
@@ -154,18 +158,40 @@ function ConsultationRoomPage() {
   ]);
 
   const handleEnd = async () => {
-    await flushCaptions();
-    await leave();
-    clearRoomInfo();
-    navigate("/", { replace: true });
+    if (!roomInfo || isEnding) return;
+
+    setEndErrorMessage(null);
+    try {
+      await flushCaptions();
+      await endConsultation(roomInfo.appointmentId);
+      await leave();
+      clearRoomInfo();
+
+      // TODO: 요약 생성 API 응답의 summaryId로 교체합니다.
+      const mockSummaryId = 7;
+      navigate(`/consultation/summary/${mockSummaryId}`, {
+        replace: true,
+      });
+    } catch (error) {
+      const code = axios.isAxiosError<ApiErrorResponse>(error)
+        ? error.response?.data.code
+        : undefined;
+      setEndErrorMessage(
+        code === "CONSULTATION_404_1"
+          ? "종료할 화상상담 세션을 찾을 수 없습니다."
+          : code === "APPOINTMENT_409_7"
+            ? "이미 취소된 예약입니다."
+            : "상담을 종료하지 못했습니다. 잠시 후 다시 시도해주세요.",
+      );
+    }
   };
 
-  const controlsDisabled = connectionState !== "CONNECTED";
+  const controlsDisabled = connectionState !== "CONNECTED" || isEnding;
   const visibleSttErrorMessage = isSttStatusError
     ? "자막 상태를 확인하지 못했습니다. 영상 상담은 계속할 수 있습니다."
     : sttErrorMessage;
   const visibleCaptionErrorMessage =
-    visibleSttErrorMessage ?? captionSaveError;
+    endErrorMessage ?? visibleSttErrorMessage ?? captionSaveError;
 
   return (
     <main
@@ -232,6 +258,7 @@ function ConsultationRoomPage() {
           microphoneOn={microphoneOn}
           cameraOn={cameraOn}
           disabled={controlsDisabled}
+          ending={isEnding}
           onToggleMicrophone={toggleMicrophone}
           onToggleCamera={toggleCamera}
           onSwitchCamera={switchCamera}

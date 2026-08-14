@@ -77,6 +77,14 @@ export interface SaveCaptionBatchResponse {
   updatedCount: number;
 }
 
+export interface EndConsultationResponse {
+  sessionId: number;
+  status: "COMPLETED";
+  startedAt: string;
+  endedAt: string;
+  actualDurationSeconds: number;
+}
+
 export interface ApiResponse<T> {
   isSuccess: boolean;
   timestamp: string;

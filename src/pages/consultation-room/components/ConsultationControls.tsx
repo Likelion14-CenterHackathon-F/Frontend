@@ -54,6 +54,7 @@ interface ConsultationControlsProps {
   microphoneOn: boolean;
   cameraOn: boolean;
   disabled: boolean;
+  ending: boolean;
   onToggleMicrophone: () => Promise<void>;
   onToggleCamera: () => Promise<void>;
   onSwitchCamera: () => Promise<void>;
@@ -64,6 +65,7 @@ function ConsultationControls({
   microphoneOn,
   cameraOn,
   disabled,
+  ending,
   onToggleMicrophone,
   onToggleCamera,
   onSwitchCamera,
@@ -95,9 +97,10 @@ function ConsultationControls({
         onClick={onSwitchCamera}
       />
       <ControlButton
-        label="상담 종료"
+        label={ending ? "상담 종료 중" : "상담 종료"}
         icon={endCallIcon}
         danger
+        disabled={ending}
         onClick={onEnd}
       />
     </nav>
