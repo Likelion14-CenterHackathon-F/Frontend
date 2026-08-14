@@ -85,6 +85,34 @@ export interface EndConsultationResponse {
   actualDurationSeconds: number;
 }
 
+export type SummaryRequestLanguage = "KO" | "EN" | "JA" | "ZH";
+export type SummaryResponseLanguage = "KO" | "EN-US" | "JA" | "ZH-HANS";
+
+export interface CreateConsultationSummaryRequest {
+  medicalStaffName: string;
+  language: SummaryRequestLanguage;
+}
+
+export interface SummaryInstruction {
+  instructionId: number;
+  content: string;
+  sortOrder: number;
+  patientCompleted: boolean;
+  completedAt: string | null;
+}
+
+export interface ConsultationSummaryResponse {
+  summaryId: number;
+  consultedAt: string;
+  medicalStaffName: string;
+  actualDurationSeconds: number;
+  language: SummaryResponseLanguage;
+  translatedSummary: string;
+  consultationDetails: string;
+  instructions: SummaryInstruction[];
+  sessionId: number;
+}
+
 export interface ApiResponse<T> {
   isSuccess: boolean;
   timestamp: string;

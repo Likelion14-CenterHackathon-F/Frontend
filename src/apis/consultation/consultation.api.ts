@@ -9,6 +9,8 @@ import type {
   SaveCaptionBatchRequest,
   SaveCaptionBatchResponse,
   EndConsultationResponse,
+  CreateConsultationSummaryRequest,
+  ConsultationSummaryResponse,
 } from "@/types/consultation.type";
 import axiosInstance from "../axiosInstance";
 
@@ -61,5 +63,15 @@ export const endConsultation = async (appointmentId: number) => {
   const { data } = await axiosInstance.post<
     ApiResponse<EndConsultationResponse>
   >(`/api/consultations/${appointmentId}/end`);
+  return data.data;
+};
+
+export const createConsultationSummary = async (
+  appointmentId: number,
+  body: CreateConsultationSummaryRequest,
+) => {
+  const { data } = await axiosInstance.post<
+    ApiResponse<ConsultationSummaryResponse>
+  >(`/api/consultations/${appointmentId}/summary`, body);
   return data.data;
 };

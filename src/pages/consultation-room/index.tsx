@@ -15,7 +15,10 @@ import { useStartSttAgent } from "./hooks/useStartSttAgent";
 import { useSttAgentStatus } from "./hooks/useSttAgentStatus";
 import { useCaptionBatch } from "./hooks/useCaptionBatch";
 import { useEndConsultation } from "./hooks/useEndConsultation";
+import { useCreateConsultationSummary } from "./hooks/useCreateConsultationSummary";
 import type { ApiErrorResponse } from "@/types/consultation.type";
+import { usePreferencesStore } from "@/stores/usePreferencesStore";
+import { toSummaryRequestLanguage } from "@/pages/consultation-summary/utils/consultationSummary";
 
 function formatDuration(seconds: number) {
   const minutes = Math.floor(seconds / 60);
@@ -29,6 +32,7 @@ function ConsultationRoomPage() {
   const { appointmentId } = useParams<{ appointmentId: string }>();
   const roomInfo = useConsultationStore((state) => state.roomInfo);
   const clearRoomInfo = useConsultationStore((state) => state.clearRoomInfo);
+  const locale = usePreferencesStore((state) => state.locale);
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
   const sttRequestedRef = useRef(false);
   const [sttErrorMessage, setSttErrorMessage] = useState<string | null>(null);
@@ -36,6 +40,10 @@ function ConsultationRoomPage() {
   const { mutateAsync: startSttAgent } = useStartSttAgent();
   const { mutateAsync: endConsultation, isPending: isEnding } =
     useEndConsultation();
+  const {
+    mutateAsync: createConsultationSummary,
+    isPending: isCreatingSummary,
+  } = useCreateConsultationSummary();
   const {
     enqueue: enqueueCaption,
     flush: flushCaptions,
@@ -158,18 +166,24 @@ function ConsultationRoomPage() {
   ]);
 
   const handleEnd = async () => {
-    if (!roomInfo || isEnding) return;
+    if (!roomInfo || isEnding || isCreatingSummary) return;
 
     setEndErrorMessage(null);
     try {
       await flushCaptions();
       await endConsultation(roomInfo.appointmentId);
       await leave();
-      clearRoomInfo();
+      const language = toSummaryRequestLanguage(locale);
+      const summary = await createConsultationSummary({
+        appointmentId: roomInfo.appointmentId,
+        request: {
+          medicalStaffName: "박지태 의사",
+          language,
+        },
+      });
 
-      // TODO: 요약 생성 API 응답의 summaryId로 교체합니다.
-      const mockSummaryId = 7;
-      navigate(`/consultation/summary/${mockSummaryId}`, {
+      clearRoomInfo();
+      navigate(`/consultation/summary/${summary.summaryId}`, {
         replace: true,
       });
     } catch (error) {
@@ -177,16 +191,22 @@ function ConsultationRoomPage() {
         ? error.response?.data.code
         : undefined;
       setEndErrorMessage(
-        code === "CONSULTATION_404_1"
-          ? "종료할 화상상담 세션을 찾을 수 없습니다."
-          : code === "APPOINTMENT_409_7"
-            ? "이미 취소된 예약입니다."
-            : "상담을 종료하지 못했습니다. 잠시 후 다시 시도해주세요.",
+        code === "CONSULTATION_SUMMARY_409_2"
+          ? "저장된 최종 자막이 없어 상담 요약을 만들 수 없습니다."
+          : code === "CONSULTATION_SUMMARY_502_1"
+            ? "AI 상담 요약 생성에 실패했습니다. 다시 시도해주세요."
+            : code === "CONSULTATION_404_1"
+              ? "종료할 화상상담 세션을 찾을 수 없습니다."
+              : code === "APPOINTMENT_409_7"
+                ? "이미 취소된 예약입니다."
+                : "상담을 종료하지 못했습니다. 잠시 후 다시 시도해주세요.",
       );
     }
   };
 
-  const controlsDisabled = connectionState !== "CONNECTED" || isEnding;
+  const isFinishingConsultation = isEnding || isCreatingSummary;
+  const controlsDisabled =
+    connectionState !== "CONNECTED" || isFinishingConsultation;
   const visibleSttErrorMessage = isSttStatusError
     ? "자막 상태를 확인하지 못했습니다. 영상 상담은 계속할 수 있습니다."
     : sttErrorMessage;
@@ -258,7 +278,7 @@ function ConsultationRoomPage() {
           microphoneOn={microphoneOn}
           cameraOn={cameraOn}
           disabled={controlsDisabled}
-          ending={isEnding}
+          ending={isFinishingConsultation}
           onToggleMicrophone={toggleMicrophone}
           onToggleCamera={toggleCamera}
           onSwitchCamera={switchCamera}
