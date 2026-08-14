@@ -4,8 +4,16 @@ type Field = { number: number; value: bigint | Uint8Array };
 
 export interface DecodedCaption {
   sentenceId: string;
-  text: string;
-  isFinal: boolean;
+  sequenceNumber: number;
+  speakerAgoraUid: number;
+  sourceLanguage?: string;
+  sourceText?: string;
+  sourceFinal?: boolean;
+  targetLanguage?: string;
+  translatedText?: string;
+  translationFinal?: boolean;
+  textTimestamp?: number;
+  durationMs?: number;
 }
 
 function varint(bytes: Uint8Array, start: number) {
@@ -39,7 +47,9 @@ function fields(bytes: Uint8Array) {
       const length = Number(item.value);
       offset = item.offset;
       const end = offset + length;
-      if (length > MAX_PAYLOAD_SIZE || end > bytes.length) throw new Error("Invalid protobuf length");
+      if (length > MAX_PAYLOAD_SIZE || end > bytes.length) {
+        throw new Error("Invalid protobuf length");
+      }
       result.push({ number, value: bytes.subarray(offset, end) });
       offset = end;
     } else if (wire === 1) offset += 8;
@@ -49,31 +59,81 @@ function fields(bytes: Uint8Array) {
   return result;
 }
 
-const find = (items: Field[], number: number) => items.find((item) => item.number === number)?.value;
-const bytes = (value?: bigint | Uint8Array) => value instanceof Uint8Array ? value : EMPTY;
-const text = (value?: bigint | Uint8Array) => new TextDecoder().decode(bytes(value));
+const find = (items: Field[], number: number) =>
+  items.find((item) => item.number === number)?.value;
+const bytes = (value?: bigint | Uint8Array) =>
+  value instanceof Uint8Array ? value : EMPTY;
+const text = (value?: bigint | Uint8Array) =>
+  new TextDecoder().decode(bytes(value));
+const integer = (value?: bigint | Uint8Array) =>
+  typeof value === "bigint" && value <= BigInt(Number.MAX_SAFE_INTEGER)
+    ? Number(value)
+    : undefined;
 
-export function decodeSttMessage(payload: Uint8Array, language: string): DecodedCaption | null {
+export function decodeSttMessage(
+  payload: Uint8Array,
+  language: string,
+): DecodedCaption | null {
   if (payload.byteLength > MAX_PAYLOAD_SIZE) return null;
+
   try {
     const root = fields(payload);
     const sentenceValue = find(root, 19);
-    const sentenceId = typeof sentenceValue === "bigint" ? sentenceValue.toString() : "0";
+    if (typeof sentenceValue !== "bigint") return null;
+
+    const common = {
+      sentenceId: sentenceValue.toString(),
+      sequenceNumber: integer(find(root, 3)) ?? 0,
+      speakerAgoraUid: integer(find(root, 4)) ?? 0,
+      textTimestamp: integer(find(root, 18)),
+      durationMs: integer(find(root, 15)),
+    };
+
     if (text(find(root, 13)) === "translate") {
-      const translations = root.filter((item) => item.number === 14).map((item) => {
-        const nested = fields(bytes(item.value));
-        return {
-          language: text(find(nested, 2)),
-          value: nested.filter((part) => part.number === 3).map((part) => text(part.value)).join(""),
-          final: find(nested, 1) === 1n,
-        };
-      });
-      const selected = translations.find((item) => item.language.toLowerCase() === language.toLowerCase()) ?? translations[0];
-      return selected?.value ? { sentenceId, text: selected.value, isFinal: selected.final } : null;
+      const translations = root
+        .filter((item) => item.number === 14)
+        .map((item) => {
+          const nested = fields(bytes(item.value));
+          return {
+            language: text(find(nested, 2)),
+            value: nested
+              .filter((part) => part.number === 3)
+              .map((part) => text(part.value))
+              .join(""),
+            final: find(nested, 1) === 1n,
+          };
+        });
+      const selected =
+        translations.find(
+          (item) => item.language.toLowerCase() === language.toLowerCase(),
+        ) ?? translations[0];
+      return selected?.value
+        ? {
+            ...common,
+            targetLanguage: selected.language,
+            translatedText: selected.value,
+            translationFinal: selected.final,
+          }
+        : null;
     }
-    const words = root.filter((item) => item.number === 10).map((item) => fields(bytes(item.value)));
-    const value = words.map((word) => text(find(word, 1))).join("");
-    return value ? { sentenceId, text: value, isFinal: words.length > 0 && words.every((word) => find(word, 4) === 1n) } : null;
+
+    const words = root
+      .filter((item) => item.number === 10)
+      .map((item) => fields(bytes(item.value)));
+    const sourceText = words
+      .map((word) => text(find(word, 1)))
+      .join("");
+
+    return sourceText
+      ? {
+          ...common,
+          sourceLanguage: text(find(root, 12)),
+          sourceText,
+          sourceFinal:
+            words.length > 0 &&
+            words.every((word) => find(word, 4) === 1n),
+        }
+      : null;
   } catch (error) {
     console.warn("Agora STT message decode failed", error);
     return null;
