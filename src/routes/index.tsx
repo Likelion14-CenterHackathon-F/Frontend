@@ -1,7 +1,6 @@
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import AppLayout from "@/layouts/AppLayout";
 import AftercarePage from "@/pages/aftercare";
-import AiChatPage from "@/pages/ai-chat";
 import HomePage from "@/pages/home";
 import ConsultationWaitingPage from "@/pages/consultation-waiting";
 import ConsultationHubPage from "@/pages/consultation-hub";
@@ -64,10 +63,6 @@ const router = createBrowserRouter([
       {
         path: "/",
         element: <OnboardingPage />,
-      },
-      {
-        path: "/ai-chat",
-        element: <AiChatPage />,
       },
       {
         path: "/settings/language",
