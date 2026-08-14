@@ -9,6 +9,7 @@
   --color-primary-deep: #513ba7; /* 카드 뱃지 */
 
   --color-text-01: #2a2a2a; /* 제목, 버튼 라벨 */
+  --color-text-02: #414141; /* 홈 카드 뱃지·제목, 경과일 */
   --color-text-03: #74717f; /* 본문 */
   --color-text-04: #979797; /* 입력 placeholder */
   --color-text-muted: #605c73; /* 카드 보조 설명 */
@@ -32,7 +33,7 @@
   --color-border-soft: #f6f4f4; /* 입력 테두리 */
 
   /* 사후관리 화면 */
-  --color-care-bg: #f9f9f9; /* 화면 바탕 */
+  --color-care-bg: #f6f6f9; /* 화면 바탕 */
   --color-care-title: #32303a; /* 경과일, 카드 제목 */
   --color-care-sub: #6a6581; /* 카드 부제목, 시술일·시술명 */
   --color-care-note: #65646d; /* 리포트 카드 설명 */
@@ -58,6 +59,7 @@
   --color-alert-icon: #fd7575; /* 즉시 연락 안내 아이콘 */
   --color-border-muted: #ececec; /* 정보 카드 테두리 */
   --color-language-divider: #e8e8e8; /* 언어 목록 구분선 */
+  --color-language-bg: #e6e5f5; /* 언어 설정 배경 */
   --color-accent: #ff7706; /* 휠 선택 표시 */
 
   /* 공통 Action Button */
@@ -89,12 +91,28 @@
   --color-intro-haze: #e1dff5; /* 상단 안개 */
   --color-intro-title-end: #e5e9fb; /* 제목 그라데이션 끝 */
 
-  --color-history: #fdfbff; /* 질문 내역 배경 */
+  --color-history: #e6e5f5; /* 질문 내역 배경 */
 
   /* 홈 화면 */
-  --color-home-from: #f6f6f6;
-  --color-home-to: #e2e2e2;
+  --color-home-from: #fdfbff;
+  --color-home-to: #fdfbff;
   --color-card-glow: #edebf5; /* 홈 카드 가운데 */
+
+  --color-home-bar: #fcfcfd; /* 홈 입력창 */
+
+  /*
+    홈 카드 색조. 내보낸 CSS에는 두 카드 모두 회보라 바탕만 있으나
+    시안 렌더는 색조를 띠고 있어, 렌더에서 실측한 값을 얹었다.
+  */
+  --color-card-warm-from: #fee5d6;
+  --color-card-warm-mid: #f9ebe1;
+  --color-card-warm-to: #fefbf7;
+  --color-card-cool-from: #d5f0ee;
+  --color-card-cool-mid: #dceef4;
+  --color-card-cool-to: #eaf8f6;
+
+  --color-greeting: #3b3848; /* 홈 인사말 */
+  --color-disclaimer: #9795a0; /* 홈 하단 안내 문구 */
 
   /* 홈 배경에 흩뿌리는 보라 번짐 */
   --color-glow-01: #9a7cfa;
@@ -102,6 +120,7 @@
   --color-glow-03: #6c5ece;
   --color-glow-04: #b39ff5;
   --color-glow-05: #a3b0ea; /* AI 채팅 배경에만 쓰는 푸른 번짐 */
+  --color-glow-pale: #e1e9ff; /* 홈 화면 상단의 옅은 번짐 */
 
   /* 앱 본문 최대 폭. 데스크톱에서도 폰 화면 비율을 유지한다 */
   --container-app: 430px;
