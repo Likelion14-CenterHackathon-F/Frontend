@@ -26,7 +26,11 @@ function ConsultationHubPage() {
 
       <main className="bg-surface-soft flex flex-1 flex-col pb-[calc(90px+env(safe-area-inset-bottom))]">
         <section>
-          <ConsultationTabs activeTab={activeTab} onChange={setActiveTab} />
+          <ConsultationTabs
+            activeTab={activeTab}
+            ongoingCount={ongoingConsultations.length}
+            onChange={setActiveTab}
+          />
 
           {activeTab === "history" ? (
             <ConsultationHistoryList consultations={[]} />
@@ -34,7 +38,7 @@ function ConsultationHubPage() {
             <ConsultationReservationList consultations={ongoingConsultations} />
           )}
         </section>
-        <section className="bg-[#F3F3F3] px-5 py-[26px]">
+        <section className="bg-[#E9E9EF] px-5 py-[26px]">
           <ConsultationGuide />
         </section>
       </main>
