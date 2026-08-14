@@ -1,25 +1,75 @@
+import ellipse441 from "@/assets/glow-ellipse-441.svg";
+import ellipse444 from "@/assets/glow-ellipse-444.svg";
+import gradientBottom from "@/assets/home-gradient-bottom.png";
+import gradientTop from "@/assets/home-gradient-top.png";
+
+const STATUS_BAR_HEIGHT = 60;
+
+interface GlowEllipse {
+  id: string;
+  src: string;
+  width: number;
+  height: number;
+  centerY: number;
+  rotate?: boolean;
+}
+
 /*
-  디자인 시안의 블러 처리된 타원 4개를 그대로 옮긴 배경.
-  위치와 크기는 393x852 기준이며 가로는 모두 가운데 정렬이다.
-*/
-const GLOWS = [
-  { color: "bg-glow-01/40", top: -157, width: 504, height: 738 },
-  { color: "bg-glow-02/40", top: -131, width: 578, height: 525 },
-  { color: "bg-glow-03/40", top: 1, width: 288, height: 261 },
-  { color: "bg-glow-04/40", top: 416, width: 152, height: 143 },
+ * Figma 210:1532의 레이어 순서를 그대로 따른다.
+ * SVG 크기에는 Gaussian blur 여백이 이미 포함되어 있다.
+ * 441/444는 원본 SVG가 세로형이므로 Figma처럼 90도 회전한다.
+ */
+const ELLIPSES: GlowEllipse[] = [
+  {
+    id: "purple-wide",
+    src: ellipse441,
+    width: 461,
+    height: 622,
+    centerY: 420.5,
+    rotate: true,
+  },
+  {
+    id: "purple-core",
+    src: ellipse444,
+    width: 351,
+    height: 360,
+    centerY: 420.5,
+    rotate: true,
+  },
+  {
+    id: "gradient-bottom",
+    src: gradientBottom,
+    width: 650,
+    height: 650,
+    centerY: 674,
+  },
+  {
+    id: "gradient-top",
+    src: gradientTop,
+    width: 650,
+    height: 650,
+    centerY: 183,
+  },
 ];
 
 function HomeBackdrop() {
   return (
     <div
       aria-hidden
-      className="from-home-from to-home-to pointer-events-none absolute inset-0 overflow-hidden bg-linear-to-b"
+      className="pointer-events-none absolute inset-0 overflow-hidden bg-[#FDFBFF]"
     >
-      {GLOWS.map((glow) => (
-        <div
-          key={glow.color}
-          className={`absolute left-1/2 -translate-x-1/2 rounded-full blur-[52px] ${glow.color}`}
-          style={{ top: glow.top, width: glow.width, height: glow.height }}
+      {ELLIPSES.map(({ id, src, width, height, centerY, rotate }) => (
+        <img
+          key={id}
+          src={src}
+          alt=""
+          className="absolute left-1/2 max-w-none"
+          style={{
+            top: centerY - height / 2 - STATUS_BAR_HEIGHT,
+            width,
+            height,
+            transform: `translateX(-50%)${rotate ? " rotate(90deg)" : ""}`,
+          }}
         />
       ))}
     </div>
