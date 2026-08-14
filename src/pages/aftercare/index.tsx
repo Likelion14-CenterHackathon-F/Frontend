@@ -128,7 +128,7 @@ function AftercarePage() {
           label={t("report.label")}
           title={t("report.title")}
           description={t("report.description")}
-          onClick={() => navigate("/aftercare/report")}
+          onClick={() => navigate("/aftercare/emergency-report")}
         />
       </div>
 
