@@ -4,6 +4,8 @@ import type {
   JoinConsultationRequest,
   StartSttAgentResponse,
   SttAgentStatusResponse,
+  RenewRtcTokenRequest,
+  RenewRtcTokenResponse,
 } from "@/types/consultation.type";
 import axiosInstance from "../axiosInstance";
 
@@ -29,5 +31,15 @@ export const getSttAgentStatus = async (appointmentId: number) => {
   const { data } = await axiosInstance.get<ApiResponse<SttAgentStatusResponse>>(
     `/api/consultations/${appointmentId}/stt/status`,
   );
+  return data.data;
+};
+
+export const renewConsultationRtcToken = async (
+  appointmentId: number,
+  body: RenewRtcTokenRequest,
+) => {
+  const { data } = await axiosInstance.post<
+    ApiResponse<RenewRtcTokenResponse>
+  >(`/api/consultations/${appointmentId}/token/renew`, body);
   return data.data;
 };

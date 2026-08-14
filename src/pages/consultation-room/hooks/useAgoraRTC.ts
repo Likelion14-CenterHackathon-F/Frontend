@@ -10,6 +10,7 @@ import AgoraRTC, {
 } from "agora-rtc-sdk-ng";
 
 import type { JoinConsultationResponse } from "@/types/consultation.type";
+import { renewConsultationRtcToken } from "@/apis/consultation/consultation.api";
 import { decodeSttMessage } from "../utils/decodeSttMessage";
 
 type RoomConnectionState = ConnectionState | "IDLE" | "FAILED";
@@ -48,6 +49,7 @@ export function useAgoraRTC(
   const joiningRef = useRef<Promise<void> | null>(null);
   const joinedRef = useRef(false);
   const speakerOnRef = useRef(true);
+  const tokenRenewalRef = useRef<Promise<void> | null>(null);
 
   const [localVideoTrack, setLocalVideoTrack] =
     useState<ICameraVideoTrack | null>(null);
@@ -126,9 +128,29 @@ export function useAgoraRTC(
   );
 
   const handleTokenWillExpire = useCallback(() => {
-    // TODO: 토큰 갱신 API가 추가되면 renewToken(newRtcToken)을 호출합니다.
+    if (!roomInfo || tokenRenewalRef.current) return;
+
     setTokenWillExpire(true);
-  }, []);
+
+    const renewalTask = (async () => {
+      try {
+        const role = roomInfo.role === "의료진" ? "MEDICAL_STAFF" : "PATIENT";
+        const renewed = await renewConsultationRtcToken(
+          roomInfo.appointmentId,
+          { role },
+        );
+        await client.renewToken(renewed.rtcToken);
+        setTokenWillExpire(false);
+      } catch (error) {
+        console.error("Agora RTC 토큰 갱신에 실패했습니다.", error);
+        setTokenWillExpire(true);
+      } finally {
+        tokenRenewalRef.current = null;
+      }
+    })();
+
+    tokenRenewalRef.current = renewalTask;
+  }, [client, roomInfo]);
 
   const removeListeners = useCallback(() => {
     client.off("user-published", handleUserPublished);
@@ -159,6 +181,7 @@ export function useAgoraRTC(
     cameraTrackRef.current = null;
     remoteUserRef.current = null;
     joiningRef.current = null;
+    tokenRenewalRef.current = null;
     joinedRef.current = false;
 
     setLocalVideoTrack(null);

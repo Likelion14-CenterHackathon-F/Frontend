@@ -44,6 +44,15 @@ export interface SttAgentStatusResponse {
   status: SttAgentStatus;
 }
 
+export interface RenewRtcTokenRequest {
+  role: ParticipantRole;
+}
+
+export interface RenewRtcTokenResponse {
+  rtcToken: string;
+  tokenExpiresAt: string;
+}
+
 export interface ApiResponse<T> {
   isSuccess: boolean;
   timestamp: string;
