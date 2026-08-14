@@ -13,6 +13,7 @@ import RemoteVideo from "./components/RemoteVideo";
 import { useAgoraRTC } from "./hooks/useAgoraRTC";
 import { useStartSttAgent } from "./hooks/useStartSttAgent";
 import { useSttAgentStatus } from "./hooks/useSttAgentStatus";
+import { useCaptionBatch } from "./hooks/useCaptionBatch";
 import type { ApiErrorResponse } from "@/types/consultation.type";
 
 function formatDuration(seconds: number) {
@@ -31,6 +32,11 @@ function ConsultationRoomPage() {
   const sttRequestedRef = useRef(false);
   const [sttErrorMessage, setSttErrorMessage] = useState<string | null>(null);
   const { mutateAsync: startSttAgent } = useStartSttAgent();
+  const {
+    enqueue: enqueueCaption,
+    flush: flushCaptions,
+    errorMessage: captionSaveError,
+  } = useCaptionBatch(roomInfo?.appointmentId, roomInfo?.sessionId);
 
   const {
     localVideoTrack,
@@ -49,7 +55,7 @@ function ConsultationRoomPage() {
     toggleCamera,
     toggleSpeaker,
     switchCamera,
-  } = useAgoraRTC(roomInfo);
+  } = useAgoraRTC(roomInfo, enqueueCaption);
 
   const {
     data: sttAgent,
@@ -148,6 +154,7 @@ function ConsultationRoomPage() {
   ]);
 
   const handleEnd = async () => {
+    await flushCaptions();
     await leave();
     clearRoomInfo();
     navigate("/", { replace: true });
@@ -157,6 +164,8 @@ function ConsultationRoomPage() {
   const visibleSttErrorMessage = isSttStatusError
     ? "자막 상태를 확인하지 못했습니다. 영상 상담은 계속할 수 있습니다."
     : sttErrorMessage;
+  const visibleCaptionErrorMessage =
+    visibleSttErrorMessage ?? captionSaveError;
 
   return (
     <main
@@ -203,12 +212,12 @@ function ConsultationRoomPage() {
         tokenWillExpire={tokenWillExpire}
       />
 
-      {visibleSttErrorMessage && (
+      {visibleCaptionErrorMessage && (
         <div
           role="status"
           className="absolute left-1/2 top-16 w-max max-w-[calc(100%-32px)] -translate-x-1/2 rounded-full bg-black/65 px-4 py-2 text-center text-xs text-white"
         >
-          {visibleSttErrorMessage}
+          {visibleCaptionErrorMessage}
         </div>
       )}
 
