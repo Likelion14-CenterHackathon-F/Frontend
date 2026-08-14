@@ -16,7 +16,7 @@ function ReportCard({ label, title, description, onClick }: ReportCardProps) {
         backgroundImage:
           "radial-gradient(ellipse 50% 50% at 50% 50%, #a4c6cb 0%, #bcd7db 46%, #cfe6e8 100%)",
       }}
-      className="w-full rounded-3xl p-5 text-left"
+      className="w-full rounded-[28px] p-5 text-left"
     >
       <span className="flex items-center gap-2.5">
         <img aria-hidden src={medicalDocIcon} alt="" className="size-6" />
