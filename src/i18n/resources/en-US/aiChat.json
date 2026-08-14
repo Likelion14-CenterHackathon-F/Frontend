@@ -1,0 +1,45 @@
+{
+  "menu": "Question history",
+  "newChat": "New chat",
+  "greeting": "Hello",
+  "thinking": "Looking into how I can help",
+  "disclaimer": "This is general guidance, not a medical diagnosis. Contact your hospital right away if warning signs appear.",
+  "inputPlaceholder": "How are you feeling today?",
+  "attach": "Attach a photo",
+  "send": "Send",
+  "stop": "Stop responding",
+  "attachedImage": "Attached photo",
+  "analysis": {
+    "title": "Analysis",
+    "items": [
+      "Status: You are in a normal recovery stage.",
+      "Medical follow-up: Your current condition looks fine."
+    ]
+  },
+  "reassuring": {
+    "title": "Reassuring signs",
+    "items": [
+      "Swelling is expected for 3-7 days after laser treatment.",
+      "Bruising darkens first and then fades naturally. (This is normal.)",
+      "Mild redness can last for 1-2 weeks."
+    ]
+  },
+  "lifestyle": {
+    "title": "Daily care that helps recovery",
+    "items": [
+      "Apply a cold compress 3-4 times a day, 15 minutes each. (First 48 hours)",
+      "Keep your face clean and avoid makeup for 3-5 days.",
+      "Wear SPF 50+ sunscreen whenever you go outside.",
+      "Avoid intense exercise for one week."
+    ]
+  },
+  "redFlags": {
+    "title": "Warning signs",
+    "items": [
+      "Fever of 38°C or higher",
+      "Pus or foul-smelling discharge",
+      "Swelling that increases sharply after day 3",
+      "Redness that spreads severely"
+    ]
+  }
+}

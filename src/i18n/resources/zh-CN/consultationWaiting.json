@@ -1,0 +1,51 @@
+{
+  "header": {
+    "title": "问诊等候室"
+  },
+  "preview": {
+    "connecting": "正在连接摄像头。",
+    "cameraOff": "摄像头已关闭。",
+    "controls": {
+      "cameraOff": "关闭摄像头",
+      "cameraOn": "开启摄像头",
+      "microphoneOff": "关闭麦克风",
+      "microphoneOn": "开启麦克风",
+      "switchCamera": "切换前后摄像头"
+    }
+  },
+  "checklist": {
+    "title": "进入前确认事项",
+    "items": {
+      "purpose": "本视频问诊用于康复管理，并非诊断或处方。",
+      "recording": "字幕和问诊摘要将保存到护理记录中。",
+      "orientation": "请将设备旋转为横屏。"
+    }
+  },
+  "footer": {
+    "enter": "进入",
+    "entering": "正在进入..."
+  },
+  "mediaError": {
+    "unsupported": "此浏览器不支持摄像头。",
+    "unavailable": "当前环境无法使用摄像头。",
+    "permissionDenied": "请允许访问摄像头和麦克风。",
+    "deviceNotFound": "未找到可用的摄像头或麦克风。",
+    "deviceInUse": "请确认其他应用是否正在使用摄像头或麦克风。",
+    "unsupportedSettings": "不支持当前摄像头设置。",
+    "startFailed": "无法启动摄像头。"
+  },
+  "joinError": {
+    "invalidAppointment": "问诊预约信息无效。",
+    "notJoinableTime": "当前时间无法进入问诊等候室。",
+    "appointmentNotFound": "找不到视频问诊预约。",
+    "slotNotFound": "找不到预约时间信息。",
+    "alreadyCompleted": "该视频问诊已经结束。",
+    "configMissing": "视频问诊服务器配置出现问题。",
+    "tokenIssueFailed": "连接视频问诊失败，请重试。",
+    "authRequired": "需要登录。",
+    "accessTokenExpired": "登录信息已过期，请重新登录。",
+    "invalidAccessToken": "登录信息无效。",
+    "invalidRequest": "进入问诊室的请求信息无效。",
+    "unknown": "进入问诊室时发生问题。"
+  }
+}
