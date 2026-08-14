@@ -9,9 +9,15 @@ import AgoraRTC, {
   type UID,
 } from "agora-rtc-sdk-ng";
 
-import type { JoinConsultationResponse } from "@/types/consultation.type";
+import type {
+  ConsultationCaption,
+  JoinConsultationResponse,
+} from "@/types/consultation.type";
 import { renewConsultationRtcToken } from "@/apis/consultation/consultation.api";
-import { decodeSttMessage } from "../utils/decodeSttMessage";
+import {
+  decodeSttMessage,
+  type DecodedCaption,
+} from "../utils/decodeSttMessage";
 
 type RoomConnectionState = ConnectionState | "IDLE" | "FAILED";
 
@@ -36,6 +42,7 @@ interface UseAgoraRTCResult {
 
 export function useAgoraRTC(
   roomInfo: JoinConsultationResponse | null,
+  onFinalCaption?: (caption: ConsultationCaption) => void,
 ): UseAgoraRTCResult {
   const [client] = useState<IAgoraRTCClient>(() =>
     AgoraRTC.createClient({
@@ -50,6 +57,7 @@ export function useAgoraRTC(
   const joinedRef = useRef(false);
   const speakerOnRef = useRef(true);
   const tokenRenewalRef = useRef<Promise<void> | null>(null);
+  const onFinalCaptionRef = useRef(onFinalCaption);
 
   const [localVideoTrack, setLocalVideoTrack] =
     useState<ICameraVideoTrack | null>(null);
@@ -64,15 +72,56 @@ export function useAgoraRTC(
   const [tokenWillExpire, setTokenWillExpire] = useState(false);
   const [peerAudioPublished, setPeerAudioPublished] = useState(false);
   const [caption, setCaption] = useState<string | null>(null);
-  const captionsRef = useRef(new Map<string, string>());
+  const captionsRef = useRef(new Map<string, DecodedCaption>());
+
+  useEffect(() => {
+    onFinalCaptionRef.current = onFinalCaption;
+  }, [onFinalCaption]);
 
   const handleStreamMessage = useCallback(
     (uid: UID, payload: Uint8Array) => {
       if (!roomInfo || Number(uid) !== roomInfo.sttPublisherAgoraUid) return;
       const message = decodeSttMessage(payload, roomInfo.userLanguage);
       if (!message) return;
-      captionsRef.current.set(message.sentenceId, message.text);
-      setCaption(message.text);
+
+      const previous = captionsRef.current.get(message.sentenceId);
+      const merged = { ...previous, ...message };
+      captionsRef.current.set(message.sentenceId, merged);
+      setCaption(merged.translatedText ?? merged.sourceText ?? null);
+
+      if (!merged.sourceFinal || !merged.sourceText || !merged.sourceLanguage) {
+        return;
+      }
+
+      const sentenceId = Number(merged.sentenceId);
+      if (
+        !Number.isSafeInteger(sentenceId) ||
+        merged.speakerAgoraUid < 1
+      ) {
+        console.warn("저장할 수 없는 STT 문장 식별자 또는 발화자 UID입니다.", merged);
+        return;
+      }
+
+      onFinalCaptionRef.current?.({
+        sentenceId,
+        sequenceNumber: merged.sequenceNumber,
+        speakerAgoraUid: merged.speakerAgoraUid,
+        sourceLanguage: merged.sourceLanguage,
+        sourceText: merged.sourceText,
+        ...(merged.translationFinal && merged.targetLanguage
+          ? {
+              targetLanguage: merged.targetLanguage,
+              translatedText: merged.translatedText,
+            }
+          : {}),
+        ...(merged.textTimestamp !== undefined
+          ? { textTimestamp: merged.textTimestamp }
+          : {}),
+        ...(merged.durationMs !== undefined
+          ? { durationMs: merged.durationMs }
+          : {}),
+        isFinal: true,
+      });
     },
     [roomInfo],
   );
