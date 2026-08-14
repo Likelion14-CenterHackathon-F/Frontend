@@ -10,6 +10,8 @@
   "chat": {
     "placeholder": "今天感觉怎么样？",
     "attach": "添加照片",
+    "camera": "相机",
+    "photo": "照片",
     "send": "发送"
   },
   "aftercare": {

@@ -2,18 +2,20 @@
   "menu": "메뉴 열기",
   "changeLanguage": "언어 변경",
   "progress": {
-    "day": "{{day}}일차 · ",
-    "total": "총 {{total}}일"
+    "day": "{{day}}일차  ",
+    "total": "{{total}}일 중"
   },
   "greeting": "반가워요, {{name}}님",
   "disclaimer": "의료적 진단이 아닌 참고 안내입니다. 위험 증상은 즉시 병원에 문의하세요.",
   "chat": {
     "placeholder": "오늘 상태는 어때요?",
     "attach": "사진 첨부",
+    "camera": "카메라",
+    "photo": "사진",
     "send": "보내기"
   },
   "aftercare": {
-    "badge": "{{day}}일차",
+    "badge": "{{day}}일 중",
     "title": "나의 사후관리"
   },
   "consultation": {
