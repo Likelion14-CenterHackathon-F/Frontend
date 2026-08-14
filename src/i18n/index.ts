@@ -2,12 +2,16 @@ import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 
 import koOnboarding from "./resources/ko-KR/onboarding.json";
+import koReport from "./resources/ko-KR/report.json";
 
 import enOnboarding from "./resources/en-US/onboarding.json";
+import enReport from "./resources/en-US/report.json";
 
 import jaOnboarding from "./resources/ja-JP/onboarding.json";
+import jaReport from "./resources/ja-JP/report.json";
 
 import zhCNOnboarding from "./resources/zh-CN/onboarding.json";
+import zhCNReport from "./resources/zh-CN/report.json";
 
 import { getInitialLocale } from "./language";
 
@@ -31,20 +35,24 @@ void i18n
 
     defaultNS: "onboarding",
 
-    ns: ["onboarding"],
+    ns: ["onboarding", "report"],
 
     resources: {
       "ko-KR": {
         onboarding: koOnboarding,
+        report: koReport,
       },
       "en-US": {
         onboarding: enOnboarding,
+        report: enReport,
       },
       "ja-JP": {
         onboarding: jaOnboarding,
+        report: jaReport,
       },
       "zh-CN": {
         onboarding: zhCNOnboarding,
+        report: zhCNReport,
       },
     },
 
