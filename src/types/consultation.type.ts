@@ -53,6 +53,30 @@ export interface RenewRtcTokenResponse {
   tokenExpiresAt: string;
 }
 
+export interface ConsultationCaption {
+  sentenceId: number;
+  sequenceNumber: number;
+  speakerAgoraUid: number;
+  sourceLanguage: string;
+  sourceText: string;
+  targetLanguage?: string;
+  translatedText?: string;
+  textTimestamp?: number;
+  durationMs?: number;
+  isFinal: true;
+}
+
+export interface SaveCaptionBatchRequest {
+  sessionId: number;
+  captions: ConsultationCaption[];
+}
+
+export interface SaveCaptionBatchResponse {
+  receivedCount: number;
+  insertedCount: number;
+  updatedCount: number;
+}
+
 export interface ApiResponse<T> {
   isSuccess: boolean;
   timestamp: string;
