@@ -10,6 +10,7 @@ import ConsultationHistoryList from "./components/ConsultationHistoryList";
 import ConsultationReservationList from "./components/ConsultationReservationList";
 import ConsultationTabs from "./components/ConsultationTabs";
 import { useActiveConsultationAppointment } from "./hooks/useActiveConsultationAppointment";
+import { useConsultationHistory } from "./hooks/useConsultationHistory";
 
 type ConsultationTab = "history" | "ongoing";
 const MOCK_CASE_ID = 1;
@@ -29,6 +30,12 @@ function ConsultationHubPage() {
     isError: isAppointmentError,
     refetch: refetchAppointment,
   } = useActiveConsultationAppointment(MOCK_CASE_ID);
+  const {
+    data: consultationHistoryData = [],
+    isPending: isHistoryPending,
+    isError: isHistoryError,
+    refetch: refetchHistory,
+  } = useConsultationHistory();
 
   const ongoingConsultations = useMemo<Consultation[]>(
     () =>
@@ -41,6 +48,18 @@ function ConsultationHubPage() {
         ...mockMedicalStaff,
       })),
     [activeAppointments],
+  );
+  const historyConsultations = useMemo<Consultation[]>(
+    () =>
+      consultationHistoryData.map((history) => ({
+        id: history.appointmentId,
+        status: history.status === "CANCELLED" ? "cancelled" : "completed",
+        scheduledAt: history.appointmentStartsAt,
+        subject: history.symptomCategory || null,
+        symptomNote: history.symptomNote,
+        ...mockMedicalStaff,
+      })),
+    [consultationHistoryData],
   );
 
   const enterableAppointment = activeAppointments.find(
@@ -70,7 +89,12 @@ function ConsultationHubPage() {
           />
 
           {activeTab === "history" ? (
-            <ConsultationHistoryList consultations={[]} />
+            <ConsultationHistoryList
+              consultations={historyConsultations}
+              isLoading={isHistoryPending}
+              isError={isHistoryError}
+              onRetry={() => void refetchHistory()}
+            />
           ) : (
             <ConsultationReservationList
               consultations={ongoingConsultations}

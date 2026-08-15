@@ -1,5 +1,8 @@
 import axiosInstance from "../axiosInstance";
-import type { ApiResponse } from "@/types/consultation.type";
+import type {
+  ApiResponse,
+  ConsultationHistoryItem,
+} from "@/types/consultation.type";
 import type { ActiveConsultationAppointment } from "@/types/consultationReservation.type";
 import type { AvailableConsultationDate } from "@/types/consultationReservation.type";
 import type {
@@ -8,6 +11,14 @@ import type {
   CreateConsultationAppointmentResponse,
   LocalDateString,
 } from "@/types/consultationReservation.type";
+
+export const getConsultationHistory = async () => {
+  const { data } = await axiosInstance.get<
+    ApiResponse<ConsultationHistoryItem[]>
+  >("/api/consultations/history");
+
+  return data.data;
+};
 
 export async function getActiveConsultationAppointment(caseId: number) {
   const { data } = await axiosInstance.get<

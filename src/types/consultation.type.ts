@@ -85,6 +85,22 @@ export interface EndConsultationResponse {
   actualDurationSeconds: number;
 }
 
+export interface ConsultationHistoryItem {
+  appointmentId: number;
+  sessionId: number | null;
+  startedAt: string | null;
+  endedAt: string | null;
+  actualDurationSeconds: number | null;
+  hasTranscript: boolean;
+  appointmentStartsAt: string | null;
+  appointmentEndsAt: string | null;
+  symptomCategory: string | null;
+  symptomNote: string | null;
+  status: "COMPLETED" | "CANCELLED";
+  cancelReason: string | null;
+  cancelledAt: string | null;
+}
+
 export type SummaryRequestLanguage = "KO" | "EN" | "JA" | "ZH";
 export type SummaryResponseLanguage = "KO" | "EN-US" | "JA" | "ZH-HANS";
 

@@ -15,6 +15,7 @@
   },
   "status": {
     "completed": "相談完了",
+    "cancelled": "予約キャンセル",
     "reserved": "予約確定",
     "inProgress": "相談中"
   },
