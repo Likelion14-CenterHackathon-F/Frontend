@@ -15,6 +15,7 @@ export interface Consultation {
   medicalStaffName: string;
   medicalStaffRole: MedicalStaffRole;
   subject: string;
+  symptomNote?: string | null;
   scheduledAt: string;
 }
 

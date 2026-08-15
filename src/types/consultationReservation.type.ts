@@ -48,16 +48,14 @@ export interface ActiveConsultationAppointment {
   slotId: number;
   startsAt: string;
   endsAt: string;
+  symptomCategory: string | null;
+  symptomCategories: string[];
+  symptomNote: string | null;
   waitingRoomOpensAt: string;
   waitingRoomClosesAt: string;
   canEnterWaitingRoom: boolean;
   timezoneId: string;
   status: "CONFIRMED";
-}
-
-export interface ActiveConsultationAppointmentResponse {
-  hasAppointment: boolean;
-  appointment: ActiveConsultationAppointment | null;
 }
 
 export type SymptomCategory =

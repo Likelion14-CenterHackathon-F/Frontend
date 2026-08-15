@@ -13,10 +13,7 @@ export function useCreateConsultationAppointment() {
     onSuccess: (appointment, request) => {
       queryClient.setQueryData(
         activeConsultationAppointmentQueryKey(request.caseId),
-        {
-          hasAppointment: true,
-          appointment,
-        },
+        [appointment],
       );
       void queryClient.invalidateQueries({
         queryKey: ["consultation-available-dates"],

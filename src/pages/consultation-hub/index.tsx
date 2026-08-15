@@ -1,23 +1,22 @@
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
+import ConsultationFooter from "@/components/Footer/ConsultationFooter";
 import ConsultationHeader from "@/components/Header/ConsultationHeader";
-import ConsultationTabs from "./components/ConsultationTabs";
+import type { Consultation } from "./components/ConsultationCard";
 import ConsultationGuide from "./components/ConsultationGuide";
 import ConsultationHistoryList from "./components/ConsultationHistoryList";
 import ConsultationReservationList from "./components/ConsultationReservationList";
-import ConsultationFooter from "@/components/Footer/ConsultationFooter";
-import { useNavigate } from "react-router-dom";
+import ConsultationTabs from "./components/ConsultationTabs";
 import { useActiveConsultationAppointment } from "./hooks/useActiveConsultationAppointment";
-import type { Consultation } from "./components/ConsultationCard";
 
 type ConsultationTab = "history" | "ongoing";
 const MOCK_CASE_ID = 1;
 
-const missingAppointmentData = {
+const mockMedicalStaff = {
   medicalStaffName: "박지태",
   medicalStaffRole: "doctor" as const,
-  subject: "붓기·멍",
 };
 
 function ConsultationHubPage() {
@@ -25,32 +24,33 @@ function ConsultationHubPage() {
   const { t } = useTranslation("consultationHub");
   const [activeTab, setActiveTab] = useState<ConsultationTab>("history");
   const {
-    data: activeAppointmentData,
+    data: activeAppointments = [],
     isPending: isAppointmentPending,
     isError: isAppointmentError,
     refetch: refetchAppointment,
   } = useActiveConsultationAppointment(MOCK_CASE_ID);
 
-  const activeAppointment = activeAppointmentData?.appointment ?? null;
   const ongoingConsultations = useMemo<Consultation[]>(
     () =>
-      activeAppointmentData?.hasAppointment && activeAppointment
-        ? [
-            {
-              id: activeAppointment.appointmentId,
-              status: "reserved",
-              scheduledAt: activeAppointment.startsAt,
-              ...missingAppointmentData,
-            },
-          ]
-        : [],
-    [activeAppointment, activeAppointmentData?.hasAppointment],
+      activeAppointments.map((appointment) => ({
+        id: appointment.appointmentId,
+        status: "reserved",
+        scheduledAt: appointment.startsAt,
+        subject: appointment.symptomCategories.join(" · ") || "-",
+        symptomNote: appointment.symptomNote,
+        ...mockMedicalStaff,
+      })),
+    [activeAppointments],
+  );
+
+  const enterableAppointment = activeAppointments.find(
+    (appointment) => appointment.canEnterWaitingRoom,
   );
 
   const handleEnterWaitingRoom = () => {
-    if (!activeAppointment?.canEnterWaitingRoom) return;
+    if (!enterableAppointment) return;
     navigate(
-      `/consultation/${activeAppointment.appointmentId}/waiting?role=PATIENT`,
+      `/consultation/${enterableAppointment.appointmentId}/waiting?role=PATIENT`,
     );
   };
 
@@ -86,9 +86,7 @@ function ConsultationHubPage() {
       </main>
 
       <ConsultationFooter
-        disabled={
-          activeTab !== "ongoing" || !activeAppointment?.canEnterWaitingRoom
-        }
+        disabled={activeTab !== "ongoing" || !enterableAppointment}
         onClick={handleEnterWaitingRoom}
       >
         {t("footer.enter")}
