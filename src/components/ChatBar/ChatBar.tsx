@@ -1,25 +1,37 @@
 import type { FormEvent } from "react";
 
+import AttachButton from "@/components/AttachButton/AttachButton";
+
 interface ChatBarProps {
   value: string;
   placeholder: string;
   attachLabel: string;
+  cameraLabel: string;
+  photoLabel: string;
   sendLabel: string;
+  hasImage?: boolean;
   onChange: (value: string) => void;
   onSubmit: () => void;
-  onAttach?: () => void;
+  onImageSelect: (file: File) => void;
+  onFocus?: () => void;
+  onBlur?: () => void;
 }
 
 function ChatBar({
   value,
   placeholder,
   attachLabel,
+  cameraLabel,
+  photoLabel,
   sendLabel,
+  hasImage = false,
   onChange,
   onSubmit,
-  onAttach,
+  onImageSelect,
+  onFocus,
+  onBlur,
 }: ChatBarProps) {
-  const isEmpty = value.trim().length === 0;
+  const isEmpty = value.trim().length === 0 && !hasImage;
 
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault();
@@ -31,23 +43,20 @@ function ChatBar({
   return (
     <form
       onSubmit={handleSubmit}
-      className="border-border-soft flex items-center gap-2.5 rounded-[30px] border-[1.5px] bg-neutral-white p-2.5"
+      className="bg-home-bar flex items-center gap-2.5 rounded-[30px] p-2.5 shadow-[0_4px_4.5px_0_rgba(0,0,0,0.04)]"
     >
-      <button
-        type="button"
-        aria-label={attachLabel}
-        onClick={onAttach}
-        className="flex size-10 shrink-0 items-center justify-center rounded-full"
-      >
-        <span aria-hidden className="relative block size-3.5">
-          <span className="bg-text-03 absolute top-1/2 left-0 h-[1.5px] w-full -translate-y-1/2 rounded-lg" />
-          <span className="bg-text-03 absolute top-0 left-1/2 h-full w-[1.5px] -translate-x-1/2 rounded-lg" />
-        </span>
-      </button>
+      <AttachButton
+        attachLabel={attachLabel}
+        cameraLabel={cameraLabel}
+        photoLabel={photoLabel}
+        onImageSelect={onImageSelect}
+      />
 
       <input
         value={value}
         onChange={(event) => onChange(event.target.value)}
+        onFocus={onFocus}
+        onBlur={onBlur}
         placeholder={placeholder}
         className="text-body min-w-0 flex-1 bg-transparent text-text-01 outline-none placeholder:text-text-04"
       />

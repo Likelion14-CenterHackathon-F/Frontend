@@ -76,7 +76,6 @@ function SplashStep({ onFinish }: SplashStepProps) {
 
       {GLOWS.map((glow, index) => (
         <img
-          // eslint-disable-next-line react/no-array-index-key
           key={index}
           aria-hidden
           src={glow.src}

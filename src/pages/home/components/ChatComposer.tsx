@@ -1,16 +1,23 @@
 import { useEffect, useRef, type FormEvent } from "react";
 
+import AttachButton from "@/components/AttachButton/AttachButton";
+import { cn } from "@/utils/cn";
+
 interface ChatComposerProps {
   value: string;
   placeholder: string;
   attachLabel: string;
+  cameraLabel: string;
+  photoLabel: string;
   sendLabel: string;
   stopLabel: string;
+  hasImage?: boolean;
+  variant?: "chat" | "home";
   /** 답변을 기다리는 동안에는 보내기 자리가 중단 버튼으로 바뀐다 */
   isAnswering: boolean;
   onChange: (value: string) => void;
   onSubmit: () => void;
-  onAttach: () => void;
+  onImageSelect: (file: File) => void;
   onStop: () => void;
 }
 
@@ -18,22 +25,21 @@ function ChatComposer({
   value,
   placeholder,
   attachLabel,
+  cameraLabel,
+  photoLabel,
   sendLabel,
   stopLabel,
+  hasImage = false,
+  variant = "chat",
   isAnswering,
   onChange,
   onSubmit,
-  onAttach,
+  onImageSelect,
   onStop,
 }: ChatComposerProps) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const isEmpty = value.trim().length === 0;
+  const isEmpty = value.trim().length === 0 && !hasImage;
 
-  /*
-    입력한 줄 수만큼 높이를 늘린다.
-    auto로 되돌린 뒤 scrollHeight를 읽어야 글을 지울 때도 따라 줄어든다.
-    상한은 max-h로 걸어두었다.
-  */
   useEffect(() => {
     const textarea = textareaRef.current;
     if (!textarea) return;
@@ -52,19 +58,19 @@ function ChatComposer({
   return (
     <form
       onSubmit={handleSubmit}
-      className="bg-chat-bar flex items-end gap-2.5 rounded-[30px] p-2.5"
+      className={cn(
+        "flex items-end gap-2.5 rounded-[30px] p-2.5",
+        variant === "home"
+          ? "bg-[rgba(255,255,255,0.84)] shadow-[0_4px_4.5px_rgba(0,0,0,0.04)] backdrop-blur-[3.85px]"
+          : "bg-chat-bar",
+      )}
     >
-      <button
-        type="button"
-        aria-label={attachLabel}
-        onClick={onAttach}
-        className="flex size-10 shrink-0 items-center justify-center rounded-full"
-      >
-        <span aria-hidden className="relative block size-3.5">
-          <span className="bg-text-03 absolute top-1/2 left-0 h-[1.5px] w-full -translate-y-1/2 rounded-lg" />
-          <span className="bg-text-03 absolute top-0 left-1/2 h-full w-[1.5px] -translate-x-1/2 rounded-lg" />
-        </span>
-      </button>
+      <AttachButton
+        attachLabel={attachLabel}
+        cameraLabel={cameraLabel}
+        photoLabel={photoLabel}
+        onImageSelect={onImageSelect}
+      />
 
       <textarea
         ref={textareaRef}
@@ -72,7 +78,6 @@ function ChatComposer({
         value={value}
         onChange={(event) => onChange(event.target.value)}
         onKeyDown={(event) => {
-          // 줄바꿈은 Shift와 함께 눌렀을 때만
           if (event.key === "Enter" && !event.shiftKey) {
             event.preventDefault();
             handleSubmit(event);

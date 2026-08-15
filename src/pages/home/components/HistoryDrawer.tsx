@@ -1,6 +1,5 @@
 import { useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 
 import { getChatRooms } from "@/apis/chat";
@@ -45,7 +44,6 @@ function groupRooms(rooms: ChatRoomSummary[]) {
 
 function HistoryDrawer({ isOpen, onClose }: HistoryDrawerProps) {
   const { t } = useTranslation("settings");
-  const navigate = useNavigate();
 
   const openRoom = useChatStore((state) => state.openRoom);
 
@@ -80,10 +78,10 @@ function HistoryDrawer({ isOpen, onClose }: HistoryDrawerProps) {
     return () => window.removeEventListener("keydown", closeOnEscape);
   }, [isOpen, onClose]);
 
+  // 채팅은 홈 화면 안에서 이어지므로 방만 열고 서랍을 닫는다
   const handleSelect = (roomId: number) => {
     openRoom(roomId);
     onClose();
-    navigate("/ai-chat");
   };
 
   return (

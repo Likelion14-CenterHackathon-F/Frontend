@@ -1,36 +1,77 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
+import { getChatRoomMessages, postSymptomMessage } from "@/apis/chat";
 import { getAftercareHome } from "@/apis/patient";
+import logoDark from "@/assets/logo-dark.svg";
 import sidebarLeft from "@/assets/sidebar-left.svg";
 import ChatBar from "@/components/ChatBar/ChatBar";
 import HomeCard from "@/components/HomeCard/HomeCard";
 import { useChatStore } from "@/stores/useChatStore";
 import { usePreferencesStore } from "@/stores/usePreferencesStore";
 import { getDayOffset } from "@/utils/aftercare";
+import { cn } from "@/utils/cn";
 import { formatCalendarDate, formatCompactDate } from "@/utils/dateTime";
 
 import HistoryDrawer from "./components/HistoryDrawer";
 import HomeBackdrop from "./components/HomeBackdrop";
+import AiAnswer from "./components/AiAnswer";
+import ChatComposer from "./components/ChatComposer";
+import PatientMessage from "./components/PatientMessage";
 
 function HomePage() {
-  const { t } = useTranslation("home");
+  const { t } = useTranslation(["home", "aiChat"]);
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   const locale = usePreferencesStore((state) => state.locale);
   const timeZone = usePreferencesStore((state) => state.timeZone);
-  const startNewChat = useChatStore((state) => state.startNewChat);
-  const setPendingQuestion = useChatStore((state) => state.setPendingQuestion);
+  const roomId = useChatStore((state) => state.roomId);
+  const openRoom = useChatStore((state) => state.openRoom);
 
   const [draft, setDraft] = useState("");
+  const [image, setImage] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
+  const [isChatFocused, setIsChatFocused] = useState(false);
+
+  const bottomRef = useRef<HTMLDivElement>(null);
 
   const { data: home } = useQuery({
     queryKey: ["aftercare", "home"],
     queryFn: getAftercareHome,
   });
+
+  const { data: room } = useQuery({
+    queryKey: ["aiChat", "room", roomId],
+    queryFn: () => getChatRoomMessages(roomId as number),
+    enabled: roomId !== null,
+  });
+
+  const messages = useMemo(() => room?.messages ?? [], [room]);
+
+  const {
+    mutate: send,
+    isPending: isAnswering,
+    variables: sending,
+  } = useMutation({
+    mutationFn: postSymptomMessage,
+    onSuccess: (data) => {
+      openRoom(data.roomId);
+      queryClient.setQueryData(["aiChat", "room", data.roomId], data);
+      // 마지막 대화 시각이 바뀌어 채팅방 목록 순서도 달라진다
+      void queryClient.invalidateQueries({ queryKey: ["aiChat", "rooms"] });
+    },
+    onSettled: () => {
+      // 답변에 첨부 이미지가 담겨 돌아온 뒤에야 임시 미리보기를 지운다
+      setImage(null);
+      setImagePreview(null);
+    },
+  });
+
+  const isConversationActive = messages.length > 0 || isAnswering;
 
   const dayOffset = home?.aftercareProgress.elapsedDays ?? 0;
   const cautionDays = home?.aftercareProgress.totalCareDays ?? 0;
@@ -49,19 +90,43 @@ function HomePage() {
     };
   }, [home?.consultationAppointment, locale, timeZone]);
 
-  // 홈에서 입력한 첫 문장을 새 채팅방의 첫 문의로 넘긴다
+  useEffect(() => {
+    if (!isConversationActive) return;
+    bottomRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
+  }, [messages, isAnswering, isConversationActive]);
+
+  // 미리보기로 만든 objectURL은 이미지가 바뀌거나 화면을 떠날 때 정리한다
+  useEffect(() => {
+    if (!imagePreview) return;
+
+    return () => URL.revokeObjectURL(imagePreview);
+  }, [imagePreview]);
+
+  const selectImage = (file: File) => {
+    setImage(file);
+    setImagePreview(URL.createObjectURL(file));
+  };
+
   const sendToChat = () => {
     const question = draft.trim();
-    if (!question) return;
+    if ((!question && !image) || isAnswering) return;
 
-    startNewChat();
-    setPendingQuestion(question);
+    send({
+      roomId: roomId ?? undefined,
+      question,
+      image: image ?? undefined,
+    });
+
     setDraft("");
-    navigate("/ai-chat");
   };
 
   return (
-    <div className="relative flex min-h-dvh flex-col">
+    <div
+      className={cn(
+        "relative flex min-h-dvh flex-col",
+        !isConversationActive && "pb-10.5",
+      )}
+    >
       <HomeBackdrop />
 
       <HistoryDrawer
@@ -69,12 +134,12 @@ function HomePage() {
         onClose={() => setIsHistoryOpen(false)}
       />
 
-      <header className="relative flex items-center justify-between px-5 pt-2.5">
+      <header className="relative flex items-center justify-between px-5 pt-6">
         <button
           type="button"
           aria-label={t("menu")}
           onClick={() => setIsHistoryOpen(true)}
-          className="flex size-12 items-center justify-center rounded-[28px] bg-neutral-white/25"
+          className="bg-neutral-white/70 flex size-14.5 items-center justify-center rounded-[30px]"
         >
           <img aria-hidden src={sidebarLeft} alt="" className="size-5.25" />
         </button>
@@ -83,60 +148,143 @@ function HomePage() {
           type="button"
           aria-label={t("changeLanguage")}
           onClick={() => navigate("/settings/language")}
-          className="flex size-12 items-center justify-center rounded-[28px] bg-neutral-white/25 text-neutral-white"
+          className="bg-neutral-white/70 flex size-14.5 items-center justify-center rounded-[30px] text-[#47425b] transition-colors"
         >
           <span aria-hidden className="text-[1.0625rem] font-bold">
             가
-            <span className="text-[0.8125rem] font-medium opacity-70">가</span>
+            <span className="text-[0.8125rem] font-medium text-[#68657c] opacity-70">
+              가
+            </span>
           </span>
         </button>
       </header>
 
-      <div className="relative mt-4 flex flex-col gap-2 px-5 text-neutral-white">
-        <p className="text-title leading-[1.35] font-semibold">
-          {t("progress.day", { day: dayOffset })}
-          <span className="font-medium opacity-60">
-            {t("progress.total", { total: cautionDays })}
-          </span>
-        </p>
-        <h1 className="text-display leading-[1.35] font-semibold">
-          {t("greeting")}
-        </h1>
-      </div>
+      {isConversationActive ? (
+        <>
+          <main className="relative flex-1 px-5 pt-6 pb-6">
+            <div className="flex flex-col gap-10">
+              {messages.map((message) =>
+                message.role === "USER" ? (
+                  <PatientMessage
+                    key={message.messageId}
+                    text={message.content}
+                    imageUrl={message.imageUrl ?? undefined}
+                    imageAlt={t("aiChat:attachedImage")}
+                    variant="home"
+                  />
+                ) : (
+                  <AiAnswer
+                    key={message.messageId}
+                    content={message.content}
+                    variant="home"
+                  />
+                ),
+              )}
 
-      <p className="text-caption relative mx-auto mt-auto max-w-67 px-5 text-center font-medium text-neutral-white">
-        {t("disclaimer")}
-      </p>
+              {isAnswering && (
+                <>
+                  {sending && (
+                    <PatientMessage
+                      text={sending.question}
+                      imageUrl={imagePreview ?? undefined}
+                      imageAlt={t("aiChat:attachedImage")}
+                      variant="home"
+                    />
+                  )}
 
-      <div className="relative mt-5 px-5">
-        <ChatBar
-          value={draft}
-          placeholder={t("chat.placeholder")}
-          attachLabel={t("chat.attach")}
-          sendLabel={t("chat.send")}
-          onChange={setDraft}
-          onSubmit={sendToChat}
-        />
-      </div>
+                  <div className="flex w-50 flex-col gap-4">
+                    <img aria-hidden src={logoDark} alt="" className="size-7" />
+                    <p className="bg-linear-to-r from-[#473787] from-27% to-[#c2b3fb] bg-clip-text text-[0.9375rem] leading-[1.4] font-medium tracking-tight text-transparent opacity-60">
+                      {t("aiChat:thinking")}
+                    </p>
+                  </div>
+                </>
+              )}
+            </div>
+            <div ref={bottomRef} />
+          </main>
 
-      <div className="relative mt-9 flex gap-2.5 px-5 pb-15.5">
-        <HomeCard
-          badge={t("aftercare.badge", { day: dayOffset })}
-          caption={procedureName}
-          title={t("aftercare.title")}
-          onClick={() => navigate("/aftercare")}
-        />
+          <div className="sticky bottom-0 z-10 px-5 pt-6 pb-10">
+            <ChatComposer
+              value={draft}
+              placeholder={t("aiChat:inputPlaceholder")}
+              attachLabel={t("aiChat:attach")}
+              cameraLabel={t("aiChat:camera")}
+              photoLabel={t("aiChat:photo")}
+              sendLabel={t("aiChat:send")}
+              stopLabel={t("aiChat:stop")}
+              hasImage={image !== null}
+              isAnswering={isAnswering}
+              variant="home"
+              onChange={setDraft}
+              onSubmit={sendToChat}
+              onImageSelect={selectImage}
+              onStop={() => undefined}
+            />
+          </div>
+        </>
+      ) : (
+        <>
+          <div className="relative mx-auto mt-14 flex max-w-75 flex-col items-center gap-2 px-5 text-center">
+            <p className="text-text-02 text-[1.25rem] leading-[1.45] font-medium tracking-tight">
+              {t("progress.day", { day: dayOffset })}
+              {t("progress.total", { total: cautionDays })}
+            </p>
+            <h1 className="text-title text-greeting font-bold tracking-tight">
+              {t("greeting")}
+            </h1>
+          </div>
 
-        {consultation && (
-          <HomeCard
-            hasSymbol
-            badge={t("consultation.badge", { days: consultation.daysLeft })}
-            caption={t("consultation.scheduled", { date: consultation.date })}
-            title={t("consultation.title")}
-            onClick={() => navigate("/consultation")}
-          />
-        )}
-      </div>
+          <p className="text-disclaimer relative mx-auto mt-auto max-w-62 px-5 text-center text-[0.8125rem] leading-[1.4]">
+            {t("disclaimer")}
+          </p>
+
+          <div className="relative mt-6.25 px-5">
+            <ChatBar
+              value={draft}
+              placeholder={t("chat.placeholder")}
+              attachLabel={t("chat.attach")}
+              cameraLabel={t("chat.camera")}
+              photoLabel={t("chat.photo")}
+              sendLabel={t("chat.send")}
+              hasImage={image !== null}
+              onChange={setDraft}
+              onSubmit={sendToChat}
+              onImageSelect={selectImage}
+              onFocus={() => setIsChatFocused(true)}
+              onBlur={() => setIsChatFocused(false)}
+            />
+          </div>
+
+          <div
+            className={cn(
+              "relative mt-2.5 flex gap-[9px] overflow-hidden px-5 transition-[max-height] duration-300 ease-out",
+              isChatFocused ? "max-h-4.5" : "max-h-45",
+            )}
+          >
+            {consultation && (
+              <HomeCard
+                variant="consultation"
+                badge={t("consultation.badge", {
+                  days: consultation.daysLeft,
+                })}
+                caption={t("consultation.scheduled", {
+                  date: consultation.date,
+                })}
+                title={t("consultation.title")}
+                onClick={() => navigate("/consultation")}
+              />
+            )}
+
+            <HomeCard
+              badge={t("aftercare.badge", { day: dayOffset })}
+              caption={procedureName}
+              title={t("aftercare.title")}
+              onClick={() => navigate("/aftercare")}
+            />
+          </div>
+        </>
+      )}
     </div>
   );
 }

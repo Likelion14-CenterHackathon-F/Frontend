@@ -10,6 +10,8 @@
   "chat": {
     "placeholder": "How are you feeling today?",
     "attach": "Attach a photo",
+    "camera": "Camera",
+    "photo": "Photo",
     "send": "Send"
   },
   "aftercare": {

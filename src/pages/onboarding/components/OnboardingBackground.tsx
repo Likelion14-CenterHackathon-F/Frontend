@@ -48,7 +48,6 @@ function OnboardingBackground() {
 
       {GLOWS.map((glow, index) => (
         <img
-          // eslint-disable-next-line react/no-array-index-key
           key={index}
           src={glow.src}
           alt=""

@@ -10,6 +10,8 @@
   "chat": {
     "placeholder": "今日の状態はいかがですか？",
     "attach": "写真を添付",
+    "camera": "カメラ",
+    "photo": "写真",
     "send": "送信"
   },
   "aftercare": {
