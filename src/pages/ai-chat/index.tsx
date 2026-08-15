@@ -1,57 +1,91 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
+import { getChatRoomMessages, postSymptomMessage } from "@/apis/chat";
 import logo from "@/assets/logo.svg";
 import sidebarLeft from "@/assets/sidebar-left.svg";
 import { useChatStore } from "@/stores/useChatStore";
 
-import AiAnswer, { type AnswerSection } from "./components/AiAnswer";
+import AiAnswer from "./components/AiAnswer";
 import ChatBackdrop from "./components/ChatBackdrop";
 import ChatComposer from "./components/ChatComposer";
 import PatientMessage from "./components/PatientMessage";
 
-/* 명세 확정 전까지 쓰는 응답 지연 */
-const ANSWER_DELAY_MS = 1200;
-
-/* 대화가 안내 문구에 이만큼 가까워지면 지워지기 시작한다 */
+// 대화가 안내 문구에 이만큼 가까워지면 지워지기 시작
 const NOTICE_FADE_DISTANCE = 80;
 const NOTICE_MAX_OPACITY = 0.7;
 
-const ANSWER_KEYS = ["analysis", "reassuring", "lifestyle", "redFlags"];
-
 function AiChatPage() {
   const { t } = useTranslation("aiChat");
+  const queryClient = useQueryClient();
 
-  const messages = useChatStore((state) => state.messages);
-  const addMessage = useChatStore((state) => state.addMessage);
-  const clearMessages = useChatStore((state) => state.clearMessages);
+  const roomId = useChatStore((state) => state.roomId);
+  const openRoom = useChatStore((state) => state.openRoom);
+  const startNewChat = useChatStore((state) => state.startNewChat);
+  const pendingQuestion = useChatStore((state) => state.pendingQuestion);
+  const setPendingQuestion = useChatStore((state) => state.setPendingQuestion);
 
   const [draft, setDraft] = useState("");
-  const [imageUrl, setImageUrl] = useState<string | null>(null);
-  const [isAnswering, setIsAnswering] = useState(false);
+  const [image, setImage] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
 
   const [noticeOpacity, setNoticeOpacity] = useState(NOTICE_MAX_OPACITY);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
-  const answerTimerRef = useRef<number | null>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   const noticeRef = useRef<HTMLParagraphElement>(null);
+
+  const { data: room } = useQuery({
+    queryKey: ["aiChat", "room", roomId],
+    queryFn: () => getChatRoomMessages(roomId as number),
+    enabled: roomId !== null,
+  });
+
+  const messages = useMemo(() => room?.messages ?? [], [room]);
+
+  const {
+    mutate: send,
+    isPending: isAnswering,
+    variables: sending,
+  } = useMutation({
+    mutationFn: postSymptomMessage,
+    onSuccess: (data) => {
+      openRoom(data.roomId);
+      queryClient.setQueryData(["aiChat", "room", data.roomId], data);
+      // 마지막 대화 시각이 바뀌어 채팅방 목록 순서도 달라진다
+      void queryClient.invalidateQueries({ queryKey: ["aiChat", "rooms"] });
+    },
+    onSettled: () => {
+      // 답변에 첨부 이미지가 담겨 돌아온 뒤에야 임시 미리보기를 지운다
+      setImage(null);
+      setImagePreview(null);
+    },
+  });
+
+  // 홈 화면에서 입력하고 넘어온 첫 문장을 그대로 이어서 보낸다
+  useEffect(() => {
+    if (!pendingQuestion) return;
+
+    send({ question: pendingQuestion });
+    setPendingQuestion(null);
+  }, [pendingQuestion, send, setPendingQuestion]);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, isAnswering]);
 
-  // 화면을 벗어날 때 예약된 응답이 남지 않도록 정리한다
+  // 미리보기로 만든 objectURL은 이미지가 바뀌거나 화면을 떠날 때 정리한다
   useEffect(() => {
-    return () => {
-      if (answerTimerRef.current) window.clearTimeout(answerTimerRef.current);
-    };
-  }, []);
+    if (!imagePreview) return;
+
+    return () => URL.revokeObjectURL(imagePreview);
+  }, [imagePreview]);
 
   /*
     대화가 안내 문구에 가까워질수록 문구를 옅게 만든다.
-    딱 닿는 순간 사라지면 눈에 띄어서, 여유 구간을 두고 서서히 지운다.
+    딱 닿는 순간 사라지면 눈에 띄어서, 여유 구간을 두고 서서히 지우게 구현하였다
   */
   useEffect(() => {
     const update = () => {
@@ -77,48 +111,28 @@ function AiChatPage() {
     };
   }, [messages, isAnswering]);
 
-  const answerSections: AnswerSection[] = ANSWER_KEYS.map((key) => ({
-    title: t(`${key}.title`),
-    items: t(`${key}.items`, { returnObjects: true }) as string[],
-    // 분석 결과만 글머리표 없이 문장으로 늘어놓는다
-    isPlain: key === "analysis",
-  }));
-
-  const stopAnswering = () => {
-    if (answerTimerRef.current) window.clearTimeout(answerTimerRef.current);
-    setIsAnswering(false);
-  };
-
   const handleSubmit = () => {
-    const text = draft.trim();
-    if (!text && !imageUrl) return;
+    const question = draft.trim();
+    if (!question || isAnswering) return;
 
-    addMessage({
-      id: crypto.randomUUID(),
-      role: "patient",
-      kind: "text",
-      text: text || undefined,
-      imageUrl: imageUrl ?? undefined,
+    send({
+      roomId: roomId ?? undefined,
+      question,
+      image: image ?? undefined,
     });
 
     setDraft("");
-    setImageUrl(null);
     if (fileInputRef.current) fileInputRef.current.value = "";
-
-    // 실제로는 여기서 분석 API를 호출한다
-    setIsAnswering(true);
-    answerTimerRef.current = window.setTimeout(() => {
-      addMessage({ id: crypto.randomUUID(), role: "ai", kind: "guidance" });
-      setIsAnswering(false);
-    }, ANSWER_DELAY_MS);
   };
 
   const handleNewChat = () => {
-    stopAnswering();
-    clearMessages();
+    startNewChat();
     setDraft("");
-    setImageUrl(null);
+    setImage(null);
+    setImagePreview(null);
   };
+
+  const isEmptyRoom = messages.length === 0 && !isAnswering;
 
   return (
     <div className="text-chat-fg relative flex min-h-dvh flex-col">
@@ -143,7 +157,7 @@ function AiChatPage() {
       </header>
 
       <main className="relative flex-1 px-5 pt-6 pb-10">
-        {messages.length === 0 && (
+        {isEmptyRoom && (
           <div className="flex flex-col gap-6.5 ps-4">
             <img aria-hidden src={logo} alt="" className="size-7" />
             <h1 className="text-2xl leading-[1.4] font-semibold tracking-tight">
@@ -154,25 +168,35 @@ function AiChatPage() {
 
         <div ref={contentRef} className="flex flex-col gap-10">
           {messages.map((message) =>
-            message.role === "patient" ? (
+            message.role === "USER" ? (
               <PatientMessage
-                key={message.id}
-                text={message.text}
-                imageUrl={message.imageUrl}
+                key={message.messageId}
+                text={message.content}
+                imageUrl={message.imageUrl ?? undefined}
                 imageAlt={t("attachedImage")}
               />
             ) : (
-              <AiAnswer key={message.id} sections={answerSections} />
+              <AiAnswer key={message.messageId} content={message.content} />
             ),
           )}
 
           {isAnswering && (
-            <div className="flex flex-col gap-6">
-              <img aria-hidden src={logo} alt="" className="size-7" />
-              <p className="text-body leading-normal font-medium opacity-90">
-                {t("thinking")}
-              </p>
-            </div>
+            <>
+              {sending && (
+                <PatientMessage
+                  text={sending.question}
+                  imageUrl={imagePreview ?? undefined}
+                  imageAlt={t("attachedImage")}
+                />
+              )}
+
+              <div className="flex flex-col gap-6">
+                <img aria-hidden src={logo} alt="" className="size-7" />
+                <p className="text-body leading-normal font-medium opacity-90">
+                  {t("thinking")}
+                </p>
+              </div>
+            </>
           )}
         </div>
 
@@ -196,7 +220,10 @@ function AiChatPage() {
           className="hidden"
           onChange={(event) => {
             const file = event.target.files?.[0];
-            if (file) setImageUrl(URL.createObjectURL(file));
+            if (!file) return;
+
+            setImage(file);
+            setImagePreview(URL.createObjectURL(file));
           }}
         />
 
@@ -210,7 +237,7 @@ function AiChatPage() {
           onChange={setDraft}
           onSubmit={handleSubmit}
           onAttach={() => fileInputRef.current?.click()}
-          onStop={stopAnswering}
+          onStop={() => undefined}
         />
       </div>
     </div>
