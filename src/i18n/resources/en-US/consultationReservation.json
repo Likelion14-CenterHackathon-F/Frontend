@@ -7,6 +7,10 @@
     },
     "localTime": "Local time {{time}} ({{offset}})",
     "emptySlots": "There are no times available on the selected date.",
+    "slotsLoading": "Loading appointment times.",
+    "slotsLoadError": "Unable to load appointment times.",
+    "retry": "Try again",
+    "closed": "Closed",
     "next": "Next"
   },
   "preConsultation": {

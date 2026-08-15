@@ -7,6 +7,10 @@
     },
     "localTime": "現地時間 {{time}}（{{offset}}）",
     "emptySlots": "選択した日付に予約可能な時間はありません。",
+    "slotsLoading": "予約時間を読み込んでいます。",
+    "slotsLoadError": "予約時間を読み込めませんでした。",
+    "retry": "再試行",
+    "closed": "締切",
     "next": "次へ"
   },
   "preConsultation": {

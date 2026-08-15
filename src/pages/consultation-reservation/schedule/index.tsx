@@ -3,10 +3,6 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
 import ConsultationFooter from "@/components/Footer/ConsultationFooter";
-import {
-  getMockAvailableDates,
-  getMockDailySlots,
-} from "@/mocks/availableConsultationDatesMockData";
 import { useConsultationReservationStore } from "@/stores/useConsultationReservationStore";
 import { usePreferencesStore } from "@/stores/usePreferencesStore";
 import type { LocalDateString } from "@/types/consultationReservation.type";
@@ -19,6 +15,8 @@ import { groupConsultationSlots } from "@/utils/groupConsultationSlots";
 
 import ConsultationCalendar from "./components/ConsultationCalendar";
 import ConsultationTimeSlots from "./components/ConsultationTimeSlots";
+import { useAvailableConsultationDates } from "./hooks/useAvailableConsultationDates";
+import { useAvailableConsultationSlots } from "./hooks/useAvailableConsultationSlots";
 
 function ConsultationSchedulePage() {
   const navigate = useNavigate();
@@ -33,21 +31,25 @@ function ConsultationSchedulePage() {
   const { selectedDate, selectedSlot, setSelectedDate, setSelectedSlot } =
     useConsultationReservationStore();
 
-  //월별 가능한 날짜 배열 저장
-  const monthlyAvailableDates = useMemo(
-    () =>
-      getMockAvailableDates(
-        visibleMonth.getFullYear(),
-        visibleMonth.getMonth() + 1,
-      ),
-    [visibleMonth],
+  const visibleYear = visibleMonth.getFullYear();
+  const visibleMonthNumber = visibleMonth.getMonth() + 1;
+  const {
+    data: monthlyAvailableDates = [],
+    isPending: isAvailableDatesPending,
+    isError: isAvailableDatesError,
+    refetch: refetchAvailableDates,
+  } = useAvailableConsultationDates(
+    visibleYear,
+    visibleMonthNumber,
   );
 
   //선택한 날짜의 슬롯 조회
-  const dailySlots = useMemo(
-    () => (selectedDate ? getMockDailySlots(selectedDate) : null),
-    [selectedDate],
-  );
+  const {
+    data: dailySlots,
+    isPending: isAvailableSlotsPending,
+    isError: isAvailableSlotsError,
+    refetch: refetchAvailableSlots,
+  } = useAvailableConsultationSlots(selectedDate);
 
   //사용자의 시간대 기준으로 슬롯 그룹화
   const slotGroups = useMemo(
@@ -63,7 +65,14 @@ function ConsultationSchedulePage() {
 
   //다음 단계 진행 가능 여부
   const canProceed =
-    selectedDate !== null && selectedSlot !== null && selectedSlot.available;
+    selectedDate !== null &&
+    selectedSlot !== null &&
+    selectedSlot.available &&
+    Boolean(
+      dailySlots?.slots.some(
+        (slot) => slot.slotId === selectedSlot.slotId && slot.available,
+      ),
+    );
 
   //날짜 선택 핸들러 Date 객체 -> string
   const handleSelectDate = (date: Date | undefined) => {
@@ -93,6 +102,25 @@ function ConsultationSchedulePage() {
             onMonthChange={setVisibleMonth}
             onSelect={handleSelectDate}
           />
+
+          {isAvailableDatesPending && (
+            <p className="mt-4 text-center text-sm text-[#7B7A80]">
+              예약 가능한 날짜를 불러오고 있습니다.
+            </p>
+          )}
+
+          {isAvailableDatesError && (
+            <div className="mt-4 flex items-center justify-center gap-3 text-sm text-[#65646D]">
+              <p>예약 가능한 날짜를 불러오지 못했습니다.</p>
+              <button
+                type="button"
+                onClick={() => void refetchAvailableDates()}
+                className="font-semibold text-[#614BB8]"
+              >
+                다시 시도
+              </button>
+            </div>
+          )}
         </section>
 
         <ul className="text-calendar-description mx-5 mt-8 list-disc pl-5 text-sm leading-[1.4] tracking-tight">
@@ -100,13 +128,28 @@ function ConsultationSchedulePage() {
           <li className="mt-1">{t("schedule.instructions.timezone")}</li>
         </ul>
 
-        {selectedDate && dailySlots && (
+        {selectedDate && (
           <div className="mt-9 h-2 bg-action-disabled" />
         )}
 
-        {selectedDate && dailySlots && (
+        {selectedDate && (
           <section className="px-5 py-[46px]">
-            {dailySlots.slots.length === 0 ? (
+            {isAvailableSlotsPending ? (
+              <p className="text-center text-text-03">
+                {t("schedule.slotsLoading")}
+              </p>
+            ) : isAvailableSlotsError ? (
+              <div className="flex items-center justify-center gap-3 text-sm text-[#65646D]">
+                <p>{t("schedule.slotsLoadError")}</p>
+                <button
+                  type="button"
+                  onClick={() => void refetchAvailableSlots()}
+                  className="font-semibold text-[#614BB8]"
+                >
+                  {t("schedule.retry")}
+                </button>
+              </div>
+            ) : !dailySlots || dailySlots.slots.length === 0 ? (
               <p className="text-center text-text-03">
                 {t("schedule.emptySlots")}
               </p>

@@ -7,6 +7,10 @@
     },
     "localTime": "현지 시간 {{time}} ({{offset}})",
     "emptySlots": "선택한 날짜에 등록된 시간이 없습니다.",
+    "slotsLoading": "예약 시간을 불러오고 있습니다.",
+    "slotsLoadError": "예약 시간을 불러오지 못했습니다.",
+    "retry": "다시 시도",
+    "closed": "마감",
     "next": "다음"
   },
   "preConsultation": {
