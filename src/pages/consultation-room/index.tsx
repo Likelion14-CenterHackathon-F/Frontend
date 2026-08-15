@@ -8,6 +8,7 @@ import speakerIcon from "@/assets/icons/consultation-room/speaker.svg";
 import CaptionOverlay from "./components/CaptionOverlay";
 import ConnectionStatus from "./components/ConnectionStatus";
 import ConsultationControls from "./components/ConsultationControls";
+import ConsultationEndModal from "./components/ConsultationEndModal";
 import LocalVideo from "./components/LocalVideo";
 import RemoteVideo from "./components/RemoteVideo";
 import { useAgoraRTC } from "./hooks/useAgoraRTC";
@@ -42,6 +43,7 @@ function ConsultationRoomPage() {
   const sttRequestedRef = useRef(false);
   const [sttErrorMessage, setSttErrorMessage] = useState<string | null>(null);
   const [endErrorMessage, setEndErrorMessage] = useState<string | null>(null);
+  const [isEndModalOpen, setIsEndModalOpen] = useState(false);
   const { mutateAsync: startSttAgent } = useStartSttAgent();
   const { mutateAsync: endConsultation, isPending: isEnding } =
     useEndConsultation();
@@ -121,10 +123,6 @@ function ConsultationRoomPage() {
     )
       return;
 
-    if (isSttStatusError) {
-      return;
-    }
-
     if (
       sttAgent?.status === "STARTING" ||
       sttAgent?.status === "RUNNING" ||
@@ -173,12 +171,6 @@ function ConsultationRoomPage() {
   const handleEnd = async () => {
     if (!roomInfo || isEnding || isCreatingSummary) return;
 
-    const confirmed = window.confirm(
-      "상담을 종료하면 다시 입장할 수 없습니다. 상담을 종료하시겠습니까?",
-    );
-
-    if (!confirmed) return;
-
     setEndErrorMessage(null);
     try {
       await flushCaptions();
@@ -203,6 +195,7 @@ function ConsultationRoomPage() {
       });
 
       clearRoomInfo();
+      setIsEndModalOpen(false);
       navigate(`/consultation/summary/${summary.summaryId}`, {
         replace: true,
       });
@@ -237,10 +230,7 @@ function ConsultationRoomPage() {
     <main
       className={[
         "relative isolate h-dvh min-h-[390px] w-full overflow-hidden bg-[#1A1A1A] text-white",
-        "[@media_(orientation:landscape)_and_(pointer:coarse)]:left-1/2",
-        "[@media_(orientation:landscape)_and_(pointer:coarse)]:w-screen",
-        "[@media_(orientation:landscape)_and_(pointer:coarse)]:min-h-0",
-        "[@media_(orientation:landscape)_and_(pointer:coarse)]:-translate-x-1/2",
+        role === "PATIENT" ? "mx-auto max-w-[430px]" : "",
       ].join(" ")}
     >
       <RemoteVideo
@@ -302,9 +292,16 @@ function ConsultationRoomPage() {
           onToggleMicrophone={toggleMicrophone}
           onToggleCamera={toggleCamera}
           onSwitchCamera={switchCamera}
-          onEnd={handleEnd}
+          onEnd={() => setIsEndModalOpen(true)}
         />
       </div>
+
+      <ConsultationEndModal
+        open={isEndModalOpen}
+        ending={isFinishingConsultation}
+        onContinue={() => setIsEndModalOpen(false)}
+        onConfirm={handleEnd}
+      />
     </main>
   );
 }

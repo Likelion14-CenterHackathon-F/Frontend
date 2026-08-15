@@ -58,7 +58,7 @@ interface ConsultationControlsProps {
   onToggleMicrophone: () => Promise<void>;
   onToggleCamera: () => Promise<void>;
   onSwitchCamera: () => Promise<void>;
-  onEnd: () => Promise<void>;
+  onEnd: () => void | Promise<void>;
 }
 
 function ConsultationControls({

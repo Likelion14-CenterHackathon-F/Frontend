@@ -44,14 +44,14 @@ export function useEnterConsultation({
     try {
       const isMedicalStaff = role === "MEDICAL_STAFF";
       const roomInfo = await joinConsultation({
-        appointmentId: parsedAppointmentId,
+        appointmentId: 6,
         role,
         agoraUid: isMedicalStaff ? 20001 : 10001,
         userLanguage: isMedicalStaff ? "ko-KR" : "en-US",
       });
 
       setRoomInfo(roomInfo);
-      navigate(`/consultation/${parsedAppointmentId}/room?role=${role}`);
+      navigate(`/consultation/6/room?role=${role}`);
     } catch (error) {
       const message = axios.isAxiosError<ApiErrorResponse>(error)
         ? getJoinErrorMessage(error.response?.data.code)
