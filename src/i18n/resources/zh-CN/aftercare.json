@@ -1,4 +1,6 @@
 {
+  "pageTitle": "我的术后管理",
+  "back": "返回",
   "dayCount": "第 {{day}} 天",
   "today": "今天，",
   "toggle": {

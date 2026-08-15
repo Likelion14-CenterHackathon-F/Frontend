@@ -1,4 +1,6 @@
 {
+  "pageTitle": "My Aftercare",
+  "back": "Go back",
   "dayCount": "Day {{day}}",
   "today": "Today,",
   "toggle": {

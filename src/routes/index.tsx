@@ -1,6 +1,7 @@
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import AppLayout from "@/layouts/AppLayout";
 import AftercarePage from "@/pages/aftercare";
+import EmergencyReportPage from "@/pages/aftercare/emergency-report";
 import HomePage from "@/pages/home";
 import ConsultationWaitingPage from "@/pages/consultation-waiting";
 import ConsultationHubPage from "@/pages/consultation-hub";
@@ -59,6 +60,10 @@ const router = createBrowserRouter([
       {
         path: "/aftercare",
         element: <AftercarePage />,
+      },
+      {
+        path: "/aftercare/emergency-report",
+        element: <EmergencyReportPage />,
       },
       {
         path: "/",

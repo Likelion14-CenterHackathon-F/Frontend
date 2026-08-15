@@ -33,9 +33,7 @@ function WeekStrip({ days, today, locale }: WeekStripProps) {
             <span
               className={cn(
                 "text-caption font-medium",
-                isToday && "text-text-01",
-                isPast && "text-week-past",
-                !isToday && !isPast && "text-week-future",
+                isPast ? "text-week-past" : "text-week-upcoming",
               )}
             >
               {formatWeekday(day, locale)}
@@ -43,15 +41,17 @@ function WeekStrip({ days, today, locale }: WeekStripProps) {
 
             <span
               style={
-                isToday || isPast
+                !isPast
                   ? { backgroundImage: chipGradient(isToday ? 1 : 0.12) }
                   : undefined
               }
               className={cn(
                 "text-body flex h-12 w-11 items-center justify-center rounded-[20px] font-semibold",
-                isToday && "text-neutral-white",
-                isPast && "text-week-past",
-                !isToday && !isPast && "text-week-future",
+                isToday
+                  ? "text-neutral-white"
+                  : isPast
+                    ? "text-week-past"
+                    : "text-week-upcoming",
               )}
             >
               {day.getDate()}

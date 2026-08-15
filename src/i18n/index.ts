@@ -7,6 +7,7 @@ import jaAftercare from "./resources/ja-JP/aftercare.json";
 import zhCNAftercare from "./resources/zh-CN/aftercare.json";
 
 import koOnboarding from "./resources/ko-KR/onboarding.json";
+import koReport from "./resources/ko-KR/report.json";
 import koHome from "./resources/ko-KR/home.json";
 import koAiChat from "./resources/ko-KR/aiChat.json";
 import koSettings from "./resources/ko-KR/settings.json";
@@ -15,6 +16,7 @@ import koConsultationWaiting from "./resources/ko-KR/consultationWaiting.json";
 import koConsultationReservation from "./resources/ko-KR/consultationReservation.json";
 
 import enOnboarding from "./resources/en-US/onboarding.json";
+import enReport from "./resources/en-US/report.json";
 import enHome from "./resources/en-US/home.json";
 import enAiChat from "./resources/en-US/aiChat.json";
 import enSettings from "./resources/en-US/settings.json";
@@ -23,6 +25,7 @@ import enConsultationWaiting from "./resources/en-US/consultationWaiting.json";
 import enConsultationReservation from "./resources/en-US/consultationReservation.json";
 
 import jaOnboarding from "./resources/ja-JP/onboarding.json";
+import jaReport from "./resources/ja-JP/report.json";
 import jaHome from "./resources/ja-JP/home.json";
 import jaAiChat from "./resources/ja-JP/aiChat.json";
 import jaSettings from "./resources/ja-JP/settings.json";
@@ -31,6 +34,7 @@ import jaConsultationWaiting from "./resources/ja-JP/consultationWaiting.json";
 import jaConsultationReservation from "./resources/ja-JP/consultationReservation.json";
 
 import zhCNOnboarding from "./resources/zh-CN/onboarding.json";
+import zhCNReport from "./resources/zh-CN/report.json";
 import zhCNHome from "./resources/zh-CN/home.json";
 import zhCNAiChat from "./resources/zh-CN/aiChat.json";
 import zhCNSettings from "./resources/zh-CN/settings.json";
@@ -61,6 +65,7 @@ void i18n
 
     ns: [
       "onboarding",
+      "report",
       "home",
       "aiChat",
       "settings",
@@ -73,6 +78,7 @@ void i18n
     resources: {
       "ko-KR": {
         onboarding: koOnboarding,
+        report: koReport,
         aftercare: koAftercare,
         home: koHome,
         aiChat: koAiChat,
@@ -83,6 +89,7 @@ void i18n
       },
       "en-US": {
         onboarding: enOnboarding,
+        report: enReport,
         aftercare: enAftercare,
         home: enHome,
         aiChat: enAiChat,
@@ -93,6 +100,7 @@ void i18n
       },
       "ja-JP": {
         onboarding: jaOnboarding,
+        report: jaReport,
         aftercare: jaAftercare,
         home: jaHome,
         aiChat: jaAiChat,
@@ -103,6 +111,7 @@ void i18n
       },
       "zh-CN": {
         onboarding: zhCNOnboarding,
+        report: zhCNReport,
         aftercare: zhCNAftercare,
         home: zhCNHome,
         aiChat: zhCNAiChat,

@@ -1,4 +1,6 @@
 {
+  "pageTitle": "나의 사후관리",
+  "back": "뒤로가기",
   "dayCount": "{{day}}일째",
   "today": "오늘,",
   "toggle": {
