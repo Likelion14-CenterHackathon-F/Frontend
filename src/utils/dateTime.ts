@@ -292,6 +292,56 @@ export function getTimeZoneCity(timeZone: string): string {
   return city.replaceAll("_", " ");
 }
 
+// UTC 대비 분 단위 오프셋. "GMT+9" → 540, "GMT-3:30" → -210
+function getTimeZoneOffsetMinutes(timeZone: string, value: DateValue = new Date()): number {
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone,
+    timeZoneName: "shortOffset",
+  }).formatToParts(toDate(value));
+
+  const raw = parts.find((part) => part.type === "timeZoneName")?.value ?? "GMT";
+  const match = /GMT([+-]\d+)(?::(\d+))?/.exec(raw);
+  if (!match) return 0;
+
+  const hours = Number(match[1]);
+  const minutes = Number(match[2] ?? 0);
+
+  return hours < 0 ? hours * 60 - minutes : hours * 60 + minutes;
+}
+
+export interface CityTimeZoneOption {
+  value: string;
+  city: string;
+  offsetMinutes: number;
+  offsetLabel: string;
+}
+
+/*
+브라우저가 지원하는 모든 IANA 시간대를 도시 단위 옵션으로 만든다.
+react-timezone-select의 기본 목록은 같은 오프셋을 쓰는 도시를 하나로 묶어버려서
+도쿄·서울처럼 오프셋이 겹치는 도시를 따로 고를 수 없어, 직접 Intl로 오프셋을 계산해 채운다.
+*/
+export function getCityTimeZoneOptions(): CityTimeZoneOption[] {
+  const now = new Date();
+
+  return Intl.supportedValuesOf("timeZone")
+    .filter((timeZone) => !timeZone.startsWith("Etc/"))
+    .map((timeZone) => {
+      const offsetMinutes = getTimeZoneOffsetMinutes(timeZone, now);
+      const sign = offsetMinutes < 0 ? "-" : "+";
+      const abs = Math.abs(offsetMinutes);
+      const offsetLabel = `GMT${sign}${Math.floor(abs / 60)}${abs % 60 ? `:${String(abs % 60).padStart(2, "0")}` : ""}`;
+
+      return {
+        value: timeZone,
+        city: getTimeZoneCity(timeZone),
+        offsetMinutes,
+        offsetLabel,
+      };
+    })
+    .sort((a, b) => a.offsetMinutes - b.offsetMinutes || a.city.localeCompare(b.city));
+}
+
 // timeZone에 맞는 Date 객체를 반환
 export function getCurrentMonthInTimeZone(timeZone: string) {
   const parts = new Intl.DateTimeFormat("en-US", {
