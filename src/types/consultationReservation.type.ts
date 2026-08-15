@@ -42,6 +42,24 @@ export interface ConsultationDailySlots {
   slots: ConsultationReservationSlot[];
 }
 
+export interface ActiveConsultationAppointment {
+  appointmentId: number;
+  caseId: number;
+  slotId: number;
+  startsAt: string;
+  endsAt: string;
+  waitingRoomOpensAt: string;
+  waitingRoomClosesAt: string;
+  canEnterWaitingRoom: boolean;
+  timezoneId: string;
+  status: "CONFIRMED";
+}
+
+export interface ActiveConsultationAppointmentResponse {
+  hasAppointment: boolean;
+  appointment: ActiveConsultationAppointment | null;
+}
+
 export type SymptomType =
   | "pain"
   | "swelling"

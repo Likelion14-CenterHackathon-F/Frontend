@@ -6,12 +6,41 @@ import { useTranslation } from "react-i18next";
 
 interface ConsultationReservationListProps {
   consultations: Consultation[];
+  isLoading?: boolean;
+  isError?: boolean;
+  onRetry?: () => void;
 }
 
 function ConsultationReservationList({
   consultations,
+  isLoading = false,
+  isError = false,
+  onRetry,
 }: ConsultationReservationListProps) {
   const { t } = useTranslation("consultationHub");
+
+  if (isLoading) {
+    return (
+      <div className="flex min-h-[640px] items-center justify-center bg-[#F4F4F8] px-5 text-sm text-[#65646D]">
+        상담 예약을 불러오고 있습니다.
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="flex min-h-[640px] flex-col items-center justify-center gap-4 bg-[#F4F4F8] px-5 text-center text-sm text-[#65646D]">
+        <p>상담 예약을 불러오지 못했습니다.</p>
+        <button
+          type="button"
+          onClick={onRetry}
+          className="rounded-full bg-[#2A2A2A] px-5 py-3 font-semibold text-white"
+        >
+          다시 시도
+        </button>
+      </div>
+    );
+  }
 
   if (consultations.length === 0) {
     return <EmptyConsultation />;
