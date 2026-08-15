@@ -60,6 +60,27 @@ export interface ActiveConsultationAppointmentResponse {
   appointment: ActiveConsultationAppointment | null;
 }
 
+export type SymptomCategory =
+  | "PAIN"
+  | "SWELLING"
+  | "REDNESS"
+  | "HEAT"
+  | "BLEEDING"
+  | "ITCHING"
+  | "BRUISING"
+  | "OTHER";
+
+export interface CreateConsultationAppointmentRequest {
+  caseId: number;
+  slotId: number;
+  symptomCategory?: SymptomCategory;
+  symptomNote?: string;
+  files?: File[];
+}
+
+export type CreateConsultationAppointmentResponse =
+  ActiveConsultationAppointment;
+
 export type SymptomType =
   | "pain"
   | "swelling"
