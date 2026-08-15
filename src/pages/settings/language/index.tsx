@@ -12,10 +12,10 @@ function LanguageSettingsPage() {
   const setLocale = usePreferencesStore((state) => state.setLocale);
 
   return (
-    <div className="min-h-dvh bg-neutral-white">
+    <div className="min-h-dvh bg-language-bg">
       <PageHeader title={t("language.title")} backLabel={t("back")} />
 
-      <ul>
+      <ul className="mt-1.5">
         {LANGUAGE_OPTIONS.map((option) => {
           const isSelected = option.value === locale;
 
@@ -25,7 +25,7 @@ function LanguageSettingsPage() {
                 type="button"
                 aria-current={isSelected}
                 onClick={() => void setLocale(option.value)}
-                className="border-language-divider flex w-full items-center justify-between border-t px-5 py-4.75"
+                className="flex h-[62px] w-full items-center justify-between border-t border-language-divider bg-language-bg px-5"
               >
                 <span className="flex items-center gap-3">
                   <img
@@ -34,7 +34,7 @@ function LanguageSettingsPage() {
                     alt=""
                     className="h-6 w-9 rounded-[3px] shadow-[0_0_4px_rgba(0,0,0,0.25)]"
                   />
-                  <span className="text-body font-medium text-text-language">
+                  <span className="text-body font-medium tracking-tight text-text-language">
                     {option.label}
                   </span>
                 </span>

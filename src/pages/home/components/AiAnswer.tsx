@@ -1,4 +1,6 @@
 import logo from "@/assets/logo.svg";
+import logoDark from "@/assets/logo-dark.svg";
+import { cn } from "@/utils/cn";
 
 export interface AnswerSection {
   title: string;
@@ -9,15 +11,29 @@ export interface AnswerSection {
 
 interface AiAnswerProps {
   sections: AnswerSection[];
+  variant?: "chat" | "home";
 }
 
-function AiAnswer({ sections }: AiAnswerProps) {
+function AiAnswer({ sections, variant = "chat" }: AiAnswerProps) {
+  const isHome = variant === "home";
+
   return (
     <div className="flex flex-col gap-6">
-      <img aria-hidden src={logo} alt="" className="size-7" />
+      <img
+        aria-hidden
+        src={isHome ? logoDark : logo}
+        alt=""
+        className="size-7"
+      />
 
       {sections.map((section) => (
-        <section key={section.title} className="text-chat-fg/90 flex flex-col">
+        <section
+          key={section.title}
+          className={cn(
+            "flex flex-col",
+            isHome ? "text-[#473787]/90" : "text-chat-fg/90",
+          )}
+        >
           <h2 className="text-lg leading-[1.4] font-semibold tracking-tight">
             {section.title}
           </h2>

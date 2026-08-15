@@ -1,6 +1,5 @@
 import { useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
 
 import { getQuestionHistory } from "@/apis/chat";
 import logoDark from "@/assets/logo-dark.svg";
@@ -13,8 +12,6 @@ interface HistoryDrawerProps {
 
 function HistoryDrawer({ isOpen, onClose }: HistoryDrawerProps) {
   const { t } = useTranslation("settings");
-  const navigate = useNavigate();
-
   const groups = useMemo(() => getQuestionHistory(), []);
 
   // 열려 있는 동안 뒤 화면이 스크롤되지 않도록 막는다
@@ -70,7 +67,7 @@ function HistoryDrawer({ isOpen, onClose }: HistoryDrawerProps) {
         <header className="flex items-center gap-3 px-5 pt-5 pb-4">
           <img src={logoDark} alt="" aria-hidden className="size-7" />
           <span className="text-heading font-semibold text-text-01">
-            Kanage
+            allway
           </span>
         </header>
 
@@ -86,10 +83,7 @@ function HistoryDrawer({ isOpen, onClose }: HistoryDrawerProps) {
                   <button
                     type="button"
                     tabIndex={isOpen ? 0 : -1}
-                    onClick={() => {
-                      onClose();
-                      navigate("/ai-chat");
-                    }}
+                    onClick={onClose}
                     className={cn(
                       "text-body flex h-12 w-full items-center rounded-xl px-3 text-left text-text-history",
                       // 가장 최근 질문만 강조된다
