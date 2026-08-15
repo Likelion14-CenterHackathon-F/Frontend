@@ -5,7 +5,7 @@
     "day": "第{{day}}天 · ",
     "total": "共{{total}}天"
   },
-  "greeting": "您好，{{name}}",
+  "greeting": "您好！",
   "disclaimer": "此为参考指引而非医疗诊断。如出现危险症状请立即联系医院。",
   "chat": {
     "placeholder": "今天感觉怎么样？",

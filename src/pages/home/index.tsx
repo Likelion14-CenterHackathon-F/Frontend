@@ -1,8 +1,9 @@
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 
-import { getPatientCase } from "@/apis/patient";
+import { getAftercareHome } from "@/apis/patient";
 import sidebarLeft from "@/assets/sidebar-left.svg";
 import ChatBar from "@/components/ChatBar/ChatBar";
 import HomeCard from "@/components/HomeCard/HomeCard";
@@ -20,35 +21,41 @@ function HomePage() {
 
   const locale = usePreferencesStore((state) => state.locale);
   const timeZone = usePreferencesStore((state) => state.timeZone);
-  const addMessage = useChatStore((state) => state.addMessage);
+  const startNewChat = useChatStore((state) => state.startNewChat);
+  const setPendingQuestion = useChatStore((state) => state.setPendingQuestion);
 
   const [draft, setDraft] = useState("");
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
 
-  const patientCase = useMemo(() => getPatientCase(), []);
-  const dayOffset = getDayOffset(patientCase.procedureDate);
+  const { data: home } = useQuery({
+    queryKey: ["aftercare", "home"],
+    queryFn: getAftercareHome,
+  });
+
+  const dayOffset = home?.aftercareProgress.elapsedDays ?? 0;
+  const cautionDays = home?.aftercareProgress.totalCareDays ?? 0;
+  const procedureName = home?.procedure.procedureName ?? "";
 
   const consultation = useMemo(() => {
-    if (!patientCase.upcomingConsultationAt) return null;
+    const appointment = home?.consultationAppointment;
+    if (!appointment) return null;
 
-    const scheduledAt = new Date(patientCase.upcomingConsultationAt);
+    const scheduledAt = new Date(appointment.startsAt);
 
     return {
       date: formatCompactDate(scheduledAt, { locale, timeZone }),
       // 상담일이 미래면 getDayOffset이 음수를 주므로 부호를 뒤집는다
       daysLeft: -getDayOffset(formatCalendarDate(scheduledAt)),
     };
-  }, [patientCase.upcomingConsultationAt, locale, timeZone]);
+  }, [home?.consultationAppointment, locale, timeZone]);
 
-  // 홈에서 입력한 첫 문장을 그대로 들고 채팅 화면으로 넘어간다
+  // 홈에서 입력한 첫 문장을 새 채팅방의 첫 문의로 넘긴다
   const sendToChat = () => {
-    addMessage({
-      id: crypto.randomUUID(),
-      role: "patient",
-      kind: "text",
-      text: draft.trim(),
-    });
+    const question = draft.trim();
+    if (!question) return;
 
+    startNewChat();
+    setPendingQuestion(question);
     setDraft("");
     navigate("/ai-chat");
   };
@@ -89,11 +96,11 @@ function HomePage() {
         <p className="text-title leading-[1.35] font-semibold">
           {t("progress.day", { day: dayOffset })}
           <span className="font-medium opacity-60">
-            {t("progress.total", { total: patientCase.cautionDays })}
+            {t("progress.total", { total: cautionDays })}
           </span>
         </p>
         <h1 className="text-display leading-[1.35] font-semibold">
-          {t("greeting", { name: patientCase.name })}
+          {t("greeting")}
         </h1>
       </div>
 
@@ -115,7 +122,7 @@ function HomePage() {
       <div className="relative mt-9 flex gap-2.5 px-5 pb-15.5">
         <HomeCard
           badge={t("aftercare.badge", { day: dayOffset })}
-          caption={patientCase.procedureName}
+          caption={procedureName}
           title={t("aftercare.title")}
           onClick={() => navigate("/aftercare")}
         />

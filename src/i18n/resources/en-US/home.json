@@ -5,7 +5,7 @@
     "day": "Day {{day}} ",
     "total": "of {{total}}"
   },
-  "greeting": "Hello, {{name}}!",
+  "greeting": "Hello!",
   "disclaimer": "For guidance only. Contact your hospital if warning signs appear.",
   "chat": {
     "placeholder": "How are you feeling today?",
