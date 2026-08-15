@@ -1,9 +1,13 @@
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
+import { updatePatientSettings } from "@/apis/patient";
 import check from "@/assets/check.svg";
 import PageHeader from "@/components/PageHeader/PageHeader";
-import { LANGUAGE_OPTIONS } from "@/constants/settings";
+import { LANGUAGE_OPTIONS, LOCALE_TO_API_LANGUAGE } from "@/constants/settings";
+import { ACCESS_TOKEN_STORAGE_KEY } from "@/constants/storageKey";
 import { usePreferencesStore } from "@/stores/usePreferencesStore";
+import type { SupportedLocale } from "@/types/preferences";
 
 function LanguageSettingsPage() {
   const { t } = useTranslation("settings");
@@ -11,9 +15,41 @@ function LanguageSettingsPage() {
   const locale = usePreferencesStore((state) => state.locale);
   const setLocale = usePreferencesStore((state) => state.setLocale);
 
+  const [pendingLocale, setPendingLocale] = useState<SupportedLocale | null>(
+    null,
+  );
+  const [error, setError] = useState(false);
+
+  const handleSelect = async (nextLocale: SupportedLocale) => {
+    if (nextLocale === locale || pendingLocale) return;
+
+    setPendingLocale(nextLocale);
+    setError(false);
+
+    try {
+      // language claim이 JWT에 들어 있어, 성공하면 accessToken이 새로 발급된다
+      const { accessToken } = await updatePatientSettings({
+        language: LOCALE_TO_API_LANGUAGE[nextLocale],
+      });
+
+      localStorage.setItem(ACCESS_TOKEN_STORAGE_KEY, accessToken);
+      await setLocale(nextLocale);
+    } catch {
+      setError(true);
+    } finally {
+      setPendingLocale(null);
+    }
+  };
+
   return (
     <div className="min-h-dvh bg-neutral-white">
       <PageHeader title={t("language.title")} backLabel={t("back")} />
+
+      {error && (
+        <p className="text-caption px-5 pb-2 text-red-500">
+          {t("language.error")}
+        </p>
+      )}
 
       <ul>
         {LANGUAGE_OPTIONS.map((option) => {
@@ -24,8 +60,9 @@ function LanguageSettingsPage() {
               <button
                 type="button"
                 aria-current={isSelected}
-                onClick={() => void setLocale(option.value)}
-                className="border-language-divider flex w-full items-center justify-between border-t px-5 py-4.75"
+                disabled={pendingLocale !== null}
+                onClick={() => void handleSelect(option.value)}
+                className="border-language-divider flex w-full items-center justify-between border-t px-5 py-4.75 disabled:opacity-60"
               >
                 <span className="flex items-center gap-3">
                   <img

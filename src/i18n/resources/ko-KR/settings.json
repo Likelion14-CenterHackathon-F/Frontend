@@ -1,7 +1,8 @@
 {
   "back": "뒤로 가기",
   "language": {
-    "title": "언어"
+    "title": "언어",
+    "error": "언어 설정을 저장하지 못했어요. 다시 시도해주세요."
   },
   "history": {
     "title": "질문 내역",

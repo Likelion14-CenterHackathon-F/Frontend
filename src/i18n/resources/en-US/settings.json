@@ -1,7 +1,8 @@
 {
   "back": "Go back",
   "language": {
-    "title": "Language"
+    "title": "Language",
+    "error": "Couldn't save your language setting. Please try again."
   },
   "history": {
     "title": "Question history",

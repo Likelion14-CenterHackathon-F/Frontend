@@ -1,7 +1,8 @@
 {
   "back": "返回",
   "language": {
-    "title": "语言"
+    "title": "语言",
+    "error": "语言设置保存失败，请重试。"
   },
   "history": {
     "title": "提问记录",
