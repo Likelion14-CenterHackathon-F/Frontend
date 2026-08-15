@@ -1,15 +1,21 @@
 import ConsultationHeader from "@/components/Header/ConsultationHeader";
 import WaitingCheckListSection from "./components/WaitingCheckListSection";
 import CameraPreview from "./components/CameraPreview";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { useConsultationMedia } from "./hooks/useConsultationMedia";
 import { useEnterConsultation } from "./hooks/useEnterConsultation";
 import { useTranslation } from "react-i18next";
+import type { ParticipantRole } from "@/types/consultation.type";
 
 function ConsultationWaitingPage() {
   const { t } = useTranslation("consultationWaiting");
   const navigate = useNavigate();
   const { appointmentId } = useParams<{ appointmentId: string }>();
+  const [searchParams] = useSearchParams();
+  const role: ParticipantRole =
+    searchParams.get("role")?.toUpperCase() === "MEDICAL_STAFF"
+      ? "MEDICAL_STAFF"
+      : "PATIENT";
 
   const {
     stream,
@@ -26,6 +32,7 @@ function ConsultationWaitingPage() {
 
   const { enterRoom, isEntering, enterErrorMessage } = useEnterConsultation({
     appointmentId,
+    role,
   });
 
   return (

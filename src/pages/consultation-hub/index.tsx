@@ -49,7 +49,9 @@ function ConsultationHubPage() {
 
   const handleEnterWaitingRoom = () => {
     if (!activeAppointment?.canEnterWaitingRoom) return;
-    navigate(`/consultation/${activeAppointment.appointmentId}/waiting`);
+    navigate(
+      `/consultation/${activeAppointment.appointmentId}/waiting?role=PATIENT`,
+    );
   };
 
   return (
