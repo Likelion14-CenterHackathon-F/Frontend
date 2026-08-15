@@ -86,6 +86,17 @@
   --color-gradient-via: #9386e0;
   --color-gradient-to: #d4ccf1;
 
+  /* 온보딩 단계(언어/지역/생년월일) 화면 */
+  --color-onboarding-bg: #e1e9ff; /* 줄무늬 이미지 아래 깔리는 바탕색 */
+  --color-onboarding-title: #32303a;
+  --color-onboarding-description: #65646d;
+  --color-onboarding-confirm-bg: #fdfdff;
+  --color-onboarding-confirm-text: #32303a;
+  --color-onboarding-previous-text: #6a6581;
+  --color-onboarding-card-title: #414141; /* 국가/시간 카드 본문 */
+  --color-onboarding-card-sub: #717171; /* 국가/시간 카드 보조 텍스트 */
+  --color-onboarding-wheel-muted: rgba(224, 224, 224, 0.41); /* 생년월일 휠의 선택 안 된 항목 */
+
   /* 인트로 화면 */
   --color-intro-haze: #e1dff5; /* 상단 안개 */
   --color-intro-title-end: #e5e9fb; /* 제목 그라데이션 끝 */
@@ -141,4 +152,19 @@
   --text-caption--letter-spacing: -0.025em;
 
   --tracking-tight: -0.025em;
+
+  /* 스플래시 로고 주위를 도는 빛 효과 */
+  --animate-logo-orbit: logo-orbit 3s linear infinite;
+}
+
+@keyframes logo-orbit {
+  to {
+    rotate: 360deg;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-logo-orbit {
+    animation: none;
+  }
 }

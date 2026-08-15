@@ -13,12 +13,13 @@ import IntroStep from "./components/IntroStep";
 import LanguageStep from "./components/LanguageStep";
 import OnboardingLayout from "./components/OnboardingLayout";
 import RegionStep from "./components/RegionStep";
+import SplashStep from "./components/SplashStep";
 
-const STEPS = ["intro", "language", "region", "birthDate"] as const;
+const STEPS = ["splash", "intro", "language", "region", "birthDate"] as const;
 
 type Step = (typeof STEPS)[number];
 
-const DEFAULT_BIRTH_DATE: BirthDate = { year: 2000, month: 1, day: 1 };
+const DEFAULT_BIRTH_DATE: BirthDate = { year: 2000, month: 6, day: 6 };
 
 // yyyy-MM-dd. API가 이 형식만 받음
 function formatBirthDate({ year, month, day }: BirthDate): string {
@@ -33,6 +34,7 @@ function OnboardingPage() {
   const locale = usePreferencesStore((state) => state.locale);
   const timeZone = usePreferencesStore((state) => state.timeZone);
   const setLocale = usePreferencesStore((state) => state.setLocale);
+  const setTimeZone = usePreferencesStore((state) => state.setTimeZone);
 
   const [stepIndex, setStepIndex] = useState(0);
   const [birthDate, setBirthDate] = useState(DEFAULT_BIRTH_DATE);
@@ -41,8 +43,8 @@ function OnboardingPage() {
 
   const step: Step = STEPS[stepIndex];
 
-  // 인트로로는 돌아가지 않는다
-  const canGoPrevious = stepIndex > 1;
+  // 스플래시/인트로로는 돌아가지 않는다
+  const canGoPrevious = stepIndex > 2;
 
   const goPrevious = () => setStepIndex((index) => index - 1);
 
@@ -83,6 +85,10 @@ function OnboardingPage() {
     void setLocale(nextLocale);
   };
 
+  if (step === "splash") {
+    return <SplashStep onFinish={() => void goNext()} />;
+  }
+
   if (step === "intro") {
     return <IntroStep onStart={goNext} />;
   }
@@ -101,7 +107,13 @@ function OnboardingPage() {
         <LanguageStep value={locale} onChange={handleLocaleChange} />
       )}
 
-      {step === "region" && <RegionStep locale={locale} timeZone={timeZone} />}
+      {step === "region" && (
+        <RegionStep
+          locale={locale}
+          timeZone={timeZone}
+          onTimeZoneChange={setTimeZone}
+        />
+      )}
 
       {step === "birthDate" && (
         <div className="flex flex-col items-center gap-4">
