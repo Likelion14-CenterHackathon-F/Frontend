@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import axios from "axios";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 
 import { useConsultationStore } from "@/stores/useConsultationStore";
 
@@ -30,6 +30,11 @@ function formatDuration(seconds: number) {
 function ConsultationRoomPage() {
   const navigate = useNavigate();
   const { appointmentId } = useParams<{ appointmentId: string }>();
+  const [searchParams] = useSearchParams();
+  const role =
+    searchParams.get("role")?.toUpperCase() === "MEDICAL_STAFF"
+      ? "MEDICAL_STAFF"
+      : "PATIENT";
   const roomInfo = useConsultationStore((state) => state.roomInfo);
   const clearRoomInfo = useConsultationStore((state) => state.clearRoomInfo);
   const locale = usePreferencesStore((state) => state.locale);
@@ -79,8 +84,8 @@ function ConsultationRoomPage() {
   );
 
   const waitingPath = useMemo(
-    () => `/consultation/${appointmentId ?? ""}/waiting`,
-    [appointmentId],
+    () => `/consultation/${appointmentId ?? ""}/waiting?role=${role}`,
+    [appointmentId, role],
   );
 
   useEffect(() => {
@@ -168,11 +173,26 @@ function ConsultationRoomPage() {
   const handleEnd = async () => {
     if (!roomInfo || isEnding || isCreatingSummary) return;
 
+    const confirmed = window.confirm(
+      "상담을 종료하면 다시 입장할 수 없습니다. 상담을 종료하시겠습니까?",
+    );
+
+    if (!confirmed) return;
+
     setEndErrorMessage(null);
     try {
       await flushCaptions();
       await endConsultation(roomInfo.appointmentId);
       await leave();
+
+      // 상대방이 입장하지 않았다면 STT 확정 자막이 없으므로
+      // 생성할 수 없는 상담 요약 API를 호출하지 않는다.
+      if (!peerAudioPublished) {
+        clearRoomInfo();
+        navigate("/consultation", { replace: true });
+        return;
+      }
+
       const language = toSummaryRequestLanguage(locale);
       const summary = await createConsultationSummary({
         appointmentId: roomInfo.appointmentId,
