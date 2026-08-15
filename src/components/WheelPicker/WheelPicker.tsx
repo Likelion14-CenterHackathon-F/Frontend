@@ -2,7 +2,6 @@ import { useEffect, useRef } from "react";
 
 import { cn } from "@/utils/cn";
 
-// w-22와 같은 값
 const ITEM_WIDTH = 88;
 
 export interface WheelOption {
@@ -20,7 +19,6 @@ interface WheelPickerProps {
 function WheelPicker({ label, options, value, onChange }: WheelPickerProps) {
   const listRef = useRef<HTMLDivElement>(null);
 
-  // 스크롤 → onChange → scrollTo 무한 반복 방지
   const isSyncingRef = useRef(false);
 
   const selectedIndex = options.findIndex((option) => option.value === value);
@@ -37,7 +35,6 @@ function WheelPicker({ label, options, value, onChange }: WheelPickerProps) {
     list.scrollTo({ left: selectedIndex * ITEM_WIDTH, behavior: "smooth" });
   }, [selectedIndex]);
 
-  // scrollend는 iOS Safari 지원이 늦어 타이머로 대체
   const settleTimerRef = useRef<number>(undefined);
 
   useEffect(() => {
@@ -87,8 +84,10 @@ function WheelPicker({ label, options, value, onChange }: WheelPickerProps) {
             >
               <span
                 className={cn(
-                  "text-[2rem] leading-normal font-medium tracking-tight",
-                  isSelected ? "text-neutral-white" : "text-neutral-white/40",
+                  "text-[2rem] leading-normal tracking-tight",
+                  isSelected
+                    ? "font-semibold text-neutral-white"
+                    : "text-onboarding-wheel-muted font-medium",
                 )}
               >
                 {option.label}
@@ -97,7 +96,7 @@ function WheelPicker({ label, options, value, onChange }: WheelPickerProps) {
                 aria-hidden
                 className={cn(
                   "h-2.5 w-1.5",
-                  isSelected ? "bg-accent" : "bg-neutral-white/40",
+                  isSelected ? "bg-accent" : "bg-onboarding-wheel-muted",
                 )}
               />
             </button>
@@ -105,7 +104,7 @@ function WheelPicker({ label, options, value, onChange }: WheelPickerProps) {
         })}
       </div>
 
-      <div aria-hidden className="h-1 w-full bg-neutral-white/40" />
+      <div aria-hidden className="bg-onboarding-wheel-muted h-1 w-full" />
     </div>
   );
 }
