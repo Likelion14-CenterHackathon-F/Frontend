@@ -2,6 +2,7 @@ import flagCn from "@/assets/flag-cn.svg";
 import flagJp from "@/assets/flag-jp.svg";
 import flagKr from "@/assets/flag-kr.svg";
 import flagUs from "@/assets/flag-us.svg";
+import type { SupportedLanguageLabel } from "@/types/patient.type";
 import type { SupportedLocale } from "@/types/preferences";
 
 export const LANGUAGE_OPTIONS: {
@@ -14,6 +15,17 @@ export const LANGUAGE_OPTIONS: {
   { value: "zh-CN", label: "中文", flag: flagCn },
   { value: "en-US", label: "English", flag: flagUs },
 ];
+
+// API가 요구하는 한글 언어명으로 바꾼다.
+export const LOCALE_TO_API_LANGUAGE: Record<
+  SupportedLocale,
+  SupportedLanguageLabel
+> = {
+  "ko-KR": "한국어",
+  "en-US": "영어",
+  "ja-JP": "일본어",
+  "zh-CN": "중국어",
+};
 
 export function getTimezoneOptions() {
   return Intl.supportedValuesOf("timeZone").map((timezone) => ({

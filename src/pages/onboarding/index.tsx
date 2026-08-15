@@ -1,7 +1,10 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
+import { verifyAccessLink } from "@/apis/patient";
+import { LOCALE_TO_API_LANGUAGE } from "@/constants/settings";
+import { ACCESS_TOKEN_STORAGE_KEY } from "@/constants/storageKey";
 import { usePreferencesStore } from "@/stores/usePreferencesStore";
 import type { SupportedLocale } from "@/types/preferences";
 
@@ -15,11 +18,17 @@ const STEPS = ["intro", "language", "region", "birthDate"] as const;
 
 type Step = (typeof STEPS)[number];
 
-const DEFAULT_BIRTH_DATE: BirthDate = { year: 1998, month: 7, day: 21 };
+const DEFAULT_BIRTH_DATE: BirthDate = { year: 2000, month: 1, day: 1 };
+
+// yyyy-MM-dd. API가 이 형식만 받음
+function formatBirthDate({ year, month, day }: BirthDate): string {
+  return `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+}
 
 function OnboardingPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
   const locale = usePreferencesStore((state) => state.locale);
   const timeZone = usePreferencesStore((state) => state.timeZone);
@@ -27,6 +36,8 @@ function OnboardingPage() {
 
   const [stepIndex, setStepIndex] = useState(0);
   const [birthDate, setBirthDate] = useState(DEFAULT_BIRTH_DATE);
+  const [isVerifying, setIsVerifying] = useState(false);
+  const [verifyError, setVerifyError] = useState<string | null>(null);
 
   const step: Step = STEPS[stepIndex];
 
@@ -35,14 +46,37 @@ function OnboardingPage() {
 
   const goPrevious = () => setStepIndex((index) => index - 1);
 
-  const goNext = () => {
+  const goNext = async () => {
     if (stepIndex < STEPS.length - 1) {
       setStepIndex((index) => index + 1);
       return;
     }
 
-    // TODO: 본인확인 API(POST /api/patients/access-links/verify)와 연동
-    navigate("/home");
+    // 매직링크의 query parameter로 전달된 원본 토큰
+    const token = searchParams.get("token");
+    if (!token) {
+      setVerifyError(t("verifyError"));
+      return;
+    }
+
+    setIsVerifying(true);
+    setVerifyError(null);
+
+    try {
+      const { accessToken } = await verifyAccessLink({
+        token,
+        birthDate: formatBirthDate(birthDate),
+        language: LOCALE_TO_API_LANGUAGE[locale],
+        timezoneId: timeZone,
+      });
+
+      localStorage.setItem(ACCESS_TOKEN_STORAGE_KEY, accessToken);
+      navigate("/home");
+    } catch {
+      setVerifyError(t("verifyError"));
+    } finally {
+      setIsVerifying(false);
+    }
   };
 
   const handleLocaleChange = (nextLocale: SupportedLocale) => {
@@ -60,7 +94,8 @@ function OnboardingPage() {
       previousLabel={t("previous")}
       confirmLabel={t(`${step}.confirm`)}
       onPrevious={canGoPrevious ? goPrevious : undefined}
-      onConfirm={goNext}
+      onConfirm={() => void goNext()}
+      isConfirmDisabled={isVerifying}
     >
       {step === "language" && (
         <LanguageStep value={locale} onChange={handleLocaleChange} />
@@ -69,7 +104,14 @@ function OnboardingPage() {
       {step === "region" && <RegionStep locale={locale} timeZone={timeZone} />}
 
       {step === "birthDate" && (
-        <BirthDateStep value={birthDate} onChange={setBirthDate} />
+        <div className="flex flex-col items-center gap-4">
+          <BirthDateStep value={birthDate} onChange={setBirthDate} />
+          {verifyError && (
+            <p className="text-caption text-center text-red-300">
+              {verifyError}
+            </p>
+          )}
+        </div>
       )}
     </OnboardingLayout>
   );
