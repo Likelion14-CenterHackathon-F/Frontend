@@ -7,7 +7,7 @@
   "history": {
     "title": "提问记录",
     "close": "关闭菜单",
-    "today": "今天",
-    "lastWeek": "过去7天"
+    "recent": "最近",
+    "older": "更早"
   }
 }

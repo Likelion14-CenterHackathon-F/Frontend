@@ -7,7 +7,7 @@
   "history": {
     "title": "質問履歴",
     "close": "メニューを閉じる",
-    "today": "今日",
-    "lastWeek": "過去7日間"
+    "recent": "最近",
+    "older": "それ以前"
   }
 }

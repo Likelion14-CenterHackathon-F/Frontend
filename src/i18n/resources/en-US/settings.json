@@ -7,7 +7,7 @@
   "history": {
     "title": "Question history",
     "close": "Close menu",
-    "today": "Today",
-    "lastWeek": "Last 7 days"
+    "recent": "Recent",
+    "older": "Older"
   }
 }

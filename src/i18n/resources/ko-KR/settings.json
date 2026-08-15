@@ -7,7 +7,7 @@
   "history": {
     "title": "질문 내역",
     "close": "메뉴 닫기",
-    "today": "오늘",
-    "lastWeek": "지난 7일"
+    "recent": "최근",
+    "older": "이전"
   }
 }
