@@ -34,7 +34,6 @@
 
   /* 사후관리 화면 */
   --color-care-bg: #f6f6f9; /* 화면 바탕 */
-  --color-care-glow: #8e7dd1; /* 상단에 흐린 보라 번짐 */
   --color-care-title: #32303a; /* 경과일, 카드 제목 */
   --color-care-sub: #6a6581; /* 카드 부제목, 시술일·시술명 */
   --color-care-note: #65646d; /* 리포트 카드 설명 */

@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 
 import { getAftercareDashboard } from "@/apis/patient";
 import backButton from "@/assets/back-button.svg";
+import gradientTop from "@/assets/home-gradient-top.png";
 import { usePreferencesStore } from "@/stores/usePreferencesStore";
 import { getWeekAround } from "@/utils/aftercare";
 import {
@@ -43,7 +44,7 @@ function AftercarePage() {
 
   // 오늘을 세 번째 칸에 배치
   const weekDays = useMemo(
-    () => getWeekAround(today, { before: 2, after: 4 }),
+    () => getWeekAround(today, { before: 1, after: 5 }),
     [today],
   );
 
@@ -66,10 +67,13 @@ function AftercarePage() {
 
   return (
     <div className="bg-care-bg relative flex min-h-dvh flex-col overflow-hidden">
-      {/* 헤더와 경과일 뒤에 흐리게 번지는 장식 */}
-      <div
+      {/* 헤더와 경과일 뒤에 흐리게 번지는 장식. 홈 화면과 같은 그라데이션을 재사용한다 */}
+      <img
         aria-hidden
-        className="bg-care-glow pointer-events-none absolute -top-16.75 left-1/2 h-61.5 w-123.5 -translate-x-1/2 rounded-full opacity-60 blur-[52px]"
+        src={gradientTop}
+        alt=""
+        className="pointer-events-none absolute left-1/2 max-w-none -translate-x-1/2"
+        style={{ top: -202, width: 650, height: 650 }}
       />
 
       <header className="relative flex items-center px-5 pt-4.5">
@@ -79,7 +83,7 @@ function AftercarePage() {
           onClick={() => navigate("/home")}
           className="flex size-14 items-center justify-center"
         >
-          <img aria-hidden src={backButton} alt="" className="size-14" />
+          <img aria-hidden src={backButton} alt="" className="size-6" />
         </button>
 
         <h1 className="text-care-title absolute left-1/2 -translate-x-1/2 text-body font-semibold tracking-tight">
