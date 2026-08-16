@@ -21,6 +21,8 @@ interface ReservationConfirmSheetProps {
   onAgreeChange: (agreed: boolean) => void;
   onClose: () => void;
   onConfirm: () => void;
+  isSubmitting?: boolean;
+  errorMessage?: string | null;
 }
 
 function ReservationConfirmSheet({
@@ -31,6 +33,8 @@ function ReservationConfirmSheet({
   onAgreeChange,
   onClose,
   onConfirm,
+  isSubmitting = false,
+  errorMessage,
 }: ReservationConfirmSheetProps) {
   const { t } = useTranslation("consultationReservation");
   const locale = usePreferencesStore((state) => state.locale);
@@ -51,7 +55,7 @@ function ReservationConfirmSheet({
       footer={
         <ConsultationFooter
           position="static"
-          disabled={!agreed || !selectedSlot}
+          disabled={!agreed || !selectedSlot || isSubmitting}
           onClick={onConfirm}
         >
           {t("preConsultation.confirm.submit")}
@@ -65,10 +69,15 @@ function ReservationConfirmSheet({
       />
 
       <section className="mt-[30px] mb-[38px] border-t border-border-input pt-6">
-        <h3 className="text-[13px] font-semibold leading-[1.4] text-action-secondary-text">
+        {errorMessage && (
+          <p role="alert" className="mb-4 text-sm text-action-danger-text">
+            {errorMessage}
+          </p>
+        )}
+        <h3 className="text-[16px] font-semibold leading-[1.4] text-action-secondary-text">
           {t("preConsultation.confirm.noticeTitle")}
         </h3>
-        <ul className="mt-5 list-disc pl-5 text-xs leading-[1.5] text-text-secondary">
+        <ul className="mt-5 list-disc pl-5 text-[14px] leading-[1.5] text-text-secondary">
           <li>{t("preConsultation.confirm.notice")}</li>
         </ul>
 

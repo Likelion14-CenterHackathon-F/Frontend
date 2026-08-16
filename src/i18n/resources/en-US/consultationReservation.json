@@ -1,5 +1,6 @@
 {
   "schedule": {
+    "headerTitle": "Book a consultation",
     "title": "Select a date and time",
     "instructions": {
       "selectTime": "Select one of the available times below.",
@@ -7,6 +8,10 @@
     },
     "localTime": "Local time {{time}} ({{offset}})",
     "emptySlots": "There are no times available on the selected date.",
+    "slotsLoading": "Loading appointment times.",
+    "slotsLoadError": "Unable to load appointment times.",
+    "retry": "Try again",
+    "closed": "Closed",
     "next": "Next"
   },
   "preConsultation": {
@@ -62,6 +67,12 @@
       "submit": "Book consultation"
     },
     "submit": "Book consultation"
+  },
+  "appointmentDetail": {
+    "title": "Your upcoming consultation",
+    "loading": "Loading your appointment details.",
+    "notFound": "We couldn't find this appointment.",
+    "retry": "Try again"
   },
   "confirmed": {
     "title": "Your consultation is confirmed",

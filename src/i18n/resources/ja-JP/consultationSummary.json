@@ -1,0 +1,26 @@
+{
+  "close": "閉じる",
+  "loading": "相談要約を読み込んでいます。",
+  "error": "相談要約を読み込めませんでした。",
+  "retry": "再試行",
+  "home": "ホームに戻る",
+  "overview": {
+    "owner": "{{name}}さんの",
+    "title": "相談要約です。",
+    "hospital": "ソウル延世病院",
+    "appointmentDateTime": "予約日時",
+    "consultationReason": "相談理由",
+    "medicalStaff": "担当医療スタッフ"
+  },
+  "aiTitle": "AI相談要約",
+  "instructions": {
+    "title": "医療スタッフの案内",
+    "itemTitle": "案内 {{number}}"
+  },
+  "reason": {
+    "title": "相談理由",
+    "emptyTitle": "相談理由なし",
+    "emptyDescription": "事前相談情報は登録されていません。",
+    "submissionMedia": "事前提出資料"
+  }
+}

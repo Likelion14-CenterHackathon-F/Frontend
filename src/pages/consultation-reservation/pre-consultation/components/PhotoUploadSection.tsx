@@ -72,7 +72,7 @@ export default function PhotoUploadSection({
         </p>
       </header>
 
-      <div className="mt-5 flex w-full gap-2 overflow-x-auto pb-1">
+      <div className="mt-5 flex w-full gap-3 overflow-x-auto">
         {files.length < MAX_FILE_COUNT && (
           <button
             type="button"
@@ -105,9 +105,11 @@ export default function PhotoUploadSection({
         ))}
       </div>
 
-      <p className="mt-2 text-xs leading-[1.4] tracking-tight text-action-disabled-text">
-        {t("preConsultation.photos.helper")}
-      </p>
+      {files.length === 0 && (
+        <p className="mt-2 text-xs leading-[1.4] tracking-tight text-action-disabled-text">
+          {t("preConsultation.photos.helper")}
+        </p>
+      )}
       {errorMessage && (
         <p role="alert" className="mt-1 text-xs text-action-danger-text">
           {errorMessage}

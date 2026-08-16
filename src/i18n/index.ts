@@ -41,6 +41,10 @@ import zhCNSettings from "./resources/zh-CN/settings.json";
 import zhCNConsultationHub from "./resources/zh-CN/consultationHub.json";
 import zhCNConsultationWaiting from "./resources/zh-CN/consultationWaiting.json";
 import zhCNConsultationReservation from "./resources/zh-CN/consultationReservation.json";
+import koConsultationSummary from "./resources/ko-KR/consultationSummary.json";
+import enConsultationSummary from "./resources/en-US/consultationSummary.json";
+import jaConsultationSummary from "./resources/ja-JP/consultationSummary.json";
+import zhCNConsultationSummary from "./resources/zh-CN/consultationSummary.json";
 
 import { getInitialLocale } from "./language";
 
@@ -73,6 +77,7 @@ void i18n
       "consultationWaiting",
       "consultationReservation",
       "aftercare",
+      "consultationSummary",
     ],
 
     resources: {
@@ -86,6 +91,7 @@ void i18n
         consultationHub: koConsultationHub,
         consultationWaiting: koConsultationWaiting,
         consultationReservation: koConsultationReservation,
+        consultationSummary: koConsultationSummary,
       },
       "en-US": {
         onboarding: enOnboarding,
@@ -97,6 +103,7 @@ void i18n
         consultationHub: enConsultationHub,
         consultationWaiting: enConsultationWaiting,
         consultationReservation: enConsultationReservation,
+        consultationSummary: enConsultationSummary,
       },
       "ja-JP": {
         onboarding: jaOnboarding,
@@ -108,6 +115,7 @@ void i18n
         consultationHub: jaConsultationHub,
         consultationWaiting: jaConsultationWaiting,
         consultationReservation: jaConsultationReservation,
+        consultationSummary: jaConsultationSummary,
       },
       "zh-CN": {
         onboarding: zhCNOnboarding,
@@ -119,6 +127,7 @@ void i18n
         consultationHub: zhCNConsultationHub,
         consultationWaiting: zhCNConsultationWaiting,
         consultationReservation: zhCNConsultationReservation,
+        consultationSummary: zhCNConsultationSummary,
       },
     },
 

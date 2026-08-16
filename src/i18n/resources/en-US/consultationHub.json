@@ -15,6 +15,7 @@
   },
   "status": {
     "completed": "Completed",
+    "cancelled": "Cancelled",
     "reserved": "Confirmed",
     "inProgress": "In progress"
   },
