@@ -11,6 +11,9 @@ import ConsultationReservationList from "./components/ConsultationReservationLis
 import ConsultationTabs from "./components/ConsultationTabs";
 import { useActiveConsultationAppointment } from "./hooks/useActiveConsultationAppointment";
 import { useConsultationHistory } from "./hooks/useConsultationHistory";
+import { useConsultationSummaries } from "@/pages/consultation-summary/hooks/useConsultationSummaries";
+import { toSummaryRequestLanguage } from "@/pages/consultation-summary/utils/consultationSummary";
+import { usePreferencesStore } from "@/stores/usePreferencesStore";
 
 type ConsultationTab = "history" | "ongoing";
 const MOCK_CASE_ID = 1;
@@ -23,6 +26,8 @@ const mockMedicalStaff = {
 function ConsultationHubPage() {
   const navigate = useNavigate();
   const { t } = useTranslation("consultationHub");
+  const locale = usePreferencesStore((state) => state.locale);
+  const summaryLanguage = toSummaryRequestLanguage(locale);
   const [activeTab, setActiveTab] = useState<ConsultationTab>("history");
   const {
     data: activeAppointments = [],
@@ -36,6 +41,19 @@ function ConsultationHubPage() {
     isError: isHistoryError,
     refetch: refetchHistory,
   } = useConsultationHistory();
+  const { data: consultationSummaries = [] } =
+    useConsultationSummaries(summaryLanguage);
+
+  const summaryIdBySessionId = useMemo(
+    () =>
+      new Map(
+        consultationSummaries.map((summary) => [
+          summary.sessionId,
+          summary.summaryId,
+        ]),
+      ),
+    [consultationSummaries],
+  );
 
   const ongoingConsultations = useMemo<Consultation[]>(
     () =>
@@ -59,13 +77,16 @@ function ConsultationHubPage() {
     () =>
       consultationHistoryData.map((history) => ({
         id: history.appointmentId,
+        summaryId: history.sessionId
+          ? summaryIdBySessionId.get(history.sessionId)
+          : undefined,
         status: history.status === "CANCELLED" ? "cancelled" : "completed",
         scheduledAt: history.appointmentStartsAt,
         subject: history.symptomCategory || null,
         symptomNote: history.symptomNote,
         ...mockMedicalStaff,
       })),
-    [consultationHistoryData],
+    [consultationHistoryData, summaryIdBySessionId],
   );
 
   const enterableAppointment = activeAppointments.find(
@@ -101,6 +122,9 @@ function ConsultationHubPage() {
               isLoading={isHistoryPending}
               isError={isHistoryError}
               onRetry={() => void refetchHistory()}
+              onSelect={(summaryId) =>
+                navigate(`/consultation/summary/${summaryId}`)
+              }
             />
           ) : (
             <ConsultationReservationList

@@ -10,7 +10,9 @@ import type {
   SaveCaptionBatchResponse,
   EndConsultationResponse,
   CreateConsultationSummaryRequest,
+  ConsultationSummaryListItem,
   ConsultationSummaryResponse,
+  SummaryRequestLanguage,
 } from "@/types/consultation.type";
 import axiosInstance from "../axiosInstance";
 
@@ -74,5 +76,30 @@ export const createConsultationSummary = async (
   const { data } = await axiosInstance.post<
     ApiResponse<ConsultationSummaryResponse>
   >(`/api/consultation-summaries/${appointmentId}`, body);
+  return data.data;
+};
+
+export const getConsultationSummaries = async (
+  language: SummaryRequestLanguage,
+) => {
+  const { data } = await axiosInstance.get<
+    ApiResponse<ConsultationSummaryListItem[]>
+  >("/api/consultation-summaries", {
+    params: { language },
+  });
+
+  return data.data;
+};
+
+export const getConsultationSummary = async (
+  summaryId: number,
+  language: SummaryRequestLanguage,
+) => {
+  const { data } = await axiosInstance.get<
+    ApiResponse<ConsultationSummaryResponse>
+  >(`/api/consultation-summaries/${summaryId}`, {
+    params: { language },
+  });
+
   return data.data;
 };

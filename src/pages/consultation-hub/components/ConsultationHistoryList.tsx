@@ -6,6 +6,7 @@ interface ConsultationHistoryProps {
   isLoading?: boolean;
   isError?: boolean;
   onRetry?: () => void;
+  onSelect?: (summaryId: number) => void;
 }
 
 export default function ConsultationHistoryList({
@@ -13,6 +14,7 @@ export default function ConsultationHistoryList({
   isLoading = false,
   isError = false,
   onRetry,
+  onSelect,
 }: ConsultationHistoryProps) {
   if (isLoading) {
     return (
@@ -45,7 +47,15 @@ export default function ConsultationHistoryList({
     <div className="min-h-[640px] flex-1 overflow-y-auto px-5 py-6">
       <ul className="flex flex-col gap-[18px]">
         {consultations.map((consultation) => (
-          <ConsultationCard key={consultation.id} consultation={consultation} />
+          <ConsultationCard
+            key={consultation.id}
+            consultation={consultation}
+            onClick={
+              consultation.summaryId
+                ? () => onSelect?.(consultation.summaryId!)
+                : undefined
+            }
+          />
         ))}
       </ul>
     </div>

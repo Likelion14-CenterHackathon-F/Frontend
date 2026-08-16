@@ -129,6 +129,24 @@ export interface ConsultationSummaryResponse {
   sessionId: number;
 }
 
+export type ConsultationSummaryListItem = Omit<
+  ConsultationSummaryResponse,
+  "consultationDetails" | "instructions"
+>;
+
+export interface PreconsultSubmissionFile {
+  fileId: number;
+  fileUrl: string;
+}
+
+export interface PreconsultSubmissionResponse {
+  submissionId: number;
+  appointmentId: number;
+  symptomCategory: string | null;
+  symptomNote: string | null;
+  files: PreconsultSubmissionFile[];
+}
+
 export interface ApiResponse<T> {
   isSuccess: boolean;
   timestamp: string;

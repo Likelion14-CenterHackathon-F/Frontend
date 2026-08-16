@@ -1,41 +1,42 @@
-export interface MedicalInstructionItem {
-  title: string;
-  description: string;
-}
+import coldIcon from "@/assets/icons/consultation-summary/cold.svg";
+import pillIcon from "@/assets/icons/consultation-summary/pill.svg";
+import sunnyIcon from "@/assets/icons/consultation-summary/sunny.svg";
 
 interface MedicalInstructionsCardProps {
-  instructions: MedicalInstructionItem[];
+  instructions: { instructionId: number; content: string }[];
+  title: string;
 }
 
-const cardBackground = {
-  background:
-    "radial-gradient(circle at 50% 50%, #ffffff 38%, rgba(255,255,255,0.8) 100%)",
-};
+const instructionIcons = [pillIcon, coldIcon, sunnyIcon];
 
 export default function MedicalInstructionsCard({
   instructions,
+  title,
 }: MedicalInstructionsCardProps) {
   return (
-    <section
-      aria-labelledby="instructions-heading"
-      className="mt-[14px] rounded-[28px] px-5 py-6"
-      style={cardBackground}
-    >
+    <section aria-labelledby="instructions-heading" className="mt-10">
       <h2
         id="instructions-heading"
-        className="text-xl font-bold leading-[1.4] tracking-[-0.5px] text-[#302F31]"
+        className="text-[22px] font-semibold leading-[1.4] tracking-[-0.55px] text-[#32303A]"
       >
-        의료진 안내
+        {title}
       </h2>
-      <div className="my-6 h-px bg-[#D8D7DC]" />
-      <ul className="flex flex-col gap-5">
-        {instructions.map((instruction) => (
-          <li key={instruction.title}>
-            <h3 className="text-base font-semibold leading-[1.4] tracking-[-0.4px] text-[#414141]">
-              {instruction.title}
-            </h3>
-            <p className="mt-1 text-[15px] font-medium leading-[1.5] tracking-[-0.375px] text-[#717171]">
-              {instruction.description}
+      <ul className="mt-[14px] flex snap-x gap-[10px] overflow-x-auto px-5 pb-1">
+        {instructions.map((instruction, index) => (
+          <li
+            key={instruction.instructionId}
+            className="flex h-[227px] w-[171px] shrink-0 snap-start flex-col rounded-[28px] bg-white px-5 py-6 shadow-[0_4px_4px_rgba(0,0,0,0.03)]"
+          >
+            <div className="flex h-[95px] items-center justify-center">
+              <img
+                src={instructionIcons[index % instructionIcons.length]}
+                alt=""
+                className="size-[42px]"
+              />
+            </div>
+
+            <p className="mt-3 line-clamp-3 text-sm leading-[1.5] tracking-[-0.35px] text-[#65646D]">
+              {instruction.content}
             </p>
           </li>
         ))}

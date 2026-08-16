@@ -20,3 +20,7 @@ export const consultationSummaryQueryKey = (
   summaryId: number,
   language: SummaryRequestLanguage,
 ) => ["consultation-summary", summaryId, language] as const;
+
+export const consultationSummaryListQueryKey = (
+  language: SummaryRequestLanguage,
+) => ["consultation-summaries", language] as const;

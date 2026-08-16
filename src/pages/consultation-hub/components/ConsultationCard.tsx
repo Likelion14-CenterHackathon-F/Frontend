@@ -16,6 +16,7 @@ export type MedicalStaffRole = "doctor" | "nurse";
 
 export interface Consultation {
   id: number;
+  summaryId?: number;
   status: ConsultationStatus;
   medicalStaffName: string;
   medicalStaffRole: MedicalStaffRole;
@@ -58,7 +59,8 @@ export default function ConsultationCard({
       <button
         type="button"
         onClick={onClick}
-        className="flex min-h-[167px] w-full flex-col items-start rounded-[20px] bg-white px-5 py-6 text-left"
+        disabled={!onClick}
+        className="flex min-h-[167px] w-full flex-col items-start rounded-[20px] bg-white px-5 py-6 text-left cursor-pointer"
       >
         <div className="flex items-center gap-1 text-base leading-[1.4] tracking-[-0.4px]">
           <span

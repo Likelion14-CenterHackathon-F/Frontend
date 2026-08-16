@@ -2,6 +2,7 @@ import axiosInstance from "../axiosInstance";
 import type {
   ApiResponse,
   ConsultationHistoryItem,
+  PreconsultSubmissionResponse,
 } from "@/types/consultation.type";
 import type { ActiveConsultationAppointment } from "@/types/consultationReservation.type";
 import type { AvailableConsultationDate } from "@/types/consultationReservation.type";
@@ -35,6 +36,28 @@ export const getConsultationHistory = async () => {
   >("/api/consultations/history");
 
   return data.data;
+};
+
+export const getPreconsultSubmission = async (appointmentId: number) => {
+  const { data } = await axiosInstance.get<
+    ApiResponse<PreconsultSubmissionResponse>
+  >("/api/preconsult-submissions", {
+    params: { appointmentId },
+  });
+
+  return data.data;
+};
+
+export const getPreconsultSubmissionFile = async (fileUrl: string) => {
+  if (!fileUrl.startsWith("/api/preconsult-submissions/files/")) {
+    throw new Error("Invalid preconsult submission file URL");
+  }
+
+  const { data } = await axiosInstance.get<Blob>(fileUrl, {
+    responseType: "blob",
+  });
+
+  return data;
 };
 
 export async function getActiveConsultationAppointment(caseId: number) {

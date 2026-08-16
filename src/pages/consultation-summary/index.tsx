@@ -1,76 +1,174 @@
-import { useNavigate } from "react-router-dom";
+import { useMemo } from "react";
+import { useTranslation } from "react-i18next";
+import { useNavigate, useParams } from "react-router-dom";
 
-import consultationPhoto from "@/assets/icons/consultation-summary/consultation-photo-2.png";
+import { getPatientCase } from "@/apis/patient";
+import closeIcon from "@/assets/icons/consultation-summary/close.svg";
 import ConsultationFooter from "@/components/Footer/ConsultationFooter";
+import { usePreferencesStore } from "@/stores/usePreferencesStore";
+import {
+  formatConsultationCardDateTime,
+  formatZonedDate,
+} from "@/utils/dateTime";
+import { translateConsultationSubject } from "@/utils/consultationSubject";
+import { useConsultationHistory } from "@/pages/consultation-hub/hooks/useConsultationHistory";
 
 import AiSummarySection from "./components/AiSummarySection";
 import ConsultationReasonCard from "./components/ConsultationReasonCard";
-import MedicalInstructionsCard, {
-  type MedicalInstructionItem,
-} from "./components/MedicalInstructionsCard";
+import MedicalInstructionsCard from "./components/MedicalInstructionsCard";
 import SummaryOverview from "./components/SummaryOverview";
-import ConsultationHeader from "@/components/Header/ConsultationHeader";
-
-const instructions: MedicalInstructionItem[] = [
-  {
-    title: "처방약 복용",
-    description: "식후 30분에 3일간 복용해주세요.",
-  },
-  {
-    title: "냉찜질",
-    description: "하루 3회 진행해주세요.",
-  },
-  {
-    title: "외출 시 주의",
-    description: "외출 시 반드시 자외선 차단제를 바르세요.",
-  },
-];
-
-const mockSummary = {
-  patientName: "지수",
-  consultationDate: "2026년 7월 30일",
-  hospitalName: "서울 연세 병원",
-  appointmentDateTime: "2026년 7월 30일 (목) 14:00",
-  consultationReason: "붓기·멍",
-  medicalStaffName: "박지태 의사",
-  summary:
-    "현재 시술 부위의 붓기는 정상적인 회복 과정입니다.\n처방해 드린 약을 3일간 꾸준히 복용하시고,\n격한 운동은 1주일간 피해주세요.",
-  reasonTitle: "시술 후 붓기·멍 증상과 외출 시 주의사항 문의",
-  reasonDescription:
-    "얼굴에 붓기가 있고 멍도 좀 들었어요. 이거 정상인가요? 그리고 외출해도 되나요?",
-};
+import { useConsultationSummary } from "./hooks/useConsultationSummary";
+import { usePreconsultSubmission } from "./hooks/usePreconsultSubmission";
+import { toSummaryRequestLanguage } from "./utils/consultationSummary";
 
 function ConsultationSummaryPage() {
   const navigate = useNavigate();
-  const navigateHome = () => navigate("/home", { replace: true });
+  const { summaryId: summaryIdParam } = useParams();
+  const { t } = useTranslation([
+    "consultationSummary",
+    "consultationReservation",
+  ]);
+  const { locale, timeZone } = usePreferencesStore();
+  const summaryId = Number(summaryIdParam);
+  const language = toSummaryRequestLanguage(locale);
+  const patientCase = useMemo(() => getPatientCase(), []);
+  const {
+    data: summary,
+    isPending,
+    isError,
+    refetch,
+  } = useConsultationSummary(summaryId, language);
+  const { data: history = [] } = useConsultationHistory();
+
+  const consultationHistory = summary
+    ? history.find((item) => item.sessionId === summary.sessionId)
+    : undefined;
+  const { data: preconsultSubmission } = usePreconsultSubmission(
+    consultationHistory?.appointmentId ?? 0,
+  );
+  const subject = translateConsultationSubject(
+    preconsultSubmission?.symptomCategory ??
+      consultationHistory?.symptomCategory ??
+      null,
+    (key) =>
+      t(`preConsultation.symptoms.options.${key}`, {
+        ns: "consultationReservation",
+      }),
+  );
+
+  if (isPending) {
+    return (
+      <div className="flex min-h-dvh items-center justify-center bg-[#F6F6F9] px-5 text-sm text-[#65646D]">
+        {t("loading", { ns: "consultationSummary" })}
+      </div>
+    );
+  }
+
+  if (isError || !summary) {
+    return (
+      <div className="flex min-h-dvh flex-col items-center justify-center gap-4 bg-[#F6F6F9] px-5 text-center text-sm text-[#65646D]">
+        <p>{t("error", { ns: "consultationSummary" })}</p>
+        <button
+          type="button"
+          onClick={() => void refetch()}
+          className="rounded-full bg-[#2A2A2A] px-5 py-3 font-semibold text-white"
+        >
+          {t("retry", { ns: "consultationSummary" })}
+        </button>
+      </div>
+    );
+  }
+
+  const consultationDate = formatZonedDate(summary.consultedAt, {
+    locale,
+    timeZone,
+  });
+  const appointmentDateTime = consultationHistory?.appointmentStartsAt
+    ? formatConsultationCardDateTime(consultationHistory.appointmentStartsAt, {
+        locale,
+        timeZone,
+      })
+    : "-";
+  const reasonDescription =
+    preconsultSubmission?.symptomNote ||
+    consultationHistory?.symptomNote ||
+    summary.consultationDetails;
 
   return (
-    <div className="min-h-dvh bg-[#F6F6F9] text-[#32303A]">
-      <ConsultationHeader title="상담 일정" onBack={navigateHome} />
+    <div className="relative min-h-dvh overflow-hidden bg-[#F6F6F9] text-[#32303A] before:pointer-events-none before:absolute before:inset-0 before:bg-[radial-gradient(circle_at_82%_8%,rgba(222,219,248,0.82),transparent_34%),radial-gradient(circle_at_15%_55%,rgba(237,234,252,0.9),transparent_42%),radial-gradient(circle_at_90%_88%,rgba(225,222,246,0.68),transparent_36%)]">
+      <header className="relative z-10 flex h-[66px] justify-end items-center px-5 pt-[env(safe-area-inset-top)]">
+        <button
+          type="button"
+          aria-label={t("close", { ns: "consultationSummary" })}
+          onClick={() => navigate("/consultation", { replace: true })}
+          className="flex size-8 items-center justify-center"
+        >
+          <img src={closeIcon} alt="" className="size-6" />
+        </button>
+      </header>
 
-      <main className="px-5 pb-[calc(124px+env(safe-area-inset-bottom))]">
+      <main className="relative z-10 px-5 pb-[calc(132px+env(safe-area-inset-bottom))] pt-5">
         <SummaryOverview
-          patientName={mockSummary.patientName}
-          consultationDate={mockSummary.consultationDate}
-          hospitalName={mockSummary.hospitalName}
-          appointmentDateTime={mockSummary.appointmentDateTime}
-          consultationReason={mockSummary.consultationReason}
-          medicalStaffName={mockSummary.medicalStaffName}
+          consultationDate={consultationDate}
+          hospitalName={t("overview.hospital", { ns: "consultationSummary" })}
+          appointmentDateTime={appointmentDateTime}
+          consultationReason={subject}
+          medicalStaffName={summary.medicalStaffName}
+          ownerText={t("overview.owner", {
+            ns: "consultationSummary",
+            name: patientCase.name,
+          })}
+          titleText={t("overview.title", { ns: "consultationSummary" })}
+          labels={{
+            appointmentDateTime: t("overview.appointmentDateTime", {
+              ns: "consultationSummary",
+            }),
+            consultationReason: t("overview.consultationReason", {
+              ns: "consultationSummary",
+            }),
+            medicalStaff: t("overview.medicalStaff", {
+              ns: "consultationSummary",
+            }),
+          }}
         />
 
         <div className="mt-10.5 h-px bg-[#E4E3E8]" />
 
-        <AiSummarySection summary={mockSummary.summary} />
-        <MedicalInstructionsCard instructions={instructions} />
+        <AiSummarySection
+          title={t("aiTitle", { ns: "consultationSummary" })}
+          summary={summary.translatedSummary}
+        />
+
+        {summary.instructions.length > 0 && (
+          <MedicalInstructionsCard
+            title={t("instructions.title", { ns: "consultationSummary" })}
+            instructions={summary.instructions}
+          />
+        )}
+
         <ConsultationReasonCard
-          title={mockSummary.reasonTitle}
-          description={mockSummary.reasonDescription}
-          imageSrc={consultationPhoto}
+          heading={t("reason.title", { ns: "consultationSummary" })}
+          title={
+            subject === "-"
+              ? t("reason.emptyTitle", { ns: "consultationSummary" })
+              : subject
+          }
+          description={
+            reasonDescription ||
+            t("reason.emptyDescription", { ns: "consultationSummary" })
+          }
+          fileUrls={preconsultSubmission?.files.map((file) => file.fileUrl)}
+          mediaLabel={t("reason.submissionMedia", {
+            ns: "consultationSummary",
+          })}
         />
       </main>
 
-      <ConsultationFooter onClick={navigateHome} className="bg-[#F6F6F9]">
-        홈으로 돌아가기
+      <ConsultationFooter
+        onClick={() => navigate("/home", { replace: true })}
+        className="bg-transparent bg-gradient-to-b from-white/0 to-white/70 backdrop-blur-[4.7px]"
+      >
+        {t("home", { ns: "consultationSummary" })}
       </ConsultationFooter>
     </div>
   );
