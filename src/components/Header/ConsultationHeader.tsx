@@ -21,7 +21,7 @@ export default function ConsultationHeader({ title, onBack, className }: HeaderP
         </button>
       )}
 
-      <h1 className="absolute left-1/2 -translate-x-1/2 text-xl font-semibold">
+      <h1 className="absolute left-1/2 -translate-x-1/2 whitespace-nowrap text-xl font-semibold">
         {title}
       </h1>
     </header>

@@ -50,6 +50,8 @@ function ConsultationRoomPage() {
   const [sttErrorMessage, setSttErrorMessage] = useState<string | null>(null);
   const [endErrorMessage, setEndErrorMessage] = useState<string | null>(null);
   const [isEndModalOpen, setIsEndModalOpen] = useState(false);
+  const [isEndProcessing, setIsEndProcessing] = useState(false);
+  const endProcessingRef = useRef(false);
   const [controlsVisible, setControlsVisible] = useState(true);
   const { mutateAsync: startSttAgent } = useStartSttAgent();
   const { mutateAsync: endConsultation, isPending: isEnding } =
@@ -176,9 +178,12 @@ function ConsultationRoomPage() {
   ]);
 
   const handleEnd = async () => {
-    if (!roomInfo || isEnding || isCreatingSummary) return;
+    if (!roomInfo || endProcessingRef.current || isEnding || isCreatingSummary)
+      return;
 
     setEndErrorMessage(null);
+    endProcessingRef.current = true;
+    setIsEndProcessing(true);
     try {
       await flushCaptions();
       await endConsultation(roomInfo.appointmentId);
@@ -207,6 +212,8 @@ function ConsultationRoomPage() {
         replace: true,
       });
     } catch (error) {
+      endProcessingRef.current = false;
+      setIsEndProcessing(false);
       const code = axios.isAxiosError<ApiErrorResponse>(error)
         ? error.response?.data.code
         : undefined;
@@ -224,7 +231,8 @@ function ConsultationRoomPage() {
     }
   };
 
-  const isFinishingConsultation = isEnding || isCreatingSummary;
+  const isFinishingConsultation =
+    isEndProcessing || isEnding || isCreatingSummary;
   const controlsDisabled =
     connectionState !== "CONNECTED" || isFinishingConsultation;
   const visibleSttErrorMessage = isSttStatusError
