@@ -9,11 +9,11 @@ function EmptyConsultation() {
   const navigate = useNavigate();
 
   return (
-    <div className="flex min-h-[640px] flex-col items-center justify-center px-5">
+    <div className="flex min-h-[640px] flex-col items-center px-5">
       <img
         src={noHistoryIcon}
         alt={t("empty.imageAlt")}
-        className="h-[86px] w-[70px]"
+        className="h-[86px] w-[70px] mt-[156px]"
       />
 
       <p className="mt-[22px] text-center text-[15px] leading-[1.6] tracking-[-0.375px] text-[#65646D]">

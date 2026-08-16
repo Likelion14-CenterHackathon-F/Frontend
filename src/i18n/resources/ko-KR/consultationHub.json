@@ -15,7 +15,7 @@
   },
   "status": {
     "completed": "상담 완료",
-    "cancelled": "예약 취소",
+    "cancelled": "상담 취소",
     "reserved": "예약확정",
     "inProgress": "상담 진행중"
   },

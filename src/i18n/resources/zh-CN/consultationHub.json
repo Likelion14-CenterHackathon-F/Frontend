@@ -15,7 +15,7 @@
   },
   "status": {
     "completed": "问诊已完成",
-    "cancelled": "预约已取消",
+    "cancelled": "咨询已取消",
     "reserved": "预约已确认",
     "inProgress": "问诊进行中"
   },

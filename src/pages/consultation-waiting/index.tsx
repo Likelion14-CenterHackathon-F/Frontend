@@ -1,4 +1,5 @@
 import ConsultationHeader from "@/components/Header/ConsultationHeader";
+import ConsultationFooter from "@/components/Footer/ConsultationFooter";
 import WaitingCheckListSection from "./components/WaitingCheckListSection";
 import CameraPreview from "./components/CameraPreview";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
@@ -21,7 +22,6 @@ function ConsultationWaitingPage() {
     stream,
     cameraOn,
     microphoneOn,
-    isSpeaking,
     isLoading,
     errorMessage,
     facingMode,
@@ -36,45 +36,44 @@ function ConsultationWaitingPage() {
   });
 
   return (
-    <div className="flex min-h-dvh flex-col">
+    <div className="relative flex min-h-dvh flex-col overflow-hidden bg-[#F6F6F9] before:pointer-events-none before:absolute before:inset-0 before:bg-[radial-gradient(circle_at_82%_8%,rgba(222,219,248,0.82),transparent_34%),radial-gradient(circle_at_12%_60%,rgba(237,234,252,0.82),transparent_42%),radial-gradient(circle_at_92%_88%,rgba(225,222,246,0.62),transparent_36%)]">
       <ConsultationHeader
         title={t("header.title")}
         onBack={() => navigate(-1)}
+        className="relative z-10 bg-transparent"
       />
 
-      <main className="flex flex-1 flex-col gap-4 px-5">
-        <CameraPreview
-          stream={stream}
-          facingMode={facingMode}
-          cameraOn={cameraOn}
-          microphoneOn={microphoneOn}
-          isSpeaking={isSpeaking}
-          isLoading={isLoading}
-          errorMessage={errorMessage}
-          onToggleCamera={toggleCamera}
-          onToggleMicrophone={toggleMicrophone}
-          onSwitchCamera={switchCamera}
-        />
+      <main className="relative z-10 flex flex-1 flex-col overflow-y-auto px-5 pb-[calc(138px+env(safe-area-inset-bottom))]">
+        <div className="mx-auto flex w-full max-w-[353px] flex-col gap-3">
+          <CameraPreview
+            stream={stream}
+            facingMode={facingMode}
+            cameraOn={cameraOn}
+            microphoneOn={microphoneOn}
+            isLoading={isLoading}
+            errorMessage={errorMessage}
+            onToggleCamera={toggleCamera}
+            onToggleMicrophone={toggleMicrophone}
+            onSwitchCamera={switchCamera}
+          />
 
-        <WaitingCheckListSection />
+          <WaitingCheckListSection />
+
+          {enterErrorMessage && (
+            <p className="px-1 text-center text-sm text-red-600">
+              {enterErrorMessage}
+            </p>
+          )}
+        </div>
       </main>
 
-      {enterErrorMessage && <div>{enterErrorMessage}</div>}
-
-      <footer className="mt-auto pb-[calc(28px+env(safe-area-inset-bottom))] px-5 pt-4">
-        <button
-          type="button"
-          disabled={isLoading || !stream || isEntering}
-          onClick={enterRoom}
-          className={`w-full rounded-4xl ${
-            isLoading || !stream
-              ? "bg-white text-gray-400 border border-gray-400"
-              : "bg-[#2A2A2A] text-white"
-          }  text-center text-[16px] font-medium p-5`}
-        >
-          {isEntering ? t("footer.entering") : t("footer.enter")}
-        </button>
-      </footer>
+      <ConsultationFooter
+        disabled={isLoading || !stream || isEntering}
+        onClick={enterRoom}
+        className="bg-[#FCFCFC]"
+      >
+        {isEntering ? t("footer.entering") : t("footer.enter")}
+      </ConsultationFooter>
     </div>
   );
 }
