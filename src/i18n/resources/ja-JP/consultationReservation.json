@@ -1,5 +1,6 @@
 {
   "schedule": {
+    "headerTitle": "相談予約",
     "title": "予約日時を選択してください",
     "instructions": {
       "selectTime": "以下の予約可能な時間から1つ選択してください。",

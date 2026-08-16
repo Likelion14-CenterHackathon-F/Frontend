@@ -1,5 +1,6 @@
 {
   "schedule": {
+    "headerTitle": "Book a consultation",
     "title": "Select a date and time",
     "instructions": {
       "selectTime": "Select one of the available times below.",

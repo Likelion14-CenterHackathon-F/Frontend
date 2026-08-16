@@ -87,12 +87,8 @@ function ConsultationSchedulePage() {
 
   return (
     <>
-      <main className="bg-surface-soft flex-1 pb-[calc(90px+env(safe-area-inset-bottom))]">
-        <h1 className="text-calendar-text px-5 pt-6 text-2xl font-bold leading-[1.4] tracking-tight">
-          {t("schedule.title")}
-        </h1>
-
-        <section className="mt-8 px-5">
+      <main className="relative z-10 flex-1 bg-transparent pb-[calc(90px+env(safe-area-inset-bottom))]">
+        <section className="mt-[19px] px-[14px]">
           <ConsultationCalendar
             locale={locale}
             startMonth={currentMonth}
@@ -123,7 +119,7 @@ function ConsultationSchedulePage() {
           )}
         </section>
 
-        <ul className="text-calendar-description mx-5 mt-8 list-disc pl-5 text-sm leading-[1.4] tracking-tight">
+        <ul className="text-calendar-description mx-5 mt-[21px] list-disc pl-5 text-sm leading-[1.4] tracking-tight">
           <li>{t("schedule.instructions.selectTime")}</li>
           <li className="mt-1">{t("schedule.instructions.timezone")}</li>
         </ul>
@@ -166,7 +162,12 @@ function ConsultationSchedulePage() {
         )}
       </main>
 
-      <ConsultationFooter disabled={!canProceed} onClick={handleNext}>
+      <ConsultationFooter
+        disabled={!canProceed}
+        onClick={handleNext}
+        className="bg-transparent bg-gradient-to-b from-white/0 to-white/45 backdrop-blur-[4.7px]"
+        buttonClassName="disabled:bg-[#FDFDFF] disabled:text-[#9795A0]"
+      >
         {t("schedule.next")}
       </ConsultationFooter>
     </>

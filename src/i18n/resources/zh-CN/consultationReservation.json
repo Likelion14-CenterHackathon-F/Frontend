@@ -1,5 +1,6 @@
 {
   "schedule": {
+    "headerTitle": "预约咨询",
     "title": "请选择预约日期和时间",
     "instructions": {
       "selectTime": "请从以下可预约时间中选择一个。",
