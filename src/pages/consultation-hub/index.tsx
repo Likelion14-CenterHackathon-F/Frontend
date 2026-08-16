@@ -43,7 +43,13 @@ function ConsultationHubPage() {
         id: appointment.appointmentId,
         status: "reserved",
         scheduledAt: appointment.startsAt,
-        subject: appointment.symptomCategories.join(" · ") || "-",
+        subject:
+          (
+            appointment.symptomCategories ??
+            (appointment.symptomCategory
+              ? [appointment.symptomCategory]
+              : [])
+          ).join(" · ") || "-",
         symptomNote: appointment.symptomNote,
         ...mockMedicalStaff,
       })),

@@ -72,12 +72,23 @@ export interface CreateConsultationAppointmentRequest {
   caseId: number;
   slotId: number;
   symptomCategory?: SymptomCategory;
+  symptomCategories?: SymptomCategory[];
   symptomNote?: string;
   files?: File[];
 }
 
-export type CreateConsultationAppointmentResponse =
-  ActiveConsultationAppointment;
+export interface CreateConsultationAppointmentResponse {
+  appointmentId: number;
+  caseId: number;
+  slotId: number;
+  startsAt: OffsetDateTimeString;
+  endsAt: OffsetDateTimeString;
+  waitingRoomOpensAt: OffsetDateTimeString;
+  waitingRoomClosesAt: OffsetDateTimeString;
+  canEnterWaitingRoom: boolean;
+  timezoneId: string;
+  status: "CONFIRMED";
+}
 
 export type SymptomType =
   | "pain"

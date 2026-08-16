@@ -77,9 +77,9 @@ function PreConsultationPage() {
       const appointment = await createAppointment({
         caseId: MOCK_CASE_ID,
         slotId: selectedSlot.slotId,
-        symptomCategory: selectedSymptoms[0]
-          ? SYMPTOM_CATEGORY_BY_TYPE[selectedSymptoms[0]]
-          : undefined,
+        symptomCategories: selectedSymptoms.map(
+          (symptom) => SYMPTOM_CATEGORY_BY_TYPE[symptom],
+        ),
         symptomNote: symptomDescription,
         files: imageFiles.map(({ file }) => file),
       });

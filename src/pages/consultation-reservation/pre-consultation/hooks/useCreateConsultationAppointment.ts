@@ -10,11 +10,10 @@ export function useCreateConsultationAppointment() {
   return useMutation({
     mutationFn: (request: CreateConsultationAppointmentRequest) =>
       createConsultationAppointment(request),
-    onSuccess: (appointment, request) => {
-      queryClient.setQueryData(
-        activeConsultationAppointmentQueryKey(request.caseId),
-        [appointment],
-      );
+    onSuccess: (_, request) => {
+      void queryClient.invalidateQueries({
+        queryKey: activeConsultationAppointmentQueryKey(request.caseId),
+      });
       void queryClient.invalidateQueries({
         queryKey: ["consultation-available-dates"],
       });

@@ -56,6 +56,7 @@ export async function createConsultationAppointment({
   caseId,
   slotId,
   symptomCategory,
+  symptomCategories = [],
   symptomNote,
   files = [],
 }: CreateConsultationAppointmentRequest) {
@@ -64,6 +65,9 @@ export async function createConsultationAppointment({
   formData.append("slotId", String(slotId));
 
   if (symptomCategory) formData.append("symptomCategory", symptomCategory);
+  symptomCategories.forEach((category) =>
+    formData.append("symptomCategories", category),
+  );
   if (symptomNote?.trim()) formData.append("symptomNote", symptomNote.trim());
   files.forEach((file) => formData.append("files", file));
 
