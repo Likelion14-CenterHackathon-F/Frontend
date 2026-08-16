@@ -245,23 +245,32 @@ function ConsultationRoomPage() {
 
       <button
         type="button"
-        aria-label={speakerOn ? "스피커 끄기" : "스피커 켜기"}
+        aria-label={speakerOn ? "상대방 소리 끄기" : "상대방 소리 켜기"}
         aria-pressed={speakerOn}
         onClick={toggleSpeaker}
         className="absolute left-[30px] top-[30px] grid size-6 place-items-center rounded-full focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
       >
-        <img
-          src={speakerIcon}
-          alt=""
-          className={`size-6 object-contain ${speakerOn ? "" : "opacity-45"}`}
-        />
+        <span className="relative block size-6">
+          <img
+            src={speakerIcon}
+            alt=""
+            className={`size-6 object-contain transition-opacity ${speakerOn ? "" : "opacity-70"}`}
+          />
+          {!speakerOn && (
+            <span className="absolute left-1/2 top-1/2 h-0.5 w-7 -translate-x-1/2 -translate-y-1/2 rotate-45 rounded-full bg-white" />
+          )}
+        </span>
       </button>
 
       <time className="absolute left-1/2 top-[30px] -translate-x-1/2 text-sm leading-5 tracking-[-0.35px]">
         {formatDuration(elapsedSeconds)}
       </time>
 
-      <LocalVideo track={localVideoTrack} cameraOn={cameraOn} />
+      <LocalVideo
+        track={localVideoTrack}
+        cameraOn={cameraOn}
+        microphoneOn={microphoneOn}
+      />
 
       <ConnectionStatus
         connectionState={connectionState}

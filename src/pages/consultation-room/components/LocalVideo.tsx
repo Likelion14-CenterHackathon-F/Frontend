@@ -5,13 +5,15 @@ import {
   type PointerEvent as ReactPointerEvent,
 } from "react";
 import type { ICameraVideoTrack } from "agora-rtc-sdk-ng";
+import microphoneOffIcon from "@/assets/icons/consultation/microphone-off.svg";
 
 interface LocalVideoProps {
   track: ICameraVideoTrack | null;
   cameraOn: boolean;
+  microphoneOn: boolean;
 }
 
-function LocalVideo({ track, cameraOn }: LocalVideoProps) {
+function LocalVideo({ track, cameraOn, microphoneOn }: LocalVideoProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const pointersRef = useRef(new Map<number, { x: number; y: number }>());
   const previousDistanceRef = useRef<number | null>(null);
@@ -103,6 +105,15 @@ function LocalVideo({ track, cameraOn }: LocalVideoProps) {
       {!cameraOn && (
         <div className="absolute inset-0 grid place-items-center bg-[#333] text-xs text-white/70">
           카메라 꺼짐
+        </div>
+      )}
+      {!microphoneOn && (
+        <div
+          role="status"
+          aria-label="마이크 음소거"
+          className="absolute bottom-2 right-2 grid size-8 place-items-center rounded-full bg-black/65"
+        >
+          <img src={microphoneOffIcon} alt="" className="h-[17px] w-4" />
         </div>
       )}
     </section>
