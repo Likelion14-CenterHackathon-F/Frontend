@@ -56,7 +56,9 @@ function ConsultationConfirmedPage() {
     .map((symptom) => t(`preConsultation.symptoms.options.${symptom}`))
     .join("·");
 
-  const handleConfirmCancellation = async (reason: ConsultationCancelReason) => {
+  const handleConfirmCancellation = async (
+    reason: ConsultationCancelReason,
+  ) => {
     if (isCancelling || !Number.isInteger(appointmentId) || appointmentId < 1)
       return;
 
@@ -91,7 +93,10 @@ function ConsultationConfirmedPage() {
     <div className="relative flex min-h-dvh flex-col overflow-hidden bg-[#FCFCFC] before:pointer-events-none before:absolute before:inset-0 before:bg-[radial-gradient(circle_at_50%_18%,rgba(222,219,248,0.78),transparent_48%),radial-gradient(circle_at_18%_72%,rgba(233,230,250,0.68),transparent_42%),radial-gradient(circle_at_88%_78%,rgba(225,222,246,0.52),transparent_38%)]">
       <ConsultationHeader
         title={t("schedule.headerTitle")}
-        onBack={() => navigate("/consultation")}
+        onBack={() => {
+          resetReservation();
+          navigate("/consultation");
+        }}
         className="z-10 bg-transparent"
       />
 

@@ -1,8 +1,10 @@
+import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 
 import ConsultationHeader from "@/components/Header/ConsultationHeader";
 import { cn } from "@/utils/cn";
+import { useConsultationReservationStore } from "@/stores/useConsultationReservationStore";
 
 function ConsultationReservationLayout() {
   const navigate = useNavigate();
@@ -12,10 +14,20 @@ function ConsultationReservationLayout() {
   const isSchedulePage = location.pathname.endsWith("/schedule");
   const isPreConsultationPage = location.pathname.endsWith("/pre-consultation");
   const usesReservationBackground = isSchedulePage || isPreConsultationPage;
+  const resetReservation = useConsultationReservationStore(
+    (state) => state.reset,
+  );
+
+  useEffect(() => {
+    if (!usesReservationBackground) return;
+
+    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+  }, [location.pathname, usesReservationBackground]);
 
   const handleBack = () => {
     if (isSchedulePage) {
       navigate("/consultation");
+      resetReservation();
       return;
     }
 
@@ -36,7 +48,9 @@ function ConsultationReservationLayout() {
       <ConsultationHeader
         title={usesReservationBackground ? t("schedule.headerTitle") : ""}
         onBack={handleBack}
-        className={usesReservationBackground ? "z-10 bg-transparent" : undefined}
+        className={
+          usesReservationBackground ? "z-10 bg-transparent" : undefined
+        }
       />
 
       <Outlet />

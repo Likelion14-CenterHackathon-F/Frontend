@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
 
 import type {
   ConsultationAttachment,
@@ -36,7 +37,8 @@ const initialState = {
 };
 
 export const useConsultationReservationStore =
-  create<ConsultationReservationState>((set, get) => ({
+  create<ConsultationReservationState>()(
+    persist((set, get) => ({
     ...initialState,
 
     setSelectedDate: (selectedDate) => {
@@ -81,4 +83,13 @@ export const useConsultationReservationStore =
       });
       set(initialState);
     },
-  }));
+    }), {
+      name: "consultation-reservation",
+      partialize: (state) => ({
+        selectedDate: state.selectedDate,
+        selectedSlot: state.selectedSlot,
+        selectedSymptoms: state.selectedSymptoms,
+        symptomDescription: state.symptomDescription,
+      }),
+    }),
+  );
