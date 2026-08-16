@@ -59,6 +59,7 @@ interface ConsultationControlsProps {
   onToggleCamera: () => Promise<void>;
   onSwitchCamera: () => Promise<void>;
   onEnd: () => void | Promise<void>;
+  onBackgroundClick?: () => void;
 }
 
 function ConsultationControls({
@@ -70,10 +71,15 @@ function ConsultationControls({
   onToggleCamera,
   onSwitchCamera,
   onEnd,
+  onBackgroundClick,
 }: ConsultationControlsProps) {
   return (
     <nav
       aria-label="화상 상담 제어"
+      onClick={(event) => {
+        event.stopPropagation();
+        if (event.target === event.currentTarget) onBackgroundClick?.();
+      }}
       className="flex items-center justify-center gap-2 rounded-[25px] bg-[#1A1A1A] p-3 sm:gap-2.5 sm:p-[18px]"
     >
       <ControlButton

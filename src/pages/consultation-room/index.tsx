@@ -1,4 +1,10 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type MouseEvent as ReactMouseEvent,
+} from "react";
 import axios from "axios";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 
@@ -44,6 +50,7 @@ function ConsultationRoomPage() {
   const [sttErrorMessage, setSttErrorMessage] = useState<string | null>(null);
   const [endErrorMessage, setEndErrorMessage] = useState<string | null>(null);
   const [isEndModalOpen, setIsEndModalOpen] = useState(false);
+  const [controlsVisible, setControlsVisible] = useState(true);
   const { mutateAsync: startSttAgent } = useStartSttAgent();
   const { mutateAsync: endConsultation, isPending: isEnding } =
     useEndConsultation();
@@ -226,10 +233,19 @@ function ConsultationRoomPage() {
   const visibleCaptionErrorMessage =
     endErrorMessage ?? visibleSttErrorMessage ?? captionSaveError;
 
+  const handleRoomClick = (event: ReactMouseEvent<HTMLElement>) => {
+    const target = event.target;
+    if (!(target instanceof Element)) return;
+    if (target.closest("button, [data-local-video]")) return;
+
+    setControlsVisible((current) => !current);
+  };
+
   return (
     <main
+      onClick={handleRoomClick}
       className={[
-        "relative isolate h-dvh min-h-[390px] w-full overflow-hidden bg-[#1A1A1A] text-white",
+        "relative isolate h-dvh min-h-[390px] w-full overflow-hidden bg-[#1A1A1A] text-white [container-type:inline-size]",
         role === "PATIENT" ? "mx-auto max-w-[430px]" : "",
       ].join(" ")}
     >
@@ -286,23 +302,44 @@ function ConsultationRoomPage() {
         </div>
       )}
 
-      <p className="absolute bottom-5 left-[30px] text-[15px] leading-[1.4] tracking-[-0.375px] sm:bottom-[18px]">
+      <p className="absolute bottom-5 left-[30px] whitespace-nowrap text-[clamp(9px,2.5cqw,15px)] leading-[1.4] tracking-[-0.025em] sm:bottom-[18px]">
         박지태 의사
       </p>
 
       <div className="absolute inset-x-0 bottom-[calc(8px+env(safe-area-inset-bottom))] flex flex-col items-center gap-2 px-4 sm:bottom-[calc(10px+env(safe-area-inset-bottom))]">
         <CaptionOverlay caption={caption} />
 
-        <ConsultationControls
-          microphoneOn={microphoneOn}
-          cameraOn={cameraOn}
-          disabled={controlsDisabled}
-          ending={isFinishingConsultation}
-          onToggleMicrophone={toggleMicrophone}
-          onToggleCamera={toggleCamera}
-          onSwitchCamera={switchCamera}
-          onEnd={() => setIsEndModalOpen(true)}
-        />
+        <div
+          aria-hidden={!controlsVisible}
+          inert={!controlsVisible}
+          className={[
+            "grid transition-[grid-template-rows] duration-300 ease-out motion-reduce:transition-none",
+            controlsVisible ? "grid-rows-[1fr]" : "grid-rows-[0fr]",
+          ].join(" ")}
+        >
+          <div className="min-h-0 overflow-hidden">
+            <div
+              className={[
+                "transition-[transform,opacity] duration-300 ease-out motion-reduce:transition-none",
+                controlsVisible
+                  ? "translate-y-0 opacity-100"
+                  : "pointer-events-none translate-y-full opacity-0",
+              ].join(" ")}
+            >
+              <ConsultationControls
+                microphoneOn={microphoneOn}
+                cameraOn={cameraOn}
+                disabled={controlsDisabled}
+                ending={isFinishingConsultation}
+                onToggleMicrophone={toggleMicrophone}
+                onToggleCamera={toggleCamera}
+                onSwitchCamera={switchCamera}
+                onEnd={() => setIsEndModalOpen(true)}
+                onBackgroundClick={() => setControlsVisible(false)}
+              />
+            </div>
+          </div>
+        </div>
       </div>
 
       <ConsultationEndModal

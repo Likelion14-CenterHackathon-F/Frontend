@@ -89,6 +89,7 @@ function LocalVideo({ track, cameraOn, microphoneOn }: LocalVideoProps) {
 
   return (
     <section
+      data-local-video
       aria-label="내 카메라 화면"
       onPointerDown={handlePointerDown}
       onPointerMove={handlePointerMove}
