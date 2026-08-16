@@ -36,8 +36,26 @@ function HomePage() {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
   const [isChatFocused, setIsChatFocused] = useState(false);
+  const [showCards, setShowCards] = useState(false);
 
   const bottomRef = useRef<HTMLDivElement>(null);
+  const cardsTimerRef = useRef<number | null>(null);
+
+  /*
+    대화 중에는 카드가 평소엔 접혀 있다가, 메시지를 보내거나 답변을 받을 때마다 잠깐(5초) 올라온다.
+    이전 타이머는 취소해서 연속으로 메시지가 오갈 때 계속 5초씩 늘어나지 않게 한다.
+  */
+  const flashCards = () => {
+    setShowCards(true);
+    if (cardsTimerRef.current) window.clearTimeout(cardsTimerRef.current);
+    cardsTimerRef.current = window.setTimeout(() => setShowCards(false), 5000);
+  };
+
+  useEffect(() => {
+    return () => {
+      if (cardsTimerRef.current) window.clearTimeout(cardsTimerRef.current);
+    };
+  }, []);
 
   const { data: home } = useQuery({
     queryKey: ["aftercare", "home"],
@@ -63,6 +81,7 @@ function HomePage() {
       queryClient.setQueryData(["aiChat", "room", data.roomId], data);
       // 마지막 대화 시각이 바뀌어 채팅방 목록 순서도 달라진다
       void queryClient.invalidateQueries({ queryKey: ["aiChat", "rooms"] });
+      flashCards();
     },
     onSettled: () => {
       // 답변에 첨부 이미지가 담겨 돌아온 뒤에야 임시 미리보기를 지운다
@@ -117,8 +136,38 @@ function HomePage() {
       image: image ?? undefined,
     });
 
+    flashCards();
     setDraft("");
   };
+
+  const homeCards = (
+    <>
+      <HomeCard
+        variant="consultation"
+        badge={
+          consultation
+            ? t("consultation.badge", { days: consultation.daysLeft })
+            : t("consultation.empty.badge")
+        }
+        caption={
+          consultation
+            ? t("consultation.scheduled", { date: consultation.date })
+            : t("consultation.empty.caption")
+        }
+        title={
+          consultation ? t("consultation.title") : t("consultation.empty.title")
+        }
+        onClick={() => navigate("/consultation")}
+      />
+
+      <HomeCard
+        badge={t("aftercare.badge", { day: dayOffset })}
+        caption={procedureName}
+        title={t("aftercare.title")}
+        onClick={() => navigate("/aftercare")}
+      />
+    </>
+  );
 
   return (
     <div
@@ -204,7 +253,7 @@ function HomePage() {
             <div ref={bottomRef} />
           </main>
 
-          <div className="sticky bottom-0 z-10 px-5 pt-6 pb-10">
+          <div className="sticky bottom-0 z-10 flex flex-col gap-2.5 px-5 pt-6 pb-10">
             <ChatComposer
               value={draft}
               placeholder={t("aiChat:inputPlaceholder")}
@@ -221,6 +270,15 @@ function HomePage() {
               onImageSelect={selectImage}
               onStop={() => undefined}
             />
+
+            <div
+              className={cn(
+                "relative flex gap-[9px] overflow-hidden transition-[max-height] duration-300 ease-out",
+                showCards ? "max-h-45" : "max-h-4.5",
+              )}
+            >
+              {homeCards}
+            </div>
           </div>
         </>
       ) : (
@@ -262,32 +320,7 @@ function HomePage() {
               isChatFocused ? "max-h-4.5" : "max-h-45",
             )}
           >
-            <HomeCard
-              variant="consultation"
-              badge={
-                consultation
-                  ? t("consultation.badge", { days: consultation.daysLeft })
-                  : t("consultation.empty.badge")
-              }
-              caption={
-                consultation
-                  ? t("consultation.scheduled", { date: consultation.date })
-                  : t("consultation.empty.caption")
-              }
-              title={
-                consultation
-                  ? t("consultation.title")
-                  : t("consultation.empty.title")
-              }
-              onClick={() => navigate("/consultation")}
-            />
-
-            <HomeCard
-              badge={t("aftercare.badge", { day: dayOffset })}
-              caption={procedureName}
-              title={t("aftercare.title")}
-              onClick={() => navigate("/aftercare")}
-            />
+            {homeCards}
           </div>
         </>
       )}
