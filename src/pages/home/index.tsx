@@ -234,19 +234,25 @@ function HomePage() {
               isChatFocused ? "max-h-4.5" : "max-h-45",
             )}
           >
-            {consultation && (
-              <HomeCard
-                variant="consultation"
-                badge={t("consultation.badge", {
-                  days: consultation.daysLeft,
-                })}
-                caption={t("consultation.scheduled", {
-                  date: consultation.date,
-                })}
-                title={t("consultation.title")}
-                onClick={() => navigate("/consultation")}
-              />
-            )}
+            <HomeCard
+              variant="consultation"
+              badge={
+                consultation
+                  ? t("consultation.badge", { days: consultation.daysLeft })
+                  : t("consultation.empty.badge")
+              }
+              caption={
+                consultation
+                  ? t("consultation.scheduled", { date: consultation.date })
+                  : t("consultation.empty.caption")
+              }
+              title={
+                consultation
+                  ? t("consultation.title")
+                  : t("consultation.empty.title")
+              }
+              onClick={() => navigate("/consultation")}
+            />
 
             <HomeCard
               badge={t("aftercare.badge", { day: dayOffset })}

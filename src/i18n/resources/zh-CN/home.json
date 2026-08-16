@@ -21,6 +21,11 @@
   "consultation": {
     "badge": "D-{{days}}",
     "scheduled": "预约 {{date}}",
-    "title": "医生视频咨询"
+    "title": "医生视频咨询",
+    "empty": {
+      "badge": "视频咨询",
+      "caption": "暂无安排",
+      "title": "暂无预约的咨询"
+    }
   }
 }
