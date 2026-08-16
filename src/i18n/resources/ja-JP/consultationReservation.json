@@ -1,5 +1,6 @@
 {
   "schedule": {
+    "headerTitle": "相談予約",
     "title": "予約日時を選択してください",
     "instructions": {
       "selectTime": "以下の予約可能な時間から1つ選択してください。",
@@ -7,6 +8,10 @@
     },
     "localTime": "現地時間 {{time}}（{{offset}}）",
     "emptySlots": "選択した日付に予約可能な時間はありません。",
+    "slotsLoading": "予約時間を読み込んでいます。",
+    "slotsLoadError": "予約時間を読み込めませんでした。",
+    "retry": "再試行",
+    "closed": "締切",
     "next": "次へ"
   },
   "preConsultation": {
@@ -62,6 +67,12 @@
       "submit": "予約する"
     },
     "submit": "予約する"
+  },
+  "appointmentDetail": {
+    "title": "予定されている相談予約です",
+    "loading": "予約情報を読み込んでいます。",
+    "notFound": "予約情報が見つかりません。",
+    "retry": "もう一度試す"
   },
   "confirmed": {
     "title": "相談予約が確定しました",

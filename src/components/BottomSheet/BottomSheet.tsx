@@ -79,7 +79,7 @@ function BottomSheet({
           className,
         )}
       >
-        <header className={cn("shrink-0 px-5 pt-[34px]", headerClassName)}>
+        <header className={cn("shrink-0 px-5 pt-[52px]", headerClassName)}>
           <h2
             id={titleId}
             className="text-2xl font-semibold leading-[1.4] tracking-tight text-text-01"

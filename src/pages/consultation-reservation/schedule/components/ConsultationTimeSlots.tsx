@@ -59,21 +59,31 @@ function ConsultationTimeSlots({
                   key={slot.slotId}
                   type="button"
                   aria-pressed={isSelected}
+                  disabled={!slot.available}
                   onClick={() => onSelect(slot)}
                   className={cn(
-                    "min-h-12 rounded-[30px] border text-base tracking-tight transition-colors",
-                    isSelected
+                    "flex min-h-12 flex-col items-center justify-center rounded-[30px] border text-base tracking-tight transition-colors",
+                    !slot.available
+                      ? "cursor-not-allowed border-transparent bg-action-disabled text-[#9795A0]"
+                      : isSelected
                       ? "border-action-secondary-text bg-action-secondary-text font-medium text-action-primary-text"
                       : "border-calendar-control-border bg-transparent font-normal text-calendar-text",
                   )}
                 >
-                  {formatAppointmentTime(
-                    slot.startsAt,
-                    {
-                      locale,
-                      timeZone: userTimeZone,
-                    },
-                    "h23",
+                  <span>
+                    {formatAppointmentTime(
+                      slot.startsAt,
+                      {
+                        locale,
+                        timeZone: userTimeZone,
+                      },
+                      "h23",
+                    )}
+                  </span>
+                  {!slot.available && (
+                    <span className="text-[10px] leading-none">
+                      {t("schedule.closed")}
+                    </span>
                   )}
                 </button>
               );

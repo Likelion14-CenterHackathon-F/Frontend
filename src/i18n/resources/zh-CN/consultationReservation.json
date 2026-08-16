@@ -1,5 +1,6 @@
 {
   "schedule": {
+    "headerTitle": "预约咨询",
     "title": "请选择预约日期和时间",
     "instructions": {
       "selectTime": "请从以下可预约时间中选择一个。",
@@ -7,6 +8,10 @@
     },
     "localTime": "当地时间 {{time}}（{{offset}}）",
     "emptySlots": "所选日期暂无可预约时间。",
+    "slotsLoading": "正在加载预约时间。",
+    "slotsLoadError": "无法加载预约时间。",
+    "retry": "重试",
+    "closed": "已满",
     "next": "下一步"
   },
   "preConsultation": {
@@ -62,6 +67,12 @@
       "submit": "预约"
     },
     "submit": "预约"
+  },
+  "appointmentDetail": {
+    "title": "这是您即将进行的咨询预约",
+    "loading": "正在加载预约信息。",
+    "notFound": "找不到预约信息。",
+    "retry": "重试"
   },
   "confirmed": {
     "title": "咨询预约已确认",

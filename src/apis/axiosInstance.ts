@@ -13,6 +13,10 @@ axiosInstance.interceptors.request.use(
   (config) => {
     const accessToken = localStorage.getItem(ACCESS_TOKEN_STORAGE_KEY);
 
+    if (config.data instanceof FormData) {
+      config.headers.delete("Content-Type");
+    }
+
     if (accessToken) {
       config.headers.Authorization = `Bearer ${accessToken}`;
     }

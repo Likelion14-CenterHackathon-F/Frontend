@@ -2,6 +2,17 @@ import type {
   ApiResponse,
   JoinConsultationResponse,
   JoinConsultationRequest,
+  StartSttAgentResponse,
+  SttAgentStatusResponse,
+  RenewRtcTokenRequest,
+  RenewRtcTokenResponse,
+  SaveCaptionBatchRequest,
+  SaveCaptionBatchResponse,
+  EndConsultationResponse,
+  CreateConsultationSummaryRequest,
+  ConsultationSummaryListItem,
+  ConsultationSummaryResponse,
+  SummaryRequestLanguage,
 } from "@/types/consultation.type";
 import axiosInstance from "../axiosInstance";
 
@@ -11,7 +22,84 @@ export const joinConsultation = async (
 ) => {
   const { data } = await axiosInstance.post<
     ApiResponse<JoinConsultationResponse>
-  >(`/consultation/${appointmentId}/join`, body);
+  >(`/api/consultations/${appointmentId}/join`, body);
+
+  return data.data;
+};
+
+export const startSttAgent = async (appointmentId: number) => {
+  const { data } = await axiosInstance.post<ApiResponse<StartSttAgentResponse>>(
+    `/api/consultations/${appointmentId}/transcription/start`,
+  );
+  return data.data;
+};
+
+export const getSttAgentStatus = async (appointmentId: number) => {
+  const { data } = await axiosInstance.get<ApiResponse<SttAgentStatusResponse>>(
+    `/api/consultations/${appointmentId}/transcription/status`,
+  );
+  return data.data;
+};
+
+export const renewConsultationRtcToken = async (
+  appointmentId: number,
+  body: RenewRtcTokenRequest,
+) => {
+  const { data } = await axiosInstance.post<ApiResponse<RenewRtcTokenResponse>>(
+    `/api/consultations/${appointmentId}/token/renew`,
+    body,
+  );
+  return data.data;
+};
+
+export const saveConsultationCaptionBatch = async (
+  appointmentId: number,
+  body: SaveCaptionBatchRequest,
+) => {
+  const { data } = await axiosInstance.post<
+    ApiResponse<SaveCaptionBatchResponse>
+  >(`/api/consultations/${appointmentId}/captions/batch`, body);
+  return data.data;
+};
+
+export const endConsultation = async (appointmentId: number) => {
+  const { data } = await axiosInstance.post<
+    ApiResponse<EndConsultationResponse>
+  >(`/api/consultations/${appointmentId}/end`);
+  return data.data;
+};
+
+export const createConsultationSummary = async (
+  appointmentId: number,
+  body: CreateConsultationSummaryRequest,
+) => {
+  const { data } = await axiosInstance.post<
+    ApiResponse<ConsultationSummaryResponse>
+  >(`/api/consultation-summaries/${appointmentId}`, body);
+  return data.data;
+};
+
+export const getConsultationSummaries = async (
+  language: SummaryRequestLanguage,
+) => {
+  const { data } = await axiosInstance.get<
+    ApiResponse<ConsultationSummaryListItem[]>
+  >("/api/consultation-summaries", {
+    params: { language },
+  });
+
+  return data.data;
+};
+
+export const getConsultationSummary = async (
+  summaryId: number,
+  language: SummaryRequestLanguage,
+) => {
+  const { data } = await axiosInstance.get<
+    ApiResponse<ConsultationSummaryResponse>
+  >(`/api/consultation-summaries/${summaryId}`, {
+    params: { language },
+  });
 
   return data.data;
 };

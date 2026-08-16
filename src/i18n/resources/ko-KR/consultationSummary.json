@@ -1,0 +1,26 @@
+{
+  "close": "닫기",
+  "loading": "상담 요약을 불러오고 있습니다.",
+  "error": "상담 요약을 불러오지 못했습니다.",
+  "retry": "다시 시도",
+  "home": "홈으로 돌아가기",
+  "overview": {
+    "owner": "{{name}}님의",
+    "title": "상담 요약입니다.",
+    "hospital": "서울 연세 병원",
+    "appointmentDateTime": "예약 일시",
+    "consultationReason": "상담 사유",
+    "medicalStaff": "담당 의료진"
+  },
+  "aiTitle": "AI 상담 요약",
+  "instructions": {
+    "title": "의료진 안내",
+    "itemTitle": "안내 {{number}}"
+  },
+  "reason": {
+    "title": "상담 사유",
+    "emptyTitle": "상담 사유 없음",
+    "emptyDescription": "등록된 사전 상담 내용이 없습니다.",
+    "submissionMedia": "사전 제출 자료"
+  }
+}

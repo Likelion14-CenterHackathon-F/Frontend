@@ -143,6 +143,36 @@ export function formatAppointmentDateTime(
   }).format(toDate(value));
 }
 
+/**
+ * 상담 일정 카드 전용 날짜 형식.
+ * 예: 2026년 8월 2일 (일) 16:15
+ */
+export function formatConsultationCardDateTime(
+  value: DateValue,
+  { locale, timeZone }: DateTimeContext,
+): string {
+  const date = toDate(value);
+  const weekday = new Intl.DateTimeFormat(locale, {
+    timeZone,
+    weekday: "short",
+  }).format(date);
+  const time = new Intl.DateTimeFormat(locale, {
+    timeZone,
+    hour: "2-digit",
+    minute: "2-digit",
+    hourCycle: "h23",
+  }).format(date);
+
+  const localizedDate = new Intl.DateTimeFormat(locale, {
+    timeZone,
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  }).format(date);
+
+  return `${localizedDate} (${weekday}) ${time}`;
+}
+
 export function formatConfirmedDateTime(
   value: DateValue,
   { locale, timeZone }: DateTimeContext,
