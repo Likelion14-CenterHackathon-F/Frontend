@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
 import ConsultationFooter from "@/components/Footer/ConsultationFooter";
+import LoadingState from "@/components/Loading/LoadingState";
 import { useConsultationReservationStore } from "@/stores/useConsultationReservationStore";
 import { usePreferencesStore } from "@/stores/usePreferencesStore";
 import type { LocalDateString } from "@/types/consultationReservation.type";
@@ -100,9 +101,11 @@ function ConsultationSchedulePage() {
           />
 
           {isAvailableDatesPending && (
-            <p className="mt-4 text-center text-sm text-[#7B7A80]">
-              예약 가능한 날짜를 불러오고 있습니다.
-            </p>
+            <LoadingState
+              variant="inline"
+              className="mt-2"
+              message="예약 가능한 날짜를 불러오고 있습니다."
+            />
           )}
 
           {isAvailableDatesError && (
@@ -131,9 +134,10 @@ function ConsultationSchedulePage() {
         {selectedDate && (
           <section className="px-5 py-[46px]">
             {isAvailableSlotsPending ? (
-              <p className="text-center text-text-03">
-                {t("schedule.slotsLoading")}
-              </p>
+              <LoadingState
+                variant="inline"
+                message={t("schedule.slotsLoading")}
+              />
             ) : isAvailableSlotsError ? (
               <div className="flex items-center justify-center gap-3 text-sm text-[#65646D]">
                 <p>{t("schedule.slotsLoadError")}</p>

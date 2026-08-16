@@ -5,6 +5,7 @@ import { Navigate, useNavigate, useParams } from "react-router-dom";
 
 import ConsultationFooter from "@/components/Footer/ConsultationFooter";
 import ConsultationHeader from "@/components/Header/ConsultationHeader";
+import LoadingState from "@/components/Loading/LoadingState";
 import ConfirmedConsultationInfo from "@/pages/consultation-confirmed/components/ConfirmedConsultationInfo";
 import ConsultationCancelSheet from "@/pages/consultation-confirmed/components/ConsultationCancelSheet";
 import ConsultationEntryNotice from "@/pages/consultation-confirmed/components/ConsultationEntryNotice";
@@ -76,15 +77,7 @@ function ConsultationDetailPage() {
     }
   };
 
-  if (isPending) {
-    return (
-      <div className="flex min-h-dvh items-center justify-center bg-[#FCFCFC] px-5 text-sm text-[#65646D]">
-        {t("appointmentDetail.loading")}
-      </div>
-    );
-  }
-
-  if (isError || !appointment) {
+  if (!isPending && (isError || !appointment)) {
     return (
       <div className="flex min-h-dvh flex-col items-center justify-center gap-4 bg-[#FCFCFC] px-5 text-center text-sm text-[#65646D]">
         <p>{t("appointmentDetail.notFound")}</p>
@@ -99,16 +92,20 @@ function ConsultationDetailPage() {
     );
   }
 
-  const highlightedDate = formatConfirmedDateTime(appointment.startsAt, {
-    locale,
-    timeZone,
-  });
-  const detailDate = formatConsultationCardDateTime(appointment.startsAt, {
-    locale,
-    timeZone,
-  });
+  const highlightedDate = appointment
+    ? formatConfirmedDateTime(appointment.startsAt, {
+        locale,
+        timeZone,
+      })
+    : "";
+  const detailDate = appointment
+    ? formatConsultationCardDateTime(appointment.startsAt, {
+        locale,
+        timeZone,
+      })
+    : "";
   const symptoms =
-    appointment.symptomCategories
+    appointment?.symptomCategories
       .map((category) =>
         translateConsultationSubject(category, (key) =>
           t(`preConsultation.symptoms.options.${key}`),
@@ -125,47 +122,61 @@ function ConsultationDetailPage() {
       />
 
       <main className="relative z-10 flex-1 px-5 pt-10.5 pb-[calc(110px+env(safe-area-inset-bottom))]">
-        <h1 className="text-2xl font-semibold leading-[1.4] tracking-tight text-[#32303A]">
-          {t("appointmentDetail.title")}
-        </h1>
-        <p className="mt-1.5 text-xl font-semibold leading-[1.4] tracking-tight text-[#614BB8]">
-          {highlightedDate}
-        </p>
-
-        <div className="mt-6">
-          <ConsultationEntryNotice message={t("confirmed.entryNotice")} />
-        </div>
-
-        <section className="mt-13">
-          <h2 className="text-xl font-semibold leading-[1.4] tracking-tight text-[#32303A]">
-            {t("confirmed.infoTitle")}
-          </h2>
-          <ConfirmedConsultationInfo
-            dateLabel={t("confirmed.summary.date")}
-            dateValue={detailDate}
-            reasonLabel={t("confirmed.summary.reason")}
-            reasonValue={symptoms}
-            doctorLabel={t("confirmed.summary.doctor")}
-            doctorValue={t("confirmed.mockDoctor")}
+        {isPending ? (
+          <LoadingState
+            variant="section"
+            className="min-h-0 h-full"
+            message={t("appointmentDetail.loading")}
           />
-        </section>
+        ) : (
+          <>
+            <h1 className="text-2xl font-semibold leading-[1.4] tracking-tight text-[#32303A]">
+              {t("appointmentDetail.title")}
+            </h1>
+            <p className="mt-1.5 text-xl font-semibold leading-[1.4] tracking-tight text-[#614BB8]">
+              {highlightedDate}
+            </p>
+
+            <div className="mt-6">
+              <ConsultationEntryNotice message={t("confirmed.entryNotice")} />
+            </div>
+
+            <section className="mt-13">
+              <h2 className="text-xl font-semibold leading-[1.4] tracking-tight text-[#32303A]">
+                {t("confirmed.infoTitle")}
+              </h2>
+              <ConfirmedConsultationInfo
+                dateLabel={t("confirmed.summary.date")}
+                dateValue={detailDate}
+                reasonLabel={t("confirmed.summary.reason")}
+                reasonValue={symptoms}
+                doctorLabel={t("confirmed.summary.doctor")}
+                doctorValue={t("confirmed.mockDoctor")}
+              />
+            </section>
+          </>
+        )}
       </main>
 
-      <ConsultationFooter
-        variant="danger"
-        onClick={() => setIsCancelSheetOpen(true)}
-        className="bg-transparent bg-gradient-to-b from-white/0 to-white/60 backdrop-blur-[4.7px]"
-      >
-        {t("confirmed.cancel")}
-      </ConsultationFooter>
+      {appointment && (
+        <>
+          <ConsultationFooter
+            variant="danger"
+            onClick={() => setIsCancelSheetOpen(true)}
+            className="bg-transparent bg-gradient-to-b from-white/0 to-white/60 backdrop-blur-[4.7px]"
+          >
+            {t("confirmed.cancel")}
+          </ConsultationFooter>
 
-      <ConsultationCancelSheet
-        open={isCancelSheetOpen}
-        onClose={() => setIsCancelSheetOpen(false)}
-        onConfirm={handleConfirmCancellation}
-        isSubmitting={isCancelling}
-        errorMessage={cancelError}
-      />
+          <ConsultationCancelSheet
+            open={isCancelSheetOpen}
+            onClose={() => setIsCancelSheetOpen(false)}
+            onConfirm={handleConfirmCancellation}
+            isSubmitting={isCancelling}
+            errorMessage={cancelError}
+          />
+        </>
+      )}
     </div>
   );
 }

@@ -3,6 +3,7 @@ import ConsultationCard from "./ConsultationCard";
 import ConsultationNotice from "./ConsultationNotice";
 import EmptyConsultation from "./EmptyConsultation";
 import { useTranslation } from "react-i18next";
+import LoadingState from "@/components/Loading/LoadingState";
 
 interface ConsultationReservationListProps {
   consultations: Consultation[];
@@ -22,11 +23,7 @@ function ConsultationReservationList({
   const { t } = useTranslation("consultationHub");
 
   if (isLoading) {
-    return (
-      <div className="flex min-h-[640px] items-center justify-center px-5 text-sm text-[#65646D]">
-        상담 예약을 불러오고 있습니다.
-      </div>
-    );
+    return <LoadingState message="상담 예약을 불러오고 있습니다." />;
   }
 
   if (isError) {

@@ -5,6 +5,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { getPatientCase } from "@/apis/patient";
 import closeIcon from "@/assets/icons/consultation-summary/close.svg";
 import ConsultationFooter from "@/components/Footer/ConsultationFooter";
+import LoadingState from "@/components/Loading/LoadingState";
 import { usePreferencesStore } from "@/stores/usePreferencesStore";
 import {
   formatConsultationCardDateTime,
@@ -63,15 +64,7 @@ function ConsultationSummaryPage() {
       }),
   );
 
-  if (isPending) {
-    return (
-      <div className="flex min-h-dvh items-center justify-center bg-[#F6F6F9] px-5 text-sm text-[#65646D]">
-        {t("loading", { ns: "consultationSummary" })}
-      </div>
-    );
-  }
-
-  if (isError || !summary) {
+  if (!isPending && (isError || !summary)) {
     return (
       <div className="flex min-h-dvh flex-col items-center justify-center gap-4 bg-[#F6F6F9] px-5 text-center text-sm text-[#65646D]">
         <p>{t("error", { ns: "consultationSummary" })}</p>
@@ -86,10 +79,12 @@ function ConsultationSummaryPage() {
     );
   }
 
-  const consultationDate = formatZonedDate(summary.consultedAt, {
-    locale,
-    timeZone,
-  });
+  const consultationDate = summary
+    ? formatZonedDate(summary.consultedAt, {
+        locale,
+        timeZone,
+      })
+    : "";
   const appointmentDateTime = consultationHistory?.appointmentStartsAt
     ? formatConsultationCardDateTime(consultationHistory.appointmentStartsAt, {
         locale,
@@ -99,7 +94,7 @@ function ConsultationSummaryPage() {
   const reasonDescription =
     preconsultSubmission?.symptomNote ||
     consultationHistory?.symptomNote ||
-    summary.consultationDetails;
+    summary?.consultationDetails;
 
   return (
     <div className="relative min-h-dvh overflow-hidden bg-[#F6F6F9] text-[#32303A] before:pointer-events-none before:absolute before:inset-0 before:bg-[radial-gradient(circle_at_82%_8%,rgba(222,219,248,0.82),transparent_34%),radial-gradient(circle_at_15%_55%,rgba(237,234,252,0.9),transparent_42%),radial-gradient(circle_at_90%_88%,rgba(225,222,246,0.68),transparent_36%)]">
@@ -115,6 +110,14 @@ function ConsultationSummaryPage() {
       </header>
 
       <main className="relative z-10 px-5 pb-[calc(132px+env(safe-area-inset-bottom))] pt-5">
+        {isPending ? (
+          <LoadingState
+            variant="section"
+            className="-mx-5 min-h-[calc(100dvh-91px)]"
+            message={t("loading", { ns: "consultationSummary" })}
+          />
+        ) : summary ? (
+          <>
         <SummaryOverview
           consultationDate={consultationDate}
           hospitalName={t("overview.hospital", { ns: "consultationSummary" })}
@@ -169,14 +172,18 @@ function ConsultationSummaryPage() {
             ns: "consultationSummary",
           })}
         />
+          </>
+        ) : null}
       </main>
 
-      <ConsultationFooter
-        onClick={() => navigate("/home", { replace: true })}
-        className="bg-transparent bg-gradient-to-b from-white/0 to-white/70 backdrop-blur-[4.7px]"
-      >
-        {t("home", { ns: "consultationSummary" })}
-      </ConsultationFooter>
+      {summary && (
+        <ConsultationFooter
+          onClick={() => navigate("/home", { replace: true })}
+          className="bg-transparent bg-gradient-to-b from-white/0 to-white/70 backdrop-blur-[4.7px]"
+        >
+          {t("home", { ns: "consultationSummary" })}
+        </ConsultationFooter>
+      )}
     </div>
   );
 }

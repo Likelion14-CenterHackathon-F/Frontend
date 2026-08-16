@@ -1,5 +1,6 @@
 import ConsultationCard, { type Consultation } from "./ConsultationCard";
 import EmptyConsultation from "./EmptyConsultation";
+import LoadingState from "@/components/Loading/LoadingState";
 
 interface ConsultationHistoryProps {
   consultations: Consultation[];
@@ -17,11 +18,7 @@ export default function ConsultationHistoryList({
   onSelect,
 }: ConsultationHistoryProps) {
   if (isLoading) {
-    return (
-      <div className="flex min-h-[640px] items-center justify-center px-5 text-sm text-[#65646D]">
-        상담 내역을 불러오고 있습니다.
-      </div>
-    );
+    return <LoadingState message="상담 내역을 불러오고 있습니다." />;
   }
 
   if (isError) {
