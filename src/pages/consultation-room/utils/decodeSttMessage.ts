@@ -78,6 +78,33 @@ export function decodeSttMessage(
 
   try {
     const root = fields(payload);
+    const sourceLanguageField = find(root, 12);
+
+    if (import.meta.env.DEV) {
+      console.info("[STT][Agora 원본 Protobuf]", {
+        payload,
+        payloadSize: payload.byteLength,
+        rootFields: root.map((field) => ({
+          fieldNumber: field.number,
+          valueType:
+            field.value instanceof Uint8Array ? "bytes" : "varint",
+          value:
+            field.value instanceof Uint8Array
+              ? field.value
+              : field.value.toString(),
+        })),
+        field12: {
+          received: sourceLanguageField !== undefined,
+          rawValue:
+            sourceLanguageField instanceof Uint8Array
+              ? sourceLanguageField
+              : sourceLanguageField?.toString(),
+          decodedText: text(sourceLanguageField),
+        },
+        messageType: text(find(root, 13)),
+      });
+    }
+
     const sentenceValue = find(root, 19);
     if (typeof sentenceValue !== "bigint") return null;
 

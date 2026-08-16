@@ -90,6 +90,15 @@ export function useAgoraRTC(
         return;
       }
 
+      if (import.meta.env.DEV) {
+        console.info("[STT][디코딩 결과]", {
+          publisherUid: uid,
+          requestedLanguage: roomInfo.userLanguage,
+          decodedMessage: message,
+          sourceLanguage: message.sourceLanguage,
+        });
+      }
+
       const previous = captionsRef.current.get(message.sentenceId);
       const merged = { ...previous, ...message };
       captionsRef.current.set(message.sentenceId, merged);

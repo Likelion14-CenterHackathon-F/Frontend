@@ -6,6 +6,7 @@ import type {
 import type { ActiveConsultationAppointment } from "@/types/consultationReservation.type";
 import type { AvailableConsultationDate } from "@/types/consultationReservation.type";
 import type {
+  ConsultationAppointmentDetail,
   ConsultationDailySlots,
   CreateConsultationAppointmentRequest,
   CreateConsultationAppointmentResponse,
@@ -26,6 +27,14 @@ export async function getActiveConsultationAppointment(caseId: number) {
   >("/api/appointments", {
     params: { caseId },
   });
+
+  return data.data;
+}
+
+export async function getConsultationAppointmentDetail(appointmentId: number) {
+  const { data } = await axiosInstance.get<
+    ApiResponse<ConsultationAppointmentDetail>
+  >(`/api/appointments/${appointmentId}`);
 
   return data.data;
 }

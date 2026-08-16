@@ -68,6 +68,12 @@
     },
     "submit": "预约"
   },
+  "appointmentDetail": {
+    "title": "这是您即将进行的咨询预约",
+    "loading": "正在加载预约信息。",
+    "notFound": "找不到预约信息。",
+    "retry": "重试"
+  },
   "confirmed": {
     "title": "咨询预约已确认",
     "entryNotice": "视频咨询开始前10分钟即可进入",

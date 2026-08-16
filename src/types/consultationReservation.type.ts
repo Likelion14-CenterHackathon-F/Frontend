@@ -90,6 +90,14 @@ export interface CreateConsultationAppointmentResponse {
   status: "CONFIRMED";
 }
 
+export interface ConsultationAppointmentDetail {
+  appointmentId: number;
+  startsAt: OffsetDateTimeString;
+  endsAt: OffsetDateTimeString;
+  symptomCategories: string[];
+  symptomNote: string | null;
+}
+
 export type SymptomType =
   | "pain"
   | "swelling"

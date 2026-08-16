@@ -68,6 +68,12 @@
     },
     "submit": "Book consultation"
   },
+  "appointmentDetail": {
+    "title": "Your upcoming consultation",
+    "loading": "Loading your appointment details.",
+    "notFound": "We couldn't find this appointment.",
+    "retry": "Try again"
+  },
   "confirmed": {
     "title": "Your consultation is confirmed",
     "entryNotice": "You can join the video consultation 10 minutes early",

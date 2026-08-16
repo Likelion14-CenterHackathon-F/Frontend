@@ -68,6 +68,12 @@
     },
     "submit": "予約する"
   },
+  "appointmentDetail": {
+    "title": "予定されている相談予約です",
+    "loading": "予約情報を読み込んでいます。",
+    "notFound": "予約情報が見つかりません。",
+    "retry": "もう一度試す"
+  },
   "confirmed": {
     "title": "相談予約が確定しました",
     "entryNotice": "ビデオ相談には10分前から入室できます",

@@ -6,7 +6,10 @@ import ConsultationFooter from "@/components/Footer/ConsultationFooter";
 import ConsultationHeader from "@/components/Header/ConsultationHeader";
 import { useConsultationReservationStore } from "@/stores/useConsultationReservationStore";
 import { usePreferencesStore } from "@/stores/usePreferencesStore";
-import { formatConfirmedDateTime } from "@/utils/dateTime";
+import {
+  formatConfirmedDateTime,
+  formatConsultationCardDateTime,
+} from "@/utils/dateTime";
 
 import ConfirmedConsultationInfo from "./components/ConfirmedConsultationInfo";
 import ConsultationCancelSheet from "./components/ConsultationCancelSheet";
@@ -36,9 +39,13 @@ function ConsultationConfirmedPage() {
     locale,
     timeZone,
   });
+  const scheduledAtDetail = formatConsultationCardDateTime(
+    selectedSlot.startsAt,
+    { locale, timeZone },
+  );
   const symptoms = selectedSymptoms
     .map((symptom) => t(`preConsultation.symptoms.options.${symptom}`))
-    .join(" · ");
+    .join("·");
 
   const handleConfirmCancellation = () => {
     // 예약 취소 API 성공 후 실행합니다.
@@ -47,11 +54,15 @@ function ConsultationConfirmedPage() {
   };
 
   return (
-    <div className="flex min-h-dvh flex-col bg-surface-footer">
-      <ConsultationHeader title="" onBack={() => navigate("/consultation")} />
+    <div className="relative flex min-h-dvh flex-col overflow-hidden bg-[#FCFCFC] before:pointer-events-none before:absolute before:inset-0 before:bg-[radial-gradient(circle_at_50%_18%,rgba(222,219,248,0.78),transparent_48%),radial-gradient(circle_at_18%_72%,rgba(233,230,250,0.68),transparent_42%),radial-gradient(circle_at_88%_78%,rgba(225,222,246,0.52),transparent_38%)]">
+      <ConsultationHeader
+        title={t("schedule.headerTitle")}
+        onBack={() => navigate("/consultation")}
+        className="z-10 bg-transparent"
+      />
 
-      <main className="flex-1 px-5 pb-[calc(110px+env(safe-area-inset-bottom))] pt-6">
-        <h1 className="text-calendar-text text-2xl font-bold leading-[1.4] tracking-tight">
+      <main className="relative z-10 flex-1 px-5 pb-[calc(110px+env(safe-area-inset-bottom))] pt-10.5">
+        <h1 className="text-calendar-text text-2xl font-semibold leading-[1.4] tracking-tight">
           {t("confirmed.title")}
         </h1>
         <p className="mt-1.5 text-xl font-semibold leading-[1.4] tracking-tight text-primary">
@@ -68,7 +79,7 @@ function ConsultationConfirmedPage() {
           </h2>
           <ConfirmedConsultationInfo
             dateLabel={t("confirmed.summary.date")}
-            dateValue={scheduledAt}
+            dateValue={scheduledAtDetail}
             reasonLabel={t("confirmed.summary.reason")}
             reasonValue={symptoms || "-"}
             doctorLabel={t("confirmed.summary.doctor")}
@@ -80,6 +91,7 @@ function ConsultationConfirmedPage() {
       <ConsultationFooter
         variant="danger"
         onClick={() => setIsCancelSheetOpen(true)}
+        className="bg-transparent bg-gradient-to-b from-white/0 to-white/60 backdrop-blur-[4.7px]"
       >
         {t("confirmed.cancel")}
       </ConsultationFooter>

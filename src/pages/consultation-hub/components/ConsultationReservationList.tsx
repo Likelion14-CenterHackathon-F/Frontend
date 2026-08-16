@@ -9,6 +9,7 @@ interface ConsultationReservationListProps {
   isLoading?: boolean;
   isError?: boolean;
   onRetry?: () => void;
+  onSelect?: (appointmentId: number) => void;
 }
 
 function ConsultationReservationList({
@@ -16,6 +17,7 @@ function ConsultationReservationList({
   isLoading = false,
   isError = false,
   onRetry,
+  onSelect,
 }: ConsultationReservationListProps) {
   const { t } = useTranslation("consultationHub");
 
@@ -54,7 +56,11 @@ function ConsultationReservationList({
 
       <ul className="mt-5 flex flex-col gap-4">
         {consultations.map((consultation) => (
-          <ConsultationCard key={consultation.id} consultation={consultation} />
+          <ConsultationCard
+            key={consultation.id}
+            consultation={consultation}
+            onClick={() => onSelect?.(consultation.id)}
+          />
         ))}
       </ul>
 

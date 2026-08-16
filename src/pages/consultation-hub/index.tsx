@@ -108,6 +108,9 @@ function ConsultationHubPage() {
               isLoading={isAppointmentPending}
               isError={isAppointmentError}
               onRetry={() => void refetchAppointment()}
+              onSelect={(appointmentId) =>
+                navigate(`/consultation/${appointmentId}/details`)
+              }
             />
           )}
         </section>
