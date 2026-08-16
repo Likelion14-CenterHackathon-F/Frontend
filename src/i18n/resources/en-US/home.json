@@ -21,6 +21,11 @@
   "consultation": {
     "badge": "D-{{days}}",
     "scheduled": "Scheduled {{date}}",
-    "title": "Video Consultation"
+    "title": "Video Consultation",
+    "empty": {
+      "badge": "Video Consultation",
+      "caption": "No schedule",
+      "title": "No consultation booked"
+    }
   }
 }

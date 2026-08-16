@@ -21,6 +21,11 @@
   "consultation": {
     "badge": "D-{{days}}",
     "scheduled": "{{date}} 예정",
-    "title": "의료진 화상 상담"
+    "title": "의료진 화상 상담",
+    "empty": {
+      "badge": "화상 상담",
+      "caption": "일정 없음",
+      "title": "예약한 상담이 없습니다"
+    }
   }
 }

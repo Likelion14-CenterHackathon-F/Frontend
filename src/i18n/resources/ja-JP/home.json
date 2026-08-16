@@ -21,6 +21,11 @@
   "consultation": {
     "badge": "D-{{days}}",
     "scheduled": "{{date}} 予定",
-    "title": "医師とのビデオ相談"
+    "title": "医師とのビデオ相談",
+    "empty": {
+      "badge": "ビデオ相談",
+      "caption": "予定なし",
+      "title": "予約された相談がありません"
+    }
   }
 }
