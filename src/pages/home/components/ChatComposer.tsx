@@ -17,7 +17,7 @@ interface ChatComposerProps {
   isAnswering: boolean;
   onChange: (value: string) => void;
   onSubmit: () => void;
-  onImageSelect: (url: string) => void;
+  onImageSelect: (file: File) => void;
   onStop: () => void;
 }
 

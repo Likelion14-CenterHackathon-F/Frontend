@@ -1,12 +1,13 @@
 {
   "back": "Go back",
   "language": {
-    "title": "Language"
+    "title": "Language",
+    "error": "Couldn't save your language setting. Please try again."
   },
   "history": {
     "title": "Question history",
     "close": "Close menu",
-    "today": "Today",
-    "lastWeek": "Last 7 days"
+    "recent": "Recent",
+    "older": "Older"
   }
 }

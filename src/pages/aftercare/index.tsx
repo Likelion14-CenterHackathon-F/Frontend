@@ -1,11 +1,12 @@
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 
-import { RECOVERY_PHASES, getPatientCase } from "@/apis/patient";
+import { getAftercareDashboard } from "@/apis/patient";
 import backButton from "@/assets/back-button.svg";
 import { usePreferencesStore } from "@/stores/usePreferencesStore";
-import { getDayOffset, getPhaseStatus, getWeekAround } from "@/utils/aftercare";
+import { getWeekAround } from "@/utils/aftercare";
 import {
   formatMonthDay,
   formatShortDate,
@@ -15,9 +16,7 @@ import {
 import AlertCard from "./components/AlertCard";
 import NoticeFooter from "./components/NoticeFooter";
 import PhaseSummaryCard from "./components/PhaseSummaryCard";
-import PhaseTimeline, {
-  type TimelinePhase,
-} from "./components/PhaseTimeline";
+import PhaseTimeline, { type TimelinePhase } from "./components/PhaseTimeline";
 import ReportCard from "./components/ReportCard";
 import WeekStrip from "./components/WeekStrip";
 
@@ -30,31 +29,44 @@ function AftercarePage() {
   const [isExpanded, setIsExpanded] = useState(false);
 
   const today = useMemo(() => new Date(), []);
-  const patientCase = useMemo(() => getPatientCase(), []);
-  const dayOffset = getDayOffset(patientCase.procedureDate);
 
-  // 오늘을 세 번째 칸에 두는 시안 배치
+  const { data: dashboard } = useQuery({
+    queryKey: ["aftercare", "dashboard"],
+    queryFn: getAftercareDashboard,
+  });
+
+  const dayOffset = dashboard?.caseStatus.currentDay ?? 0;
+  const procedureDate = dashboard?.caseStatus.procedureDate ?? null;
+  const procedureName = dashboard?.caseStatus.procedureName ?? "";
+  const recoveryGuides = dashboard?.recoveryGuides ?? [];
+  const redFlagItems = dashboard?.redFlags.items ?? [];
+
+  // 오늘을 세 번째 칸에 배치
   const weekDays = useMemo(
     () => getWeekAround(today, { before: 2, after: 4 }),
     [today],
   );
 
-  const currentPhase =
-    RECOVERY_PHASES.find(
-      (phase) => getPhaseStatus(phase, dayOffset) === "current",
-    ) ?? RECOVERY_PHASES[0];
+  const currentGuide =
+    recoveryGuides.find((guide) => guide.status === "CURRENT") ??
+    recoveryGuides[0];
 
-  const timelinePhases: TimelinePhase[] = RECOVERY_PHASES.map((phase) => ({
-    id: phase.id,
-    label: t(`phases.${phase.id}.headline`),
-    range: t(`phases.${phase.id}.range`),
-    items: t(`phases.${phase.id}.items`, { returnObjects: true }) as string[],
-    isCurrent: phase.id === currentPhase.id,
+  // 단계명·가이드 문구는 서버가 내려주는 값 그대로 쓴다(현재 한국어만 제공).
+  // 구간 표시만 startDay/endDay로 프론트에서 locale에 맞춰 조립한다.
+  const timelinePhases: TimelinePhase[] = recoveryGuides.map((guide) => ({
+    id: String(guide.stageGuideId),
+    label: guide.recoveryStage,
+    range:
+      guide.endDay === null
+        ? t("stageRangeOpen", { from: guide.startDay })
+        : t("stageRange", { from: guide.startDay, to: guide.endDay }),
+    items: guide.guideItems,
+    isCurrent: guide.status === "CURRENT",
   }));
 
   return (
     <div className="bg-care-bg relative flex min-h-dvh flex-col overflow-hidden">
-      {/* 헤더와 경과일 뒤에 흐리게 번지는 장식. 카드 배치에는 관여하지 않는다 */}
+      {/* 헤더와 경과일 뒤에 흐리게 번지는 장식 */}
       <div
         aria-hidden
         className="bg-care-glow pointer-events-none absolute -top-16.75 left-1/2 h-61.5 w-123.5 -translate-x-1/2 rounded-full opacity-60 blur-[52px]"
@@ -96,13 +108,14 @@ function AftercarePage() {
 
       <div className="relative mt-9.5 px-5">
         <PhaseSummaryCard
-          label={t(`phases.${currentPhase.id}.label`)}
-          headline={t(`phases.${currentPhase.id}.headline`)}
-          procedureDate={formatShortDate(
-            parseCalendarDate(patientCase.procedureDate),
-            locale,
-          )}
-          procedureName={patientCase.procedureName}
+          label={currentGuide?.recoveryStage ?? ""}
+          headline={currentGuide?.recoveryStage ?? ""}
+          procedureDate={
+            procedureDate
+              ? formatShortDate(parseCalendarDate(procedureDate), locale)
+              : ""
+          }
+          procedureName={procedureName}
           isExpanded={isExpanded}
           toggleLabel={t(isExpanded ? "toggle.collapse" : "toggle.expand")}
           onToggle={() => setIsExpanded((expanded) => !expanded)}
@@ -116,10 +129,7 @@ function AftercarePage() {
             todayLabel={t("today")}
             todayDate={formatMonthDay(today, locale)}
           />
-          <AlertCard
-            title={t("alert.title")}
-            items={t("alert.items", { returnObjects: true }) as string[]}
-          />
+          <AlertCard title={t("alert.title")} items={redFlagItems} />
         </div>
       )}
 

@@ -1,5 +1,6 @@
 {
   "previous": "Before",
+  "verifyError": "Verification failed. Please check your birth date and try again.",
   "intro": {
     "title": "allway, with you\nthrough recovery.",
     "description": "Based on your procedure information, allway provides personalized guidance and support throughout your recovery.",

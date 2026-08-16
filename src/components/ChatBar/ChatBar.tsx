@@ -12,7 +12,7 @@ interface ChatBarProps {
   hasImage?: boolean;
   onChange: (value: string) => void;
   onSubmit: () => void;
-  onImageSelect: (url: string) => void;
+  onImageSelect: (file: File) => void;
   onFocus?: () => void;
   onBlur?: () => void;
 }

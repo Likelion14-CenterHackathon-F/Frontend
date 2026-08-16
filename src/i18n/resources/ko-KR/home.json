@@ -5,7 +5,7 @@
     "day": "{{day}}일차  ",
     "total": "{{total}}일 중"
   },
-  "greeting": "반가워요, {{name}}님",
+  "greeting": "반가워요!",
   "disclaimer": "의료적 진단이 아닌 참고 안내입니다. 위험 증상은 즉시 병원에 문의하세요.",
   "chat": {
     "placeholder": "오늘 상태는 어때요?",

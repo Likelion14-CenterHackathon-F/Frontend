@@ -70,6 +70,11 @@ const router = createBrowserRouter([
         element: <OnboardingPage />,
       },
       {
+        // 백엔드가 만드는 매직링크 경로. 온보딩에서 token 쿼리를 그대로 읽는다
+        path: "/patient/access",
+        element: <OnboardingPage />,
+      },
+      {
         path: "/settings/language",
         element: <LanguageSettingsPage />,
       },

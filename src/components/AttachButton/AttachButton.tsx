@@ -7,7 +7,8 @@ interface AttachButtonProps {
   attachLabel: string;
   cameraLabel: string;
   photoLabel: string;
-  onImageSelect: (url: string) => void;
+  /** 업로드에 원본 파일이 필요해 미리보기 URL 대신 File을 넘긴다 */
+  onImageSelect: (file: File) => void;
 }
 
 function AttachButton({
@@ -23,7 +24,7 @@ function AttachButton({
 
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
-    if (file) onImageSelect(URL.createObjectURL(file));
+    if (file) onImageSelect(file);
     event.target.value = "";
   };
 

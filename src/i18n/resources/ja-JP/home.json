@@ -5,7 +5,7 @@
     "day": "{{day}}日目 · ",
     "total": "全{{total}}日"
   },
-  "greeting": "こんにちは、{{name}}さん",
+  "greeting": "こんにちは！",
   "disclaimer": "医療的な診断ではなく参考のご案内です。危険な症状があればすぐに病院へご連絡ください。",
   "chat": {
     "placeholder": "今日の状態はいかがですか？",
