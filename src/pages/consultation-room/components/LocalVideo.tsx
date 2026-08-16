@@ -1,4 +1,9 @@
-import { useEffect, useRef } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  type PointerEvent as ReactPointerEvent,
+} from "react";
 import type { ICameraVideoTrack } from "agora-rtc-sdk-ng";
 
 interface LocalVideoProps {
@@ -8,6 +13,9 @@ interface LocalVideoProps {
 
 function LocalVideo({ track, cameraOn }: LocalVideoProps) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const pointersRef = useRef(new Map<number, { x: number; y: number }>());
+  const previousDistanceRef = useRef<number | null>(null);
+  const [scale, setScale] = useState(1);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -20,10 +28,72 @@ function LocalVideo({ track, cameraOn }: LocalVideoProps) {
     };
   }, [track]);
 
+  const updatePinchDistance = () => {
+    const pointers = [...pointersRef.current.values()];
+
+    if (pointers.length !== 2) {
+      previousDistanceRef.current = null;
+      return;
+    }
+
+    previousDistanceRef.current = Math.hypot(
+      pointers[0].x - pointers[1].x,
+      pointers[0].y - pointers[1].y,
+    );
+  };
+
+  const handlePointerDown = (event: ReactPointerEvent<HTMLElement>) => {
+    if (event.pointerType !== "touch") return;
+
+    event.currentTarget.setPointerCapture(event.pointerId);
+    pointersRef.current.set(event.pointerId, {
+      x: event.clientX,
+      y: event.clientY,
+    });
+    updatePinchDistance();
+  };
+
+  const handlePointerMove = (event: ReactPointerEvent<HTMLElement>) => {
+    if (!pointersRef.current.has(event.pointerId)) return;
+
+    pointersRef.current.set(event.pointerId, {
+      x: event.clientX,
+      y: event.clientY,
+    });
+
+    const pointers = [...pointersRef.current.values()];
+    if (pointers.length !== 2) return;
+
+    const distance = Math.hypot(
+      pointers[0].x - pointers[1].x,
+      pointers[0].y - pointers[1].y,
+    );
+    const previousDistance = previousDistanceRef.current;
+
+    if (previousDistance && previousDistance > 0) {
+      const distanceRatio = distance / previousDistance;
+      setScale((current) =>
+        Math.min(1.45, Math.max(1, current * distanceRatio)),
+      );
+    }
+
+    previousDistanceRef.current = distance;
+  };
+
+  const handlePointerEnd = (event: ReactPointerEvent<HTMLElement>) => {
+    pointersRef.current.delete(event.pointerId);
+    updatePinchDistance();
+  };
+
   return (
     <section
       aria-label="내 카메라 화면"
-      className="absolute right-5 top-5 aspect-[160/118] w-[clamp(118px,18.8vw,160px)] overflow-hidden rounded-[11px] border-2 border-white bg-[#333] shadow-lg"
+      onPointerDown={handlePointerDown}
+      onPointerMove={handlePointerMove}
+      onPointerUp={handlePointerEnd}
+      onPointerCancel={handlePointerEnd}
+      style={{ transform: `scale(${scale})` }}
+      className="absolute right-5 top-5 h-[173px] w-[133px] origin-top-right touch-none select-none overflow-hidden rounded-[11px] border-2 border-white bg-[#333] shadow-lg transition-transform duration-100 ease-out will-change-transform motion-reduce:transition-none"
     >
       <div
         ref={containerRef}
