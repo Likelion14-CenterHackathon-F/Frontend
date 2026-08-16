@@ -6,12 +6,28 @@ import type {
 import type { ActiveConsultationAppointment } from "@/types/consultationReservation.type";
 import type { AvailableConsultationDate } from "@/types/consultationReservation.type";
 import type {
+  CancelConsultationAppointmentRequest,
   ConsultationAppointmentDetail,
   ConsultationDailySlots,
   CreateConsultationAppointmentRequest,
   CreateConsultationAppointmentResponse,
   LocalDateString,
 } from "@/types/consultationReservation.type";
+
+export async function cancelConsultationAppointment({
+  appointmentId,
+}: CancelConsultationAppointmentRequest) {
+  const { data } = await axiosInstance.delete<ApiResponse<null>>(
+    `/api/appointments/${appointmentId}`,
+    {
+      data: {
+        cancelReason: "OTHER",
+      },
+    },
+  );
+
+  return data;
+}
 
 export const getConsultationHistory = async () => {
   const { data } = await axiosInstance.get<

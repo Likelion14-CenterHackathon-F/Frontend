@@ -1,3 +1,4 @@
+import axios from "axios";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
@@ -9,6 +10,8 @@ import ConsultationCancelSheet from "@/pages/consultation-confirmed/components/C
 import ConsultationEntryNotice from "@/pages/consultation-confirmed/components/ConsultationEntryNotice";
 import { useConsultationReservationStore } from "@/stores/useConsultationReservationStore";
 import { usePreferencesStore } from "@/stores/usePreferencesStore";
+import type { ApiErrorResponse } from "@/types/consultation.type";
+import type { ConsultationCancelReason } from "@/types/consultationReservation.type";
 import {
   formatConfirmedDateTime,
   formatConsultationCardDateTime,
@@ -16,6 +19,7 @@ import {
 import { translateConsultationSubject } from "@/utils/consultationSubject";
 
 import { useConsultationAppointmentDetail } from "./hooks/useConsultationAppointmentDetail";
+import { useCancelConsultationAppointment } from "@/pages/consultation-confirmed/hooks/useCancelConsultationAppointment";
 
 function ConsultationDetailPage() {
   const { appointmentId: appointmentIdParam } = useParams();
@@ -23,6 +27,7 @@ function ConsultationDetailPage() {
   const navigate = useNavigate();
   const { t } = useTranslation("consultationReservation");
   const [isCancelSheetOpen, setIsCancelSheetOpen] = useState(false);
+  const [cancelError, setCancelError] = useState<string | null>(null);
   const locale = usePreferencesStore((state) => state.locale);
   const timeZone = usePreferencesStore((state) => state.timeZone);
   const resetReservation = useConsultationReservationStore(
@@ -34,15 +39,41 @@ function ConsultationDetailPage() {
     isError,
     refetch,
   } = useConsultationAppointmentDetail(appointmentId);
+  const { mutateAsync: cancelAppointment, isPending: isCancelling } =
+    useCancelConsultationAppointment();
 
   if (!Number.isInteger(appointmentId) || appointmentId < 1) {
     return <Navigate to="/consultation" replace />;
   }
 
-  const handleConfirmCancellation = () => {
-    // 예약 취소 API가 연결되면 성공 콜백에서 실행합니다.
-    resetReservation();
-    navigate("/consultation", { replace: true });
+  const handleConfirmCancellation = async (reason: ConsultationCancelReason) => {
+    if (isCancelling || !appointment) return;
+
+    setCancelError(null);
+
+    try {
+      await cancelAppointment({ appointmentId });
+      navigate(`/consultation/${appointmentId}/cancelled`, {
+        replace: true,
+        state: {
+          cancelledAt: new Date().toISOString(),
+          cancelReason: reason,
+          startsAt: appointment.startsAt,
+          symptoms,
+          doctor: t("confirmed.mockDoctor"),
+        },
+      });
+      resetReservation();
+    } catch (error) {
+      setCancelError(
+        (axios.isAxiosError<ApiErrorResponse>(error) &&
+          error.response?.data.message) ||
+          t("confirmed.cancelSheet.error", {
+            defaultValue:
+              "예약을 취소하지 못했어요. 잠시 후 다시 시도해 주세요.",
+          }),
+      );
+    }
   };
 
   if (isPending) {
@@ -132,6 +163,8 @@ function ConsultationDetailPage() {
         open={isCancelSheetOpen}
         onClose={() => setIsCancelSheetOpen(false)}
         onConfirm={handleConfirmCancellation}
+        isSubmitting={isCancelling}
+        errorMessage={cancelError}
       />
     </div>
   );

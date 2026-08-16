@@ -120,3 +120,15 @@ export type ConsultationCancelReason =
   | "changedMind"
   | "bookingMistake"
   | "other";
+
+export interface CancelConsultationAppointmentRequest {
+  appointmentId: number;
+}
+
+export interface CancelledAppointmentNavigationState {
+  cancelledAt: string;
+  cancelReason: ConsultationCancelReason;
+  startsAt: OffsetDateTimeString;
+  symptoms: string;
+  doctor: string;
+}
