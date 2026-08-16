@@ -34,7 +34,7 @@ export const getConsultationHistory = async () => {
   const { data } = await axiosInstance.get<
     ApiResponse<ConsultationHistoryItem[]>
   >("/api/consultations/history");
-  console.log(data);
+
   return data.data;
 };
 
@@ -44,6 +44,7 @@ export const getPreconsultSubmission = async (appointmentId: number) => {
   >("/api/preconsult-submissions", {
     params: { appointmentId },
   });
+  console.log(data);
 
   return data.data;
 };

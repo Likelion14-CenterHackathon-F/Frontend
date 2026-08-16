@@ -95,6 +95,7 @@ export interface ConsultationHistoryItem {
   appointmentStartsAt: string | null;
   appointmentEndsAt: string | null;
   symptomCategory: string | null;
+  symptomCategories?: string[];
   symptomNote: string | null;
   status: "COMPLETED" | "CANCELLED";
   cancelReason: string | null;
@@ -143,6 +144,7 @@ export interface PreconsultSubmissionResponse {
   submissionId: number;
   appointmentId: number;
   symptomCategory: string | null;
+  symptomCategories?: string[];
   symptomNote: string | null;
   files: PreconsultSubmissionFile[];
 }

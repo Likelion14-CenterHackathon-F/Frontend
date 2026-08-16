@@ -82,7 +82,14 @@ function ConsultationHubPage() {
           : undefined,
         status: history.status === "CANCELLED" ? "cancelled" : "completed",
         scheduledAt: history.appointmentStartsAt,
-        subject: history.symptomCategory || null,
+        subject:
+          (
+            history.symptomCategories?.length
+              ? history.symptomCategories
+              : history.symptomCategory
+                ? [history.symptomCategory]
+                : []
+          ).join(" · ") || null,
         symptomNote: history.symptomNote,
         ...mockMedicalStaff,
       })),

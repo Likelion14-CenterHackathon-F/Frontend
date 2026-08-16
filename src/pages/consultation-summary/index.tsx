@@ -46,10 +46,17 @@ function ConsultationSummaryPage() {
   const { data: preconsultSubmission } = usePreconsultSubmission(
     consultationHistory?.appointmentId ?? 0,
   );
+  const symptomCategories = preconsultSubmission?.symptomCategories?.length
+    ? preconsultSubmission.symptomCategories
+    : preconsultSubmission?.symptomCategory
+      ? [preconsultSubmission.symptomCategory]
+      : consultationHistory?.symptomCategories?.length
+        ? consultationHistory.symptomCategories
+        : consultationHistory?.symptomCategory
+          ? [consultationHistory.symptomCategory]
+          : [];
   const subject = translateConsultationSubject(
-    preconsultSubmission?.symptomCategory ??
-      consultationHistory?.symptomCategory ??
-      null,
+    symptomCategories.join(" · ") || null,
     (key) =>
       t(`preConsultation.symptoms.options.${key}`, {
         ns: "consultationReservation",
