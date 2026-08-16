@@ -1,33 +1,52 @@
-/**
- * 환자가 AI에게 물어본 질문 내역을 내려주는 자리.
- * 백엔드 명세가 나오기 전까지 고정 목 데이터로 대체한다.
- */
+// ai 챗봇
+import type {
+  ChatRoomDetailResponse,
+  ChatRoomSummary,
+  PostSymptomMessageRequest,
+} from "@/types/aiChat.type";
+import type { ApiResponse } from "@/types/consultation.type";
 
-export interface QuestionGroup {
-  id: "today" | "lastWeek";
-  questions: string[];
+import axiosInstance from "./axiosInstance";
+
+/* 최근 대화순으로 정렬된 채팅방 목록. 채팅방이 없으면 빈 배열이 내려온다. */
+export async function getChatRooms() {
+  const { data } = await axiosInstance.get<ApiResponse<ChatRoomSummary[]>>(
+    "/api/ai-chats/rooms",
+  );
+
+  return data.data;
 }
 
-export function getQuestionHistory(): QuestionGroup[] {
-  return [
-    {
-      id: "today",
-      questions: [
-        "붓기와 멍의 회복 경과",
-        "외출 가능 시점과 주의사항",
-        "세안 시작 시점과 방법",
-        "화장 가능 시기",
-        "붉은기와 열감 변화",
-      ],
-    },
-    {
-      id: "lastWeek",
-      questions: [
-        "운동 재개 시점",
-        "자외선 차단과 외출 관리",
-        "시술 후 보습제 사용 방법",
-        "가려움·따가움 증상 관리",
-      ],
-    },
-  ];
+/* 특정 채팅방의 전체 대화 내역. 오래된 메시지 순으로 정렬돼 내려온다. */
+export async function getChatRoomMessages(roomId: number) {
+  const { data } = await axiosInstance.get<ApiResponse<ChatRoomDetailResponse>>(
+    `/api/ai-chats/rooms/${roomId}/messages`,
+  );
+
+  return data.data;
+}
+
+/*
+  AI 챗봇에 증상을 문의한다. multipart/form-data로 전송해야 해서
+  axiosInstance 기본 Content-Type(application/json)을 이 요청만 무효화한다
+  — undefined로 넘기면 브라우저가 FormData의 boundary를 포함해 직접 채운다.
+  roomId를 안 보내면 서버가 새 채팅방을 만든다.
+*/
+export async function postSymptomMessage({
+  roomId,
+  question,
+  image,
+}: PostSymptomMessageRequest) {
+  const formData = new FormData();
+  if (roomId !== undefined) formData.append("roomId", String(roomId));
+  formData.append("question", question);
+  if (image) formData.append("image", image);
+
+  const { data } = await axiosInstance.post<
+    ApiResponse<ChatRoomDetailResponse>
+  >("/api/ai-chats/messages", formData, {
+    headers: { "Content-Type": undefined },
+  });
+
+  return data.data;
 }

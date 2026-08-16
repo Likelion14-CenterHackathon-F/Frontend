@@ -10,6 +10,8 @@ interface ConsultationCancelSheetProps {
   open: boolean;
   onClose: () => void;
   onConfirm: (reason: ConsultationCancelReason) => void;
+  isSubmitting?: boolean;
+  errorMessage?: string | null;
 }
 
 const cancelReasons: ConsultationCancelReason[] = [
@@ -24,6 +26,8 @@ function ConsultationCancelSheet({
   open,
   onClose,
   onConfirm,
+  isSubmitting = false,
+  errorMessage,
 }: ConsultationCancelSheetProps) {
   const { t } = useTranslation("consultationReservation");
   const [selectedReason, setSelectedReason] =
@@ -62,16 +66,29 @@ function ConsultationCancelSheet({
             variant="danger"
             size="action"
             fullWidth
-            disabled={!selectedReason}
+            disabled={!selectedReason || isSubmitting}
             onClick={handleConfirm}
+            aria-busy={isSubmitting}
             className="bg-action-danger-text text-action-primary-text"
           >
-            {t("confirmed.cancelSheet.confirm")}
+            {isSubmitting
+              ? t("confirmed.cancelSheet.submitting", {
+                  defaultValue: "취소 중...",
+                })
+              : t("confirmed.cancelSheet.confirm")}
           </Button>
         </div>
       }
     >
       <div className="flex flex-col gap-2.5 pb-8">
+        {errorMessage && (
+          <p
+            role="alert"
+            className="mb-1 text-center text-sm text-action-danger-text"
+          >
+            {errorMessage}
+          </p>
+        )}
         {cancelReasons.map((reason) => {
           const isSelected = selectedReason === reason;
 

@@ -1,19 +1,29 @@
+import axios from "axios";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Navigate, useNavigate } from "react-router-dom";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
 
 import ConsultationFooter from "@/components/Footer/ConsultationFooter";
 import ConsultationHeader from "@/components/Header/ConsultationHeader";
 import { useConsultationReservationStore } from "@/stores/useConsultationReservationStore";
 import { usePreferencesStore } from "@/stores/usePreferencesStore";
-import { formatConfirmedDateTime } from "@/utils/dateTime";
+import type { ApiErrorResponse } from "@/types/consultation.type";
+import type { ConsultationCancelReason } from "@/types/consultationReservation.type";
+import {
+  formatConfirmedDateTime,
+  formatConsultationCardDateTime,
+} from "@/utils/dateTime";
 
 import ConfirmedConsultationInfo from "./components/ConfirmedConsultationInfo";
 import ConsultationCancelSheet from "./components/ConsultationCancelSheet";
 import ConsultationEntryNotice from "./components/ConsultationEntryNotice";
+import { useCancelConsultationAppointment } from "./hooks/useCancelConsultationAppointment";
 
 function ConsultationConfirmedPage() {
   const [isCancelSheetOpen, setIsCancelSheetOpen] = useState(false);
+  const [cancelError, setCancelError] = useState<string | null>(null);
+  const { appointmentId: appointmentIdParam } = useParams();
+  const appointmentId = Number(appointmentIdParam);
   const navigate = useNavigate();
   const { t } = useTranslation("consultationReservation");
   const locale = usePreferencesStore((state) => state.locale);
@@ -27,6 +37,8 @@ function ConsultationConfirmedPage() {
   const resetReservation = useConsultationReservationStore(
     (state) => state.reset,
   );
+  const { mutateAsync: cancelAppointment, isPending: isCancelling } =
+    useCancelConsultationAppointment();
 
   if (!selectedSlot) {
     return <Navigate to="/consultation/reservation/schedule" replace />;
@@ -36,22 +48,60 @@ function ConsultationConfirmedPage() {
     locale,
     timeZone,
   });
+  const scheduledAtDetail = formatConsultationCardDateTime(
+    selectedSlot.startsAt,
+    { locale, timeZone },
+  );
   const symptoms = selectedSymptoms
     .map((symptom) => t(`preConsultation.symptoms.options.${symptom}`))
-    .join(" · ");
+    .join("·");
 
-  const handleConfirmCancellation = () => {
-    // 예약 취소 API 성공 후 실행합니다.
-    resetReservation();
-    navigate("/consultation", { replace: true });
+  const handleConfirmCancellation = async (
+    reason: ConsultationCancelReason,
+  ) => {
+    if (isCancelling || !Number.isInteger(appointmentId) || appointmentId < 1)
+      return;
+
+    setCancelError(null);
+
+    try {
+      await cancelAppointment({ appointmentId });
+      navigate(`/consultation/${appointmentId}/cancelled`, {
+        replace: true,
+        state: {
+          cancelledAt: new Date().toISOString(),
+          cancelReason: reason,
+          startsAt: selectedSlot.startsAt,
+          symptoms: symptoms || "-",
+          doctor: t("confirmed.mockDoctor"),
+        },
+      });
+      resetReservation();
+    } catch (error) {
+      setCancelError(
+        (axios.isAxiosError<ApiErrorResponse>(error) &&
+          error.response?.data.message) ||
+          t("confirmed.cancelSheet.error", {
+            defaultValue:
+              "예약을 취소하지 못했어요. 잠시 후 다시 시도해 주세요.",
+          }),
+      );
+    }
   };
 
   return (
-    <div className="flex min-h-dvh flex-col bg-surface-footer">
-      <ConsultationHeader title="" onBack={() => navigate("/consultation")} />
+    <div className="relative flex min-h-dvh flex-col overflow-hidden bg-[#FCFCFC] before:pointer-events-none before:absolute before:inset-0 before:bg-[radial-gradient(circle_at_50%_18%,rgba(222,219,248,0.78),transparent_48%),radial-gradient(circle_at_18%_72%,rgba(233,230,250,0.68),transparent_42%),radial-gradient(circle_at_88%_78%,rgba(225,222,246,0.52),transparent_38%)]">
+      <ConsultationHeader
+        title={t("schedule.headerTitle")}
+        onBack={() => {
+          resetReservation();
+          navigate("/consultation");
+        }}
+        className="z-10 bg-transparent"
+      />
 
-      <main className="flex-1 px-5 pb-[calc(110px+env(safe-area-inset-bottom))] pt-6">
-        <h1 className="text-calendar-text text-2xl font-bold leading-[1.4] tracking-tight">
+      <main className="relative z-10 flex-1 px-5 pb-[calc(110px+env(safe-area-inset-bottom))] pt-10.5">
+        <h1 className="text-calendar-text text-2xl font-semibold leading-[1.4] tracking-tight">
           {t("confirmed.title")}
         </h1>
         <p className="mt-1.5 text-xl font-semibold leading-[1.4] tracking-tight text-primary">
@@ -68,7 +118,7 @@ function ConsultationConfirmedPage() {
           </h2>
           <ConfirmedConsultationInfo
             dateLabel={t("confirmed.summary.date")}
-            dateValue={scheduledAt}
+            dateValue={scheduledAtDetail}
             reasonLabel={t("confirmed.summary.reason")}
             reasonValue={symptoms || "-"}
             doctorLabel={t("confirmed.summary.doctor")}
@@ -80,6 +130,7 @@ function ConsultationConfirmedPage() {
       <ConsultationFooter
         variant="danger"
         onClick={() => setIsCancelSheetOpen(true)}
+        className="bg-transparent bg-gradient-to-b from-white/0 to-white/60 backdrop-blur-[4.7px]"
       >
         {t("confirmed.cancel")}
       </ConsultationFooter>
@@ -88,6 +139,8 @@ function ConsultationConfirmedPage() {
         open={isCancelSheetOpen}
         onClose={() => setIsCancelSheetOpen(false)}
         onConfirm={handleConfirmCancellation}
+        isSubmitting={isCancelling}
+        errorMessage={cancelError}
       />
     </div>
   );

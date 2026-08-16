@@ -42,6 +42,62 @@ export interface ConsultationDailySlots {
   slots: ConsultationReservationSlot[];
 }
 
+export interface ActiveConsultationAppointment {
+  appointmentId: number;
+  caseId: number;
+  slotId: number;
+  startsAt: string;
+  endsAt: string;
+  symptomCategory: string | null;
+  symptomCategories: string[];
+  symptomNote: string | null;
+  waitingRoomOpensAt: string;
+  waitingRoomClosesAt: string;
+  canEnterWaitingRoom: boolean;
+  timezoneId: string;
+  status: "CONFIRMED";
+}
+
+export type SymptomCategory =
+  | "PAIN"
+  | "SWELLING"
+  | "REDNESS"
+  | "HEAT"
+  | "BLEEDING"
+  | "ITCHING"
+  | "BRUISING"
+  | "OTHER";
+
+export interface CreateConsultationAppointmentRequest {
+  caseId: number;
+  slotId: number;
+  symptomCategory?: SymptomCategory;
+  symptomCategories?: SymptomCategory[];
+  symptomNote?: string;
+  files?: File[];
+}
+
+export interface CreateConsultationAppointmentResponse {
+  appointmentId: number;
+  caseId: number;
+  slotId: number;
+  startsAt: OffsetDateTimeString;
+  endsAt: OffsetDateTimeString;
+  waitingRoomOpensAt: OffsetDateTimeString;
+  waitingRoomClosesAt: OffsetDateTimeString;
+  canEnterWaitingRoom: boolean;
+  timezoneId: string;
+  status: "CONFIRMED";
+}
+
+export interface ConsultationAppointmentDetail {
+  appointmentId: number;
+  startsAt: OffsetDateTimeString;
+  endsAt: OffsetDateTimeString;
+  symptomCategories: string[];
+  symptomNote: string | null;
+}
+
 export type SymptomType =
   | "pain"
   | "swelling"
@@ -64,3 +120,15 @@ export type ConsultationCancelReason =
   | "changedMind"
   | "bookingMistake"
   | "other";
+
+export interface CancelConsultationAppointmentRequest {
+  appointmentId: number;
+}
+
+export interface CancelledAppointmentNavigationState {
+  cancelledAt: string;
+  cancelReason: ConsultationCancelReason;
+  startsAt: OffsetDateTimeString;
+  symptoms: string;
+  doctor: string;
+}

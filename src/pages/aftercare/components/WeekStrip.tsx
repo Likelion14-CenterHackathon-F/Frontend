@@ -26,16 +26,15 @@ function WeekStrip({ days, today, locale }: WeekStripProps) {
       {days.map((day) => {
         const key = toDayKey(day);
         const isToday = key === todayKey;
-        const isPast = key < todayKey;
+        // 지난 날짜와 오늘은 진하게, 앞으로 다가올 날짜만 흐리게 표시한다
+        const isFuture = key > todayKey;
 
         return (
           <li key={key} className="flex flex-col items-center gap-1">
             <span
               className={cn(
                 "text-caption font-medium",
-                isToday && "text-text-01",
-                isPast && "text-week-past",
-                !isToday && !isPast && "text-week-future",
+                isFuture ? "text-week-past" : "text-week-upcoming",
               )}
             >
               {formatWeekday(day, locale)}
@@ -43,15 +42,17 @@ function WeekStrip({ days, today, locale }: WeekStripProps) {
 
             <span
               style={
-                isToday || isPast
+                !isFuture
                   ? { backgroundImage: chipGradient(isToday ? 1 : 0.12) }
                   : undefined
               }
               className={cn(
                 "text-body flex h-12 w-11 items-center justify-center rounded-[20px] font-semibold",
-                isToday && "text-neutral-white",
-                isPast && "text-week-past",
-                !isToday && !isPast && "text-week-future",
+                isToday
+                  ? "text-neutral-white"
+                  : isFuture
+                    ? "text-week-past"
+                    : "text-week-upcoming",
               )}
             >
               {day.getDate()}

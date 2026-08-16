@@ -31,9 +31,9 @@ function PhaseSummaryCard({
       */
       style={{
         backgroundImage:
-          "radial-gradient(ellipse 50% 50% at 50% 50%, #dad8e6 0%, #dedcea 46%, #e8e6f4 100%)",
+          "radial-gradient(ellipse 50% 50% at 50% 50%, #c0b8f1 0%, #cfcaeb 46%, #e4e1f9 100%)",
       }}
-      className="mx-5 rounded-3xl p-5"
+      className="rounded-3xl p-5"
     >
       <div className="flex items-center gap-2.5">
         <img aria-hidden src={phaseMoonIcon} alt="" className="size-6" />
@@ -74,8 +74,8 @@ function PhaseSummaryCard({
             alt=""
             className={cn(
               "size-6 transition-transform duration-200",
-              // 원본은 왼쪽을 가리키는 꺾쇠라 아래로 돌려 쓴다
-              isExpanded ? "rotate-90" : "-rotate-90",
+              // 원본은 오른쪽을 가리키는 꺾쇠라 반대로 돌려 쓴다
+              isExpanded ? "-rotate-90" : "rotate-90",
             )}
           />
         </button>

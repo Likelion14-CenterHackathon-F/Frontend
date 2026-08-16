@@ -5,11 +5,13 @@
     "day": "{{day}}日目 · ",
     "total": "全{{total}}日"
   },
-  "greeting": "こんにちは、{{name}}さん",
+  "greeting": "こんにちは！",
   "disclaimer": "医療的な診断ではなく参考のご案内です。危険な症状があればすぐに病院へご連絡ください。",
   "chat": {
     "placeholder": "今日の状態はいかがですか？",
     "attach": "写真を添付",
+    "camera": "カメラ",
+    "photo": "写真",
     "send": "送信"
   },
   "aftercare": {
@@ -19,6 +21,11 @@
   "consultation": {
     "badge": "D-{{days}}",
     "scheduled": "{{date}} 予定",
-    "title": "医師とのビデオ相談"
+    "title": "医師とのビデオ相談",
+    "empty": {
+      "badge": "ビデオ相談",
+      "caption": "予定なし",
+      "title": "予約された相談がありません"
+    }
   }
 }

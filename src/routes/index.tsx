@@ -1,9 +1,10 @@
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import AppLayout from "@/layouts/AppLayout";
 import AftercarePage from "@/pages/aftercare";
-import AiChatPage from "@/pages/ai-chat";
+import EmergencyReportPage from "@/pages/aftercare/emergency-report";
 import HomePage from "@/pages/home";
 import ConsultationWaitingPage from "@/pages/consultation-waiting";
+import ConsultationRoomPage from "@/pages/consultation-room";
 import ConsultationHubPage from "@/pages/consultation-hub";
 import OnboardingPage from "@/pages/onboarding";
 import LanguageSettingsPage from "@/pages/settings/language";
@@ -11,6 +12,9 @@ import ConsultationReservationLayout from "@/pages/consultation-reservation/layo
 import ConsultationSchedulePage from "@/pages/consultation-reservation/schedule";
 import PreConsultationPage from "@/pages/consultation-reservation/pre-consultation";
 import ConsultationConfirmedPage from "@/pages/consultation-confirmed";
+import ConsultationCancelledPage from "@/pages/consultation-cancelled";
+import ConsultationDetailPage from "@/pages/consultation-detail";
+import ConsultationSummaryPage from "@/pages/consultation-summary";
 
 const router = createBrowserRouter([
   {
@@ -52,8 +56,24 @@ const router = createBrowserRouter([
             element: <ConsultationConfirmedPage />,
           },
           {
+            path: ":appointmentId/cancelled",
+            element: <ConsultationCancelledPage />,
+          },
+          {
+            path: ":appointmentId/details",
+            element: <ConsultationDetailPage />,
+          },
+          {
             path: ":appointmentId/waiting",
             element: <ConsultationWaitingPage />,
+          },
+          {
+            path: ":appointmentId/room",
+            element: <ConsultationRoomPage />,
+          },
+          {
+            path: "summary/:summaryId",
+            element: <ConsultationSummaryPage />,
           },
         ],
       },
@@ -62,12 +82,17 @@ const router = createBrowserRouter([
         element: <AftercarePage />,
       },
       {
+        path: "/aftercare/emergency-report",
+        element: <EmergencyReportPage />,
+      },
+      {
         path: "/",
         element: <OnboardingPage />,
       },
       {
-        path: "/ai-chat",
-        element: <AiChatPage />,
+        // 백엔드가 만드는 매직링크 경로. 온보딩에서 token 쿼리를 그대로 읽는다
+        path: "/patient/access",
+        element: <OnboardingPage />,
       },
       {
         path: "/settings/language",

@@ -1,5 +1,6 @@
 {
   "schedule": {
+    "headerTitle": "상담 예약",
     "title": "예약일시를 선택해 주세요",
     "instructions": {
       "selectTime": "아래 가능한 시간 중 하나를 선택하세요.",
@@ -7,6 +8,10 @@
     },
     "localTime": "현지 시간 {{time}} ({{offset}})",
     "emptySlots": "선택한 날짜에 등록된 시간이 없습니다.",
+    "slotsLoading": "예약 시간을 불러오고 있습니다.",
+    "slotsLoadError": "예약 시간을 불러오지 못했습니다.",
+    "retry": "다시 시도",
+    "closed": "마감",
     "next": "다음"
   },
   "preConsultation": {
@@ -62,6 +67,12 @@
       "submit": "예약하기"
     },
     "submit": "예약하기"
+  },
+  "appointmentDetail": {
+    "title": "예정된 상담 예약 정보에요",
+    "loading": "예약 정보를 불러오고 있습니다.",
+    "notFound": "예약 정보를 찾을 수 없습니다.",
+    "retry": "다시 시도"
   },
   "confirmed": {
     "title": "상담 예약이 확정되었어요",

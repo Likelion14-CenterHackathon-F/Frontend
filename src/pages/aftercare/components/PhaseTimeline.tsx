@@ -18,10 +18,8 @@ function PhaseCard({ phase }: { phase: TimelinePhase }) {
   return (
     <div
       className={cn(
-        "w-full rounded-[18px] bg-neutral-white px-5 py-6",
-        phase.isCurrent
-          ? "border-spin"
-          : "opacity-40 shadow-[0_0_8px_0_rgba(0,0,0,0.04)]",
+        "w-full rounded-[18px] bg-neutral-white px-5 py-6 shadow-[0_0_8px_0_rgba(0,0,0,0.04)]",
+        !phase.isCurrent && "opacity-40",
       )}
     >
       <div className="flex items-center gap-1.5">

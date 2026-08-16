@@ -1,5 +1,7 @@
 import axios from "axios";
 
+import { ACCESS_TOKEN_STORAGE_KEY } from "@/constants/storageKey";
+
 const axiosInstance = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
   headers: {
@@ -9,7 +11,11 @@ const axiosInstance = axios.create({
 
 axiosInstance.interceptors.request.use(
   (config) => {
-    const accessToken = localStorage.getItem("accessToken");
+    const accessToken = localStorage.getItem(ACCESS_TOKEN_STORAGE_KEY);
+
+    if (config.data instanceof FormData) {
+      config.headers.delete("Content-Type");
+    }
 
     if (accessToken) {
       config.headers.Authorization = `Bearer ${accessToken}`;

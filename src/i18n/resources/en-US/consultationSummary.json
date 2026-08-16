@@ -1,0 +1,26 @@
+{
+  "close": "Close",
+  "loading": "Loading your consultation summary.",
+  "error": "We couldn't load the consultation summary.",
+  "retry": "Try again",
+  "home": "Back to home",
+  "overview": {
+    "owner": "{{name}}'s",
+    "title": "consultation summary.",
+    "hospital": "Seoul Yonsei Hospital",
+    "appointmentDateTime": "Appointment",
+    "consultationReason": "Reason",
+    "medicalStaff": "Medical staff"
+  },
+  "aiTitle": "AI consultation summary",
+  "instructions": {
+    "title": "Medical instructions",
+    "itemTitle": "Instruction {{number}}"
+  },
+  "reason": {
+    "title": "Reason for consultation",
+    "emptyTitle": "No reason provided",
+    "emptyDescription": "No pre-consultation information was submitted.",
+    "submissionMedia": "Pre-consultation attachment"
+  }
+}

@@ -1,7 +1,8 @@
 {
   "previous": "上一步",
+  "verifyError": "身份验证失败，请确认出生日期后重试。",
   "intro": {
-    "title": "术后恢复，\n与 Kanage 同行。",
+    "title": "术后恢复，\n与 allway 同行。",
     "description": "根据医院提供的手术信息，为您提供符合恢复阶段的\n护理指引与咨询服务。",
     "start": "开始使用"
   },

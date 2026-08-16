@@ -5,11 +5,13 @@
     "day": "第{{day}}天 · ",
     "total": "共{{total}}天"
   },
-  "greeting": "您好，{{name}}",
+  "greeting": "您好！",
   "disclaimer": "此为参考指引而非医疗诊断。如出现危险症状请立即联系医院。",
   "chat": {
     "placeholder": "今天感觉怎么样？",
     "attach": "添加照片",
+    "camera": "相机",
+    "photo": "照片",
     "send": "发送"
   },
   "aftercare": {
@@ -19,6 +21,11 @@
   "consultation": {
     "badge": "D-{{days}}",
     "scheduled": "预约 {{date}}",
-    "title": "医生视频咨询"
+    "title": "医生视频咨询",
+    "empty": {
+      "badge": "视频咨询",
+      "caption": "暂无安排",
+      "title": "暂无预约的咨询"
+    }
   }
 }

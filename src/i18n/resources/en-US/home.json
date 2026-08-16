@@ -5,11 +5,13 @@
     "day": "Day {{day}} ",
     "total": "of {{total}}"
   },
-  "greeting": "Hello, {{name}}!",
+  "greeting": "Hello!",
   "disclaimer": "For guidance only. Contact your hospital if warning signs appear.",
   "chat": {
     "placeholder": "How are you feeling today?",
     "attach": "Attach a photo",
+    "camera": "Camera",
+    "photo": "Photo",
     "send": "Send"
   },
   "aftercare": {
@@ -19,6 +21,11 @@
   "consultation": {
     "badge": "D-{{days}}",
     "scheduled": "Scheduled {{date}}",
-    "title": "Video Consultation"
+    "title": "Video Consultation",
+    "empty": {
+      "badge": "Video Consultation",
+      "caption": "No schedule",
+      "title": "No consultation booked"
+    }
   }
 }

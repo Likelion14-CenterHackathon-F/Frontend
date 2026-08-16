@@ -1,48 +1,73 @@
-/**
- * 환자 케이스 데이터를 내려주는 자리.
- * 백엔드 명세가 나오기 전까지 고정 목 데이터로 대체한다.
- */
+/* 환자 케이스 데이터*/
 
-import type { RecoveryPhase } from "@/utils/aftercare";
+import type {
+  AftercareDashboardResponse,
+  AftercareHomeResponse,
+  EmergencyMedicalReportResponse,
+} from "@/types/aftercare.type";
+import type { ApiResponse } from "@/types/consultation.type";
+import type {
+  UpdatePatientSettingsRequest,
+  UpdatePatientSettingsResponse,
+  VerifyAccessLinkRequest,
+  VerifyAccessLinkResponse,
+} from "@/types/patient.type";
 
-export interface PatientCase {
-  name: string;
-  procedureName: string;
-  procedureDate: string;
-  cautionDays: number;
-  upcomingConsultationAt: string | null;
+import axiosInstance from "./axiosInstance";
+
+/*
+  매직링크로 접근한 환자가 생년월일을 입력해 2차 인증하는 API.
+  성공하면 이후 보호된 API 호출에 쓸 accessToken을 받는다.
+*/
+export async function verifyAccessLink(body: VerifyAccessLinkRequest) {
+  const { data } = await axiosInstance.post<
+    ApiResponse<VerifyAccessLinkResponse>
+  >("/api/patients/access-links/verify", body);
+
+  return data.data;
 }
 
-/** 회복 시기 구간. 실제로는 시술 종류별로 백엔드에서 내려받는다. */
-export const RECOVERY_PHASES: RecoveryPhase[] = [
-  { id: "early", fromDay: 0, toDay: 3 },
-  { id: "middle", fromDay: 4, toDay: 7 },
-  { id: "stable", fromDay: 8, toDay: null },
-];
+/*
+  언어/국적/시간대 설정을 저장하는 API.
+  language claim이 JWT에 들어가 있어 성공 시 accessToken이 새로 발급되므로,
+  호출한 쪽에서 반드시 기존 토큰을 이 응답의 accessToken으로 교체해야 한다.
+*/
+export async function updatePatientSettings(
+  body: UpdatePatientSettingsRequest,
+) {
+  const { data } = await axiosInstance.patch<
+    ApiResponse<UpdatePatientSettingsResponse>
+  >("/api/patients/me/settings", body);
 
-function daysAgo(days: number): string {
-  const date = new Date();
-  date.setDate(date.getDate() - days);
-
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
-
-  return `${date.getFullYear()}-${month}-${day}`;
+  return data.data;
 }
 
-function daysLater(days: number): string {
-  const date = new Date();
-  date.setDate(date.getDate() + days);
-  date.setHours(14, 0, 0, 0);
-  return date.toISOString();
+/* 홈 화면 대시보드 요약. consultationAppointment는 예약이 없으면 null이다. */
+export async function getAftercareHome() {
+  const { data } = await axiosInstance.get<ApiResponse<AftercareHomeResponse>>(
+    "/api/aftercare/home",
+  );
+
+  return data.data;
 }
 
-export function getPatientCase(): PatientCase {
-  return {
-    name: "김지수",
-    procedureName: "복합 레이저 (피부)",
-    procedureDate: daysAgo(10),
-    cautionDays: 14,
-    upcomingConsultationAt: daysLater(3),
-  };
+/* 사후관리 상세 화면. 각 회복 단계의 status(PAST/CURRENT/UPCOMING)는 서버가 판단해 내려준다. */
+export async function getAftercareDashboard() {
+  const { data } = await axiosInstance.get<
+    ApiResponse<AftercareDashboardResponse>
+  >("/api/aftercare/dashboard");
+
+  return data.data;
+}
+
+/*
+  글로벌 응급 의료 리포트. materials와 medicationAndAllergies.medications는
+  줄바꿈으로 구분된 문자열로 내려온다.
+*/
+export async function getEmergencyMedicalReport() {
+  const { data } = await axiosInstance.get<
+    ApiResponse<EmergencyMedicalReportResponse>
+  >("/api/aftercare/emergency-medical-report");
+
+  return data.data;
 }
