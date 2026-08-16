@@ -130,8 +130,9 @@ export function decodeSttMessage(
           sourceLanguage: text(find(root, 12)),
           sourceText,
           sourceFinal:
-            words.length > 0 &&
-            words.every((word) => find(word, 4) === 1n),
+            find(root, 11) === 1n ||
+            (words.length > 0 &&
+              words.every((word) => find(word, 4) === 1n)),
         }
       : null;
   } catch (error) {

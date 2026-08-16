@@ -38,13 +38,25 @@ export function useCaptionBatch(
       if (pendingRef.current.size > 0) return flushRef.current();
       return;
     }
-    if (!appointmentId || !sessionId || pendingRef.current.size === 0) return;
+    if (!appointmentId || !sessionId || pendingRef.current.size === 0) {
+      console.info("[CaptionBatch] 저장을 건너뜁니다.", {
+        appointmentId,
+        sessionId,
+        pendingCount: pendingRef.current.size,
+      });
+      return;
+    }
 
     clearTimer();
     const snapshot = Array.from(pendingRef.current.entries());
     const task = (async () => {
       let shouldRetry = false;
       try {
+        console.info("[CaptionBatch] 확정 자막 저장을 요청합니다.", {
+          appointmentId,
+          sessionId,
+          count: snapshot.length,
+        });
         await saveConsultationCaptionBatch(appointmentId, {
           sessionId,
           captions: snapshot.map(([, caption]) => caption),

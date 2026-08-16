@@ -82,7 +82,13 @@ export function useAgoraRTC(
     (uid: UID, payload: Uint8Array) => {
       if (!roomInfo || Number(uid) !== roomInfo.sttPublisherAgoraUid) return;
       const message = decodeSttMessage(payload, roomInfo.userLanguage);
-      if (!message) return;
+      if (!message) {
+        console.info("[STT] 메시지를 디코딩하지 못했습니다.", {
+          publisherUid: uid,
+          payloadSize: payload.byteLength,
+        });
+        return;
+      }
 
       const previous = captionsRef.current.get(message.sentenceId);
       const merged = { ...previous, ...message };
@@ -90,6 +96,13 @@ export function useAgoraRTC(
       setCaption(merged.translatedText ?? merged.sourceText ?? null);
 
       if (!merged.sourceFinal || !merged.sourceText || !merged.sourceLanguage) {
+        console.info("[STT] 아직 저장할 수 없는 자막입니다.", {
+          sentenceId: merged.sentenceId,
+          sourceFinal: merged.sourceFinal,
+          hasSourceText: Boolean(merged.sourceText),
+          sourceLanguage: merged.sourceLanguage,
+          translationFinal: merged.translationFinal,
+        });
         return;
       }
 
@@ -121,6 +134,10 @@ export function useAgoraRTC(
           ? { durationMs: merged.durationMs }
           : {}),
         isFinal: true,
+      });
+      console.info("[STT] 확정 자막을 배치 큐에 추가했습니다.", {
+        sentenceId,
+        speakerAgoraUid: merged.speakerAgoraUid,
       });
     },
     [roomInfo],
