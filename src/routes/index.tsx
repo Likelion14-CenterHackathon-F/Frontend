@@ -11,72 +11,78 @@ import ConsultationReservationLayout from "@/pages/consultation-reservation/layo
 import ConsultationSchedulePage from "@/pages/consultation-reservation/schedule";
 import PreConsultationPage from "@/pages/consultation-reservation/pre-consultation";
 import ConsultationConfirmedPage from "@/pages/consultation-confirmed";
+import ProtectedRoute from "./ProtectedRoute";
 
 const router = createBrowserRouter([
   {
     element: <AppLayout />,
     children: [
       {
-        path: "/home",
-        element: <HomePage />,
-      },
-      {
-        path: "/consultation",
-        children: [
-          {
-            index: true,
-            element: <ConsultationHubPage />,
-          },
-
-          {
-            path: "reservation",
-            element: <ConsultationReservationLayout />,
-            children: [
-              {
-                index: true,
-                element: <Navigate to="schedule" replace />,
-              },
-              {
-                path: "schedule",
-                element: <ConsultationSchedulePage />,
-              },
-              {
-                path: "pre-consultation",
-                element: <PreConsultationPage />,
-              },
-            ],
-          },
-
-          {
-            path: ":appointmentId/confirmed",
-            element: <ConsultationConfirmedPage />,
-          },
-          {
-            path: ":appointmentId/waiting",
-            element: <ConsultationWaitingPage />,
-          },
-        ],
-      },
-      {
-        path: "/aftercare",
-        element: <AftercarePage />,
-      },
-      {
-        path: "/aftercare/emergency-report",
-        element: <EmergencyReportPage />,
-      },
-      {
         path: "/",
         element: <OnboardingPage />,
       },
       {
-        // 백엔드가 만드는 매직링크 경로. 온보딩에서 token 쿼리를 그대로 읽는다
+        // 백엔드가 만드는 매직링크 경로
         path: "/patient/access",
         element: <OnboardingPage />,
       },
       {
-        path: "/settings/language",
-        element: <LanguageSettingsPage />,
+        element: <ProtectedRoute />,
+        children: [
+          {
+            path: "/home",
+            element: <HomePage />,
+          },
+          {
+            path: "/consultation",
+            children: [
+              {
+                index: true,
+                element: <ConsultationHubPage />,
+              },
+
+              {
+                path: "reservation",
+                element: <ConsultationReservationLayout />,
+                children: [
+                  {
+                    index: true,
+                    element: <Navigate to="schedule" replace />,
+                  },
+                  {
+                    path: "schedule",
+                    element: <ConsultationSchedulePage />,
+                  },
+                  {
+                    path: "pre-consultation",
+                    element: <PreConsultationPage />,
+                  },
+                ],
+              },
+
+              {
+                path: ":appointmentId/confirmed",
+                element: <ConsultationConfirmedPage />,
+              },
+              {
+                path: ":appointmentId/waiting",
+                element: <ConsultationWaitingPage />,
+              },
+            ],
+          },
+          {
+            path: "/aftercare",
+            element: <AftercarePage />,
+          },
+          {
+            path: "/aftercare/emergency-report",
+            element: <EmergencyReportPage />,
+          },
+          {
+            path: "/settings/language",
+            element: <LanguageSettingsPage />,
+          },
+        ],
       },
     ],
   },
