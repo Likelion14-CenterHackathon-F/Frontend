@@ -27,18 +27,27 @@ const consultationFooterVariants = cva(
 interface ConsultationFooterProps
   extends
     Omit<ComponentProps<typeof Button>, "size" | "fullWidth">,
-    VariantProps<typeof consultationFooterVariants> {}
+    VariantProps<typeof consultationFooterVariants> {
+  buttonClassName?: string;
+}
 
 export default function ConsultationFooter({
   children,
   position,
   className,
+  buttonClassName,
   variant = "primary",
   ...buttonProps
 }: ConsultationFooterProps) {
   return (
     <footer className={cn(consultationFooterVariants({ position }), className)}>
-      <Button {...buttonProps} variant={variant} size="action" fullWidth>
+      <Button
+        {...buttonProps}
+        variant={variant}
+        size="action"
+        fullWidth
+        className={buttonClassName}
+      >
         {children}
       </Button>
     </footer>

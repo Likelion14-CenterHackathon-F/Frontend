@@ -2,9 +2,10 @@ import { useTranslation } from "react-i18next";
 
 import { usePreferencesStore } from "@/stores/usePreferencesStore";
 import {
-  formatAppointmentDateTime,
+  formatConsultationCardDateTime,
   formatTimeZoneName,
 } from "@/utils/dateTime";
+import { translateConsultationSubject } from "@/utils/consultationSubject";
 
 export type ConsultationStatus =
   | "completed"
@@ -32,15 +33,25 @@ export default function ConsultationCard({
   consultation,
   onClick,
 }: ConsultationCardProps) {
-  const { t } = useTranslation("consultationHub");
+  const { t } = useTranslation(["consultationHub", "consultationReservation"]);
   const { locale, timeZone } = usePreferencesStore();
   const isReserved = consultation.status === "reserved";
   const formattedDate = consultation.scheduledAt
-    ? formatAppointmentDateTime(consultation.scheduledAt, { locale, timeZone })
+    ? formatConsultationCardDateTime(consultation.scheduledAt, {
+        locale,
+        timeZone,
+      })
     : null;
   const timeZoneName = consultation.scheduledAt
     ? formatTimeZoneName(consultation.scheduledAt, { locale, timeZone })
     : null;
+  const translatedSubject = translateConsultationSubject(
+    consultation.subject,
+    (key) =>
+      t(`preConsultation.symptoms.options.${key}`, {
+        ns: "consultationReservation",
+      }),
+  );
 
   return (
     <li>
@@ -68,7 +79,7 @@ export default function ConsultationCard({
         </div>
 
         <strong className="mt-[14px] min-h-7 block text-xl font-semibold leading-[1.4] tracking-[-0.5px] text-[#32303A]">
-          {consultation.subject}
+          {translatedSubject}
         </strong>
 
         {formattedDate && timeZoneName && (

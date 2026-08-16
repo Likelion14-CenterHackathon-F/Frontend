@@ -15,76 +15,40 @@ function ConsultationTabs({
 }: ConsultationTabsProps) {
   const { t } = useTranslation("consultationHub");
 
+  const tabClassName = (isActive: boolean) =>
+    [
+      "flex items-center justify-center overflow-hidden rounded-[30px]",
+      "px-[22px] py-4 text-base font-medium leading-[1.4] tracking-[-0.4px]",
+      "transition-colors duration-200",
+      isActive
+        ? "bg-[#FDFDFF] text-[#32303A]"
+        : "bg-[rgba(253,253,255,0.44)] text-[#6A6581]",
+    ].join(" ");
+
   return (
     <nav
       aria-label={t("tabs.label")}
-      className="flex h-[52px] items-end gap-6 px-5"
+      className="flex items-center gap-3 px-5 pt-5"
     >
       <button
         type="button"
         onClick={() => onChange("history")}
-        className="flex w-20 flex-col items-center justify-between gap-3"
+        className={tabClassName(activeTab === "history")}
       >
-        <span
-          className={[
-            "transition-colors duration-200",
-            "text-lg tracking-[-0.45px]",
-            activeTab === "history"
-              ? "font-semibold text-[#32303A]"
-              : "font-medium text-[#7B7A80]",
-          ].join(" ")}
-        >
-          {t("tabs.history")}
-        </span>
-
-        <span
-          className={[
-            "transition-colors duration-200",
-            "h-[2.5px] w-[68px]",
-            activeTab === "history" ? "bg-[#32303A]" : "bg-transparent",
-          ].join(" ")}
-        />
+        {t("tabs.history")}
       </button>
 
       <button
         type="button"
         onClick={() => onChange("ongoing")}
-        className="flex w-20 flex-col items-center justify-between gap-3 transition-colors"
+        className={tabClassName(activeTab === "ongoing")}
       >
-        <span className="flex items-center gap-1.5 text-lg tracking-[-0.45px]">
-          <span
-            className={[
-              "transition-colors duration-200",
-              activeTab === "ongoing"
-                ? "font-semibold text-[#32303A]"
-                : "font-medium text-[#7B7A80]",
-            ].join(" ")}
-          >
-            {t("tabs.ongoing")}
+        <span>{t("tabs.ongoing")}</span>
+        {ongoingCount > 0 && (
+          <span className="ml-1.5 max-w-[42px] font-semibold text-[#684BDB]">
+            {ongoingCount}건
           </span>
-          {ongoingCount > 0 && (
-            <span
-              className={[
-                "transition-colors duration-200",
-                activeTab === "ongoing"
-                  ? "font-semibold text-[#4D389F]"
-                  : "font-medium text-[#7B7A80]",
-              ].join(" ")}
-            >
-              {ongoingCount}건
-            </span>
-          )}
-        </span>
-
-        <span
-          className={[
-            "transition-colors duration-200",
-            "h-[2.5px]",
-            activeTab === "ongoing"
-              ? `bg-[#32303A] ${ongoingCount > 0 ? "w-[76px]" : "w-[68px]"}`
-              : "bg-transparent w-[68px]",
-          ].join(" ")}
-        />
+        )}
       </button>
     </nav>
   );

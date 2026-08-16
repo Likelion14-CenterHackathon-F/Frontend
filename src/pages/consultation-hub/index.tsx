@@ -74,14 +74,15 @@ function ConsultationHubPage() {
   };
 
   return (
-    <div className="flex min-h-dvh flex-col">
+    <div className="relative flex min-h-dvh flex-col overflow-hidden bg-[#FAFAFA] before:pointer-events-none before:absolute before:inset-0 before:bg-[radial-gradient(circle_at_50%_18%,rgba(222,219,248,0.78),transparent_48%),radial-gradient(circle_at_18%_72%,rgba(233,230,250,0.68),transparent_42%),radial-gradient(circle_at_88%_78%,rgba(225,222,246,0.52),transparent_38%)]">
       <ConsultationHeader
         title={t("header.title")}
         onBack={() => navigate("/home")}
+        className="relative z-10 bg-transparent"
       />
 
-      <main className="bg-surface-soft flex flex-1 flex-col pb-[calc(90px+env(safe-area-inset-bottom))]">
-        <section>
+      <main className="relative z-10 flex flex-1 flex-col pb-[calc(90px+env(safe-area-inset-bottom))]">
+        <section className="flex flex-1 flex-col">
           <ConsultationTabs
             activeTab={activeTab}
             ongoingCount={ongoingConsultations.length}
@@ -104,7 +105,7 @@ function ConsultationHubPage() {
             />
           )}
         </section>
-        <section className="bg-[#E9E9EF] px-5 py-[26px]">
+        <section className="mt-auto bg-black/[0.03] px-5 py-[26px]">
           <ConsultationGuide />
         </section>
       </main>
@@ -112,6 +113,8 @@ function ConsultationHubPage() {
       <ConsultationFooter
         disabled={activeTab !== "ongoing" || !enterableAppointment}
         onClick={handleEnterWaitingRoom}
+        className="bg-transparent bg-gradient-to-b from-white/0 to-white/45 pt-[14px] backdrop-blur-[4.7px]"
+        buttonClassName="disabled:bg-[#FDFDFF] disabled:text-[#9795A0]"
       >
         {t("footer.enter")}
       </ConsultationFooter>

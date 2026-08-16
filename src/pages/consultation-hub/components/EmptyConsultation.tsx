@@ -9,10 +9,14 @@ function EmptyConsultation() {
   const navigate = useNavigate();
 
   return (
-    <div className="flex flex-col items-center justify-center px-5 pb-21 pt-32.5">
-      <img src={noHistoryIcon} alt={t("empty.imageAlt")} />
+    <div className="flex min-h-[640px] flex-col items-center justify-center px-5">
+      <img
+        src={noHistoryIcon}
+        alt={t("empty.imageAlt")}
+        className="h-[86px] w-[70px]"
+      />
 
-      <p className="mt-6 text-center text-base leading-[1.6] tracking-[-0.4px] text-[#65646D]">
+      <p className="mt-[22px] text-center text-[15px] leading-[1.6] tracking-[-0.375px] text-[#65646D]">
         {t("empty.title")}
         <br />
         {t("empty.description")}
@@ -21,7 +25,7 @@ function EmptyConsultation() {
       <Button
         variant="neutral"
         size="compact"
-        className="mt-[26px]"
+        className="mt-[22px] border border-[#D5D3DC] bg-transparent font-medium text-[#4B4B4E]"
         onClick={() => navigate("/consultation/reservation")}
       >
         {t("empty.reservationButton")}

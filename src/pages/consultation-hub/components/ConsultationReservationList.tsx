@@ -21,7 +21,7 @@ function ConsultationReservationList({
 
   if (isLoading) {
     return (
-      <div className="flex min-h-[640px] items-center justify-center bg-[#F4F4F8] px-5 text-sm text-[#65646D]">
+      <div className="flex min-h-[640px] items-center justify-center px-5 text-sm text-[#65646D]">
         상담 예약을 불러오고 있습니다.
       </div>
     );
@@ -29,7 +29,7 @@ function ConsultationReservationList({
 
   if (isError) {
     return (
-      <div className="flex min-h-[640px] flex-col items-center justify-center gap-4 bg-[#F4F4F8] px-5 text-center text-sm text-[#65646D]">
+      <div className="flex min-h-[640px] flex-col items-center justify-center gap-4 px-5 text-center text-sm text-[#65646D]">
         <p>상담 예약을 불러오지 못했습니다.</p>
         <button
           type="button"
@@ -47,7 +47,7 @@ function ConsultationReservationList({
   }
 
   return (
-    <div className="min-h-[640px] overflow-y-auto bg-[#F4F4F8] px-5 pb-6 pt-5">
+    <div className="min-h-[640px] overflow-y-auto px-5 pb-6 pt-5">
       <h2 className="text-xl font-semibold leading-[1.4] tracking-[-0.5px] text-[#32303A]">
         {t("reservation.sectionTitle")}
       </h2>
