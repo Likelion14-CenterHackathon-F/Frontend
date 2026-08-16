@@ -1,8 +1,6 @@
-import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
-import { getPatientCase } from "@/apis/patient";
 import closeIcon from "@/assets/icons/consultation-summary/close.svg";
 import ConsultationFooter from "@/components/Footer/ConsultationFooter";
 import LoadingState from "@/components/Loading/LoadingState";
@@ -32,7 +30,7 @@ function ConsultationSummaryPage() {
   const { locale, timeZone } = usePreferencesStore();
   const summaryId = Number(summaryIdParam);
   const language = toSummaryRequestLanguage(locale);
-  const patientCase = useMemo(() => getPatientCase(), []);
+  const patientCase = "김지수";
   const {
     data: summary,
     isPending,
@@ -118,60 +116,62 @@ function ConsultationSummaryPage() {
           />
         ) : summary ? (
           <>
-        <SummaryOverview
-          consultationDate={consultationDate}
-          hospitalName={t("overview.hospital", { ns: "consultationSummary" })}
-          appointmentDateTime={appointmentDateTime}
-          consultationReason={subject}
-          medicalStaffName={summary.medicalStaffName}
-          ownerText={t("overview.owner", {
-            ns: "consultationSummary",
-            name: patientCase.name,
-          })}
-          titleText={t("overview.title", { ns: "consultationSummary" })}
-          labels={{
-            appointmentDateTime: t("overview.appointmentDateTime", {
-              ns: "consultationSummary",
-            }),
-            consultationReason: t("overview.consultationReason", {
-              ns: "consultationSummary",
-            }),
-            medicalStaff: t("overview.medicalStaff", {
-              ns: "consultationSummary",
-            }),
-          }}
-        />
+            <SummaryOverview
+              consultationDate={consultationDate}
+              hospitalName={t("overview.hospital", {
+                ns: "consultationSummary",
+              })}
+              appointmentDateTime={appointmentDateTime}
+              consultationReason={subject}
+              medicalStaffName={summary.medicalStaffName}
+              ownerText={t("overview.owner", {
+                ns: "consultationSummary",
+                name: patientCase,
+              })}
+              titleText={t("overview.title", { ns: "consultationSummary" })}
+              labels={{
+                appointmentDateTime: t("overview.appointmentDateTime", {
+                  ns: "consultationSummary",
+                }),
+                consultationReason: t("overview.consultationReason", {
+                  ns: "consultationSummary",
+                }),
+                medicalStaff: t("overview.medicalStaff", {
+                  ns: "consultationSummary",
+                }),
+              }}
+            />
 
-        <div className="mt-10.5 h-px bg-[#E4E3E8]" />
+            <div className="mt-10.5 h-px bg-[#E4E3E8]" />
 
-        <AiSummarySection
-          title={t("aiTitle", { ns: "consultationSummary" })}
-          summary={summary.translatedSummary}
-        />
+            <AiSummarySection
+              title={t("aiTitle", { ns: "consultationSummary" })}
+              summary={summary.translatedSummary}
+            />
 
-        {summary.instructions.length > 0 && (
-          <MedicalInstructionsCard
-            title={t("instructions.title", { ns: "consultationSummary" })}
-            instructions={summary.instructions}
-          />
-        )}
+            {summary.instructions.length > 0 && (
+              <MedicalInstructionsCard
+                title={t("instructions.title", { ns: "consultationSummary" })}
+                instructions={summary.instructions}
+              />
+            )}
 
-        <ConsultationReasonCard
-          heading={t("reason.title", { ns: "consultationSummary" })}
-          title={
-            subject === "-"
-              ? t("reason.emptyTitle", { ns: "consultationSummary" })
-              : subject
-          }
-          description={
-            reasonDescription ||
-            t("reason.emptyDescription", { ns: "consultationSummary" })
-          }
-          fileUrls={preconsultSubmission?.files.map((file) => file.fileUrl)}
-          mediaLabel={t("reason.submissionMedia", {
-            ns: "consultationSummary",
-          })}
-        />
+            <ConsultationReasonCard
+              heading={t("reason.title", { ns: "consultationSummary" })}
+              title={
+                subject === "-"
+                  ? t("reason.emptyTitle", { ns: "consultationSummary" })
+                  : subject
+              }
+              description={
+                reasonDescription ||
+                t("reason.emptyDescription", { ns: "consultationSummary" })
+              }
+              fileUrls={preconsultSubmission?.files.map((file) => file.fileUrl)}
+              mediaLabel={t("reason.submissionMedia", {
+                ns: "consultationSummary",
+              })}
+            />
           </>
         ) : null}
       </main>
