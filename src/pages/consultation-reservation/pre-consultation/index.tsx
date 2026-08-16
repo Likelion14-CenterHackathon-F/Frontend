@@ -10,6 +10,7 @@ import type {
   SymptomCategory,
   SymptomType,
 } from "@/types/consultationReservation.type";
+import { cn } from "@/utils/cn";
 
 import NoticeCardSection from "./components/NoticeCardSection";
 import PhotoUploadSection from "./components/PhotoUploadSection";
@@ -56,6 +57,16 @@ function PreConsultationPage() {
     symptomDescription.trim().length > 0 ||
     imageFiles.length > 0;
 
+  const noticeMarginClass = cn(
+    symptomDescription.trim().length > 0
+      ? imageFiles.length > 0
+        ? "mt-[163px]"
+        : "mt-[121px]"
+      : imageFiles.length > 0
+        ? "mt-[142px]"
+        : "mt-[100px]",
+  );
+
   const handleSubmit = () => {
     if (!canSubmit) return;
     setSubmitErrorMessage(null);
@@ -100,7 +111,7 @@ function PreConsultationPage() {
 
   return (
     <>
-      <main className="bg-surface-soft flex-1 px-5 pb-[calc(110px+env(safe-area-inset-bottom))] pt-6">
+      <main className="relative z-10 flex-1 bg-transparent px-5 pb-[calc(110px+env(safe-area-inset-bottom))] pt-6">
         <SubTitleSection />
         <SymptomSection
           selectedSymptoms={selectedSymptoms}
@@ -109,10 +120,15 @@ function PreConsultationPage() {
           onChangeDescription={setSymptomDescription}
         />
         <PhotoUploadSection files={imageFiles} onChange={setImageFiles} />
-        <NoticeCardSection />
+        <NoticeCardSection className={noticeMarginClass} />
       </main>
 
-      <ConsultationFooter disabled={!canSubmit} onClick={handleSubmit}>
+      <ConsultationFooter
+        disabled={!canSubmit}
+        onClick={handleSubmit}
+        className="bg-transparent bg-gradient-to-b from-white/0 to-white/60 backdrop-blur-[4.7px]"
+        buttonClassName="disabled:bg-[#FDFDFF] disabled:text-[#9795A0]"
+      >
         {t("preConsultation.submit")}
       </ConsultationFooter>
 

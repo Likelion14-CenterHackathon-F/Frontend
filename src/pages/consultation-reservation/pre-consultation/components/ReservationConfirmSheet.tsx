@@ -74,10 +74,10 @@ function ReservationConfirmSheet({
             {errorMessage}
           </p>
         )}
-        <h3 className="text-[13px] font-semibold leading-[1.4] text-action-secondary-text">
+        <h3 className="text-[16px] font-semibold leading-[1.4] text-action-secondary-text">
           {t("preConsultation.confirm.noticeTitle")}
         </h3>
-        <ul className="mt-5 list-disc pl-5 text-xs leading-[1.5] text-text-secondary">
+        <ul className="mt-5 list-disc pl-5 text-[14px] leading-[1.5] text-text-secondary">
           <li>{t("preConsultation.confirm.notice")}</li>
         </ul>
 

@@ -41,7 +41,7 @@ export default function SymptomSection({
         </p>
       </header>
 
-      <div className="mt-5 grid grid-cols-4 gap-2">
+      <div className="mt-5 grid grid-cols-4 gap-[7px]">
         {symptomOptions.map((symptom) => {
           const isSelected = selectedSymptoms.includes(symptom);
 
@@ -52,10 +52,10 @@ export default function SymptomSection({
               aria-pressed={isSelected}
               onClick={() => onToggleSymptom(symptom)}
               className={cn(
-                "h-[46px] rounded-[30px] border text-sm font-medium leading-[1.4] tracking-tight transition-colors",
+                "h-[52px] rounded-[30px] border text-sm leading-[1.4] tracking-tight transition-colors",
                 isSelected
-                  ? "bg-action-secondary-text text-action-primary-text"
-                  : "border-calendar-control-border bg-transparent text-action-secondary-text",
+                  ? "border-action-secondary-text bg-action-secondary-text font-medium text-action-primary-text"
+                  : "border-calendar-control-border bg-transparent font-normal text-action-secondary-text",
               )}
             >
               {t(`preConsultation.symptoms.options.${symptom}`)}
@@ -71,7 +71,12 @@ export default function SymptomSection({
           aria-label={t("preConsultation.symptoms.inputLabel")}
           placeholder={t("preConsultation.symptoms.placeholder")}
           onChange={(event) => onChangeDescription(event.target.value)}
-          className="min-h-38 w-full resize-none rounded-[18px] border border-border-input bg-transparent px-5 pt-[18px] text-[15px] leading-[1.5] tracking-tight text-text-01 placeholder:text-text-04 focus:focus:border-action-secondary-text focus:outline-none"
+          className={cn(
+            "w-full resize-none rounded-[18px] border px-5 py-[18px] text-base leading-[1.5] tracking-tight text-text-01 placeholder:text-[15px] placeholder:font-light placeholder:text-text-04 focus:border-action-secondary-text focus:outline-none",
+            description.length > 0
+              ? "min-h-[153px] border-action-secondary-text bg-white/80"
+              : "min-h-[174px] border-border-input bg-transparent",
+          )}
         />
         <span className="pointer-events-none absolute bottom-[18px] right-5 text-[13px] text-text-04">
           {description.length} / {MAX_DESCRIPTION_LENGTH}

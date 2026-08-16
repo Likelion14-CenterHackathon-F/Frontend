@@ -10,6 +10,8 @@ function ConsultationReservationLayout() {
   const { t } = useTranslation("consultationReservation");
 
   const isSchedulePage = location.pathname.endsWith("/schedule");
+  const isPreConsultationPage = location.pathname.endsWith("/pre-consultation");
+  const usesReservationBackground = isSchedulePage || isPreConsultationPage;
 
   const handleBack = () => {
     if (isSchedulePage) {
@@ -24,7 +26,7 @@ function ConsultationReservationLayout() {
     <div
       className={cn(
         "flex min-h-dvh flex-col",
-        isSchedulePage && [
+        usesReservationBackground && [
           "relative overflow-hidden bg-[#FAFAFA]",
           "before:pointer-events-none before:absolute before:inset-0",
           "before:bg-[radial-gradient(circle_at_50%_18%,rgba(222,219,248,0.78),transparent_48%),radial-gradient(circle_at_18%_72%,rgba(233,230,250,0.68),transparent_42%),radial-gradient(circle_at_88%_78%,rgba(225,222,246,0.52),transparent_38%)]",
@@ -32,9 +34,9 @@ function ConsultationReservationLayout() {
       )}
     >
       <ConsultationHeader
-        title={isSchedulePage ? t("schedule.headerTitle") : ""}
+        title={usesReservationBackground ? t("schedule.headerTitle") : ""}
         onBack={handleBack}
-        className={isSchedulePage ? "z-10 bg-transparent" : undefined}
+        className={usesReservationBackground ? "z-10 bg-transparent" : undefined}
       />
 
       <Outlet />
