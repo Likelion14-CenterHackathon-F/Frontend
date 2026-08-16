@@ -112,8 +112,8 @@ export function decodeSttMessage(
       sentenceId: sentenceValue.toString(),
       sequenceNumber: integer(find(root, 3)) ?? 0,
       speakerAgoraUid: integer(find(root, 4)) ?? 0,
-      textTimestamp: integer(find(root, 18)),
-      durationMs: integer(find(root, 15)),
+      textTimestamp: integer(find(root, 16)) ?? integer(find(root, 6)),
+      durationMs: integer(find(root, 12)),
     };
 
     if (text(find(root, 13)) === "translate") {
@@ -130,10 +130,9 @@ export function decodeSttMessage(
             final: find(nested, 1) === 1n,
           };
         });
-      const selected =
-        translations.find(
-          (item) => item.language.toLowerCase() === language.toLowerCase(),
-        ) ?? translations[0];
+      const selected = translations.find(
+        (item) => item.language.toLowerCase() === language.toLowerCase(),
+      );
       return selected?.value
         ? {
             ...common,
@@ -154,7 +153,7 @@ export function decodeSttMessage(
     return sourceText
       ? {
           ...common,
-          sourceLanguage: text(find(root, 12)),
+          sourceLanguage: text(find(root, 15)),
           sourceText,
           sourceFinal:
             find(root, 11) === 1n ||
