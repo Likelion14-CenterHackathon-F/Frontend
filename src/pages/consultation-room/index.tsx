@@ -252,10 +252,7 @@ function ConsultationRoomPage() {
   return (
     <main
       onClick={handleRoomClick}
-      className={[
-        "relative isolate h-dvh min-h-[390px] w-full overflow-hidden bg-[#1A1A1A] text-white [container-type:inline-size]",
-        role === "PATIENT" ? "mx-auto max-w-[430px]" : "",
-      ].join(" ")}
+      className="relative isolate h-full w-full overflow-hidden bg-[#1A1A1A] text-white [container-type:inline-size]"
     >
       <RemoteVideo
         track={remoteVideoTrack}
