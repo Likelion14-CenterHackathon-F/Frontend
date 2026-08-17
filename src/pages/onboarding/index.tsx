@@ -54,6 +54,16 @@ function OnboardingPage() {
       return;
     }
 
+    /*
+      개발 중 백엔드 없이 화면을 확인할 수 있도록 둔 우회 경로.
+      생년월일을 2000-01-01로 두면 인증 API를 호출하지 않고 바로 홈으로 넘어간다.
+      배포 빌드(import.meta.env.DEV === false)에서는 동작 x
+    */
+    if (import.meta.env.DEV && formatBirthDate(birthDate) === "2000-01-01") {
+      navigate("/home");
+      return;
+    }
+
     // 매직링크의 query parameter로 전달된 원본 토큰
     const token = searchParams.get("token");
     if (!token) {
