@@ -34,6 +34,11 @@ function HomePage() {
   const [draft, setDraft] = useState("");
   const [image, setImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  // 전송 중인 메시지 말풍선에 쓰는 미리보기. 전송 즉시 입력창 미리보기는 지워지지만
+  // 답변이 돌아올 때까지는 이걸로 계속 보여준다
+  const [sendingImagePreview, setSendingImagePreview] = useState<
+    string | null
+  >(null);
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
   const [isChatFocused, setIsChatFocused] = useState(false);
   const [showCards, setShowCards] = useState(false);
@@ -84,9 +89,10 @@ function HomePage() {
       flashCards();
     },
     onSettled: () => {
-      // 답변에 첨부 이미지가 담겨 돌아온 뒤에야 임시 미리보기를 지운다
-      setImage(null);
-      setImagePreview(null);
+      setSendingImagePreview((preview) => {
+        if (preview) URL.revokeObjectURL(preview);
+        return null;
+      });
     },
   });
 
@@ -114,21 +120,37 @@ function HomePage() {
     bottomRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
   }, [messages, isAnswering, isConversationActive]);
 
-  // 미리보기로 만든 objectURL은 이미지가 바뀌거나 화면을 떠날 때 정리한다
+  // 화면을 떠날 때 아직 안 보낸/안 지운 미리보기가 남아있으면 정리한다
   useEffect(() => {
-    if (!imagePreview) return;
-
-    return () => URL.revokeObjectURL(imagePreview);
-  }, [imagePreview]);
+    return () => {
+      if (imagePreview) URL.revokeObjectURL(imagePreview);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const selectImage = (file: File) => {
+    // 보내지 않고 다른 사진으로 바꾼 경우, 이전 미리보기는 여기서 정리한다
+    if (imagePreview) URL.revokeObjectURL(imagePreview);
+
     setImage(file);
     setImagePreview(URL.createObjectURL(file));
+  };
+
+  const removeImage = () => {
+    if (imagePreview) URL.revokeObjectURL(imagePreview);
+
+    setImage(null);
+    setImagePreview(null);
   };
 
   const sendToChat = () => {
     const question = draft.trim();
     if ((!question && !image) || isAnswering) return;
+
+    // 전송 중 말풍선에 쓰도록 미리보기 소유권을 넘긴다 (URL은 응답이 온 뒤 정리)
+    setSendingImagePreview(imagePreview);
+    setImage(null);
+    setImagePreview(null);
 
     send({
       roomId: roomId ?? undefined,
@@ -235,7 +257,7 @@ function HomePage() {
                   {sending && (
                     <PatientMessage
                       text={sending.question}
-                      imageUrl={imagePreview ?? undefined}
+                      imageUrl={sendingImagePreview ?? undefined}
                       imageAlt={t("aiChat:attachedImage")}
                       variant="home"
                     />
@@ -262,12 +284,13 @@ function HomePage() {
               photoLabel={t("aiChat:photo")}
               sendLabel={t("aiChat:send")}
               stopLabel={t("aiChat:stop")}
-              hasImage={image !== null}
+              imagePreview={imagePreview}
               isAnswering={isAnswering}
               variant="home"
               onChange={setDraft}
               onSubmit={sendToChat}
               onImageSelect={selectImage}
+              onRemoveImage={removeImage}
               onStop={() => undefined}
             />
 
@@ -305,10 +328,11 @@ function HomePage() {
               cameraLabel={t("chat.camera")}
               photoLabel={t("chat.photo")}
               sendLabel={t("chat.send")}
-              hasImage={image !== null}
+              imagePreview={imagePreview}
               onChange={setDraft}
               onSubmit={sendToChat}
               onImageSelect={selectImage}
+              onRemoveImage={removeImage}
               onFocus={() => setIsChatFocused(true)}
               onBlur={() => setIsChatFocused(false)}
             />
