@@ -1,4 +1,10 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type TouchEvent,
+} from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -45,15 +51,33 @@ function HomePage() {
 
   const bottomRef = useRef<HTMLDivElement>(null);
   const cardsTimerRef = useRef<number | null>(null);
+  const touchStartYRef = useRef<number | null>(null);
+
+  // 위로 스와이프한 걸로 인정할 최소 이동 거리(px)
+  const SWIPE_UP_THRESHOLD = 24;
 
   /*
-    대화 중에는 카드가 평소엔 접혀 있다가, 메시지를 보내거나 답변을 받을 때마다 잠깐(5초) 올라온다.
-    이전 타이머는 취소해서 연속으로 메시지가 오갈 때 계속 5초씩 늘어나지 않게 한다.
+    대화 중에는 카드가 평소엔 접혀 있다가, 위로 스와이프하면 잠깐(5초) 펼쳐진다.
+    그 뒤로 다시 스와이프하지 않으면(반응 없으면) 5초 뒤에 저절로 접힌다.
+    이전 타이머는 취소해서 연속으로 스와이프할 때 계속 5초씩 늘어나지 않게 한다.
   */
   const flashCards = () => {
     setShowCards(true);
     if (cardsTimerRef.current) window.clearTimeout(cardsTimerRef.current);
     cardsTimerRef.current = window.setTimeout(() => setShowCards(false), 5000);
+  };
+
+  const handleCardsTouchStart = (event: TouchEvent) => {
+    touchStartYRef.current = event.touches[0].clientY;
+  };
+
+  const handleCardsTouchEnd = (event: TouchEvent) => {
+    const startY = touchStartYRef.current;
+    touchStartYRef.current = null;
+    if (startY === null) return;
+
+    const deltaY = startY - event.changedTouches[0].clientY;
+    if (deltaY >= SWIPE_UP_THRESHOLD) flashCards();
   };
 
   useEffect(() => {
@@ -86,7 +110,6 @@ function HomePage() {
       queryClient.setQueryData(["aiChat", "room", data.roomId], data);
       // 마지막 대화 시각이 바뀌어 채팅방 목록 순서도 달라진다
       void queryClient.invalidateQueries({ queryKey: ["aiChat", "rooms"] });
-      flashCards();
     },
     onSettled: () => {
       setSendingImagePreview((preview) => {
@@ -158,7 +181,6 @@ function HomePage() {
       image: image ?? undefined,
     });
 
-    flashCards();
     setDraft("");
   };
 
@@ -295,6 +317,8 @@ function HomePage() {
             />
 
             <div
+              onTouchStart={handleCardsTouchStart}
+              onTouchEnd={handleCardsTouchEnd}
               className={cn(
                 "relative flex gap-[9px] overflow-hidden transition-[max-height] duration-300 ease-out",
                 showCards ? "max-h-45" : "max-h-4.5",
