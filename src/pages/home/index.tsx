@@ -1,4 +1,10 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type TouchEvent,
+} from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -34,10 +40,51 @@ function HomePage() {
   const [draft, setDraft] = useState("");
   const [image, setImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  // 전송 중인 메시지 말풍선에 쓰는 미리보기. 전송 즉시 입력창 미리보기는 지워지지만
+  // 답변이 돌아올 때까지는 이걸로 계속 보여준다
+  const [sendingImagePreview, setSendingImagePreview] = useState<
+    string | null
+  >(null);
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
   const [isChatFocused, setIsChatFocused] = useState(false);
+  const [showCards, setShowCards] = useState(false);
 
   const bottomRef = useRef<HTMLDivElement>(null);
+  const cardsTimerRef = useRef<number | null>(null);
+  const touchStartYRef = useRef<number | null>(null);
+
+  // 위로 스와이프한 걸로 인정할 최소 이동 거리(px)
+  const SWIPE_UP_THRESHOLD = 24;
+
+  /*
+    대화 중에는 카드가 평소엔 접혀 있다가, 위로 스와이프하면 잠깐(5초) 펼쳐진다.
+    그 뒤로 다시 스와이프하지 않으면(반응 없으면) 5초 뒤에 저절로 접힌다.
+    이전 타이머는 취소해서 연속으로 스와이프할 때 계속 5초씩 늘어나지 않게 한다.
+  */
+  const flashCards = () => {
+    setShowCards(true);
+    if (cardsTimerRef.current) window.clearTimeout(cardsTimerRef.current);
+    cardsTimerRef.current = window.setTimeout(() => setShowCards(false), 5000);
+  };
+
+  const handleCardsTouchStart = (event: TouchEvent) => {
+    touchStartYRef.current = event.touches[0].clientY;
+  };
+
+  const handleCardsTouchEnd = (event: TouchEvent) => {
+    const startY = touchStartYRef.current;
+    touchStartYRef.current = null;
+    if (startY === null) return;
+
+    const deltaY = startY - event.changedTouches[0].clientY;
+    if (deltaY >= SWIPE_UP_THRESHOLD) flashCards();
+  };
+
+  useEffect(() => {
+    return () => {
+      if (cardsTimerRef.current) window.clearTimeout(cardsTimerRef.current);
+    };
+  }, []);
 
   const { data: home } = useQuery({
     queryKey: ["aftercare", "home"],
@@ -65,9 +112,10 @@ function HomePage() {
       void queryClient.invalidateQueries({ queryKey: ["aiChat", "rooms"] });
     },
     onSettled: () => {
-      // 답변에 첨부 이미지가 담겨 돌아온 뒤에야 임시 미리보기를 지운다
-      setImage(null);
-      setImagePreview(null);
+      setSendingImagePreview((preview) => {
+        if (preview) URL.revokeObjectURL(preview);
+        return null;
+      });
     },
   });
 
@@ -95,21 +143,37 @@ function HomePage() {
     bottomRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
   }, [messages, isAnswering, isConversationActive]);
 
-  // 미리보기로 만든 objectURL은 이미지가 바뀌거나 화면을 떠날 때 정리한다
+  // 화면을 떠날 때 아직 안 보낸/안 지운 미리보기가 남아있으면 정리한다
   useEffect(() => {
-    if (!imagePreview) return;
-
-    return () => URL.revokeObjectURL(imagePreview);
-  }, [imagePreview]);
+    return () => {
+      if (imagePreview) URL.revokeObjectURL(imagePreview);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const selectImage = (file: File) => {
+    // 보내지 않고 다른 사진으로 바꾼 경우, 이전 미리보기는 여기서 정리한다
+    if (imagePreview) URL.revokeObjectURL(imagePreview);
+
     setImage(file);
     setImagePreview(URL.createObjectURL(file));
+  };
+
+  const removeImage = () => {
+    if (imagePreview) URL.revokeObjectURL(imagePreview);
+
+    setImage(null);
+    setImagePreview(null);
   };
 
   const sendToChat = () => {
     const question = draft.trim();
     if ((!question && !image) || isAnswering) return;
+
+    // 전송 중 말풍선에 쓰도록 미리보기 소유권을 넘긴다 (URL은 응답이 온 뒤 정리)
+    setSendingImagePreview(imagePreview);
+    setImage(null);
+    setImagePreview(null);
 
     send({
       roomId: roomId ?? undefined,
@@ -119,6 +183,35 @@ function HomePage() {
 
     setDraft("");
   };
+
+  const homeCards = (
+    <>
+      <HomeCard
+        variant="consultation"
+        badge={
+          consultation
+            ? t("consultation.badge", { days: consultation.daysLeft })
+            : t("consultation.empty.badge")
+        }
+        caption={
+          consultation
+            ? t("consultation.scheduled", { date: consultation.date })
+            : t("consultation.empty.caption")
+        }
+        title={
+          consultation ? t("consultation.title") : t("consultation.empty.title")
+        }
+        onClick={() => navigate("/consultation")}
+      />
+
+      <HomeCard
+        badge={t("aftercare.badge", { day: dayOffset })}
+        caption={procedureName}
+        title={t("aftercare.title")}
+        onClick={() => navigate("/aftercare")}
+      />
+    </>
+  );
 
   return (
     <div
@@ -186,7 +279,7 @@ function HomePage() {
                   {sending && (
                     <PatientMessage
                       text={sending.question}
-                      imageUrl={imagePreview ?? undefined}
+                      imageUrl={sendingImagePreview ?? undefined}
                       imageAlt={t("aiChat:attachedImage")}
                       variant="home"
                     />
@@ -204,7 +297,7 @@ function HomePage() {
             <div ref={bottomRef} />
           </main>
 
-          <div className="sticky bottom-0 z-10 px-5 pt-6 pb-10">
+          <div className="sticky bottom-0 z-10 flex flex-col gap-2.5 px-5 pt-6 pb-10">
             <ChatComposer
               value={draft}
               placeholder={t("aiChat:inputPlaceholder")}
@@ -213,14 +306,26 @@ function HomePage() {
               photoLabel={t("aiChat:photo")}
               sendLabel={t("aiChat:send")}
               stopLabel={t("aiChat:stop")}
-              hasImage={image !== null}
+              imagePreview={imagePreview}
               isAnswering={isAnswering}
               variant="home"
               onChange={setDraft}
               onSubmit={sendToChat}
               onImageSelect={selectImage}
+              onRemoveImage={removeImage}
               onStop={() => undefined}
             />
+
+            <div
+              onTouchStart={handleCardsTouchStart}
+              onTouchEnd={handleCardsTouchEnd}
+              className={cn(
+                "relative flex gap-[9px] overflow-hidden transition-[max-height] duration-300 ease-out",
+                showCards ? "max-h-45" : "max-h-4.5",
+              )}
+            >
+              {homeCards}
+            </div>
           </div>
         </>
       ) : (
@@ -247,10 +352,11 @@ function HomePage() {
               cameraLabel={t("chat.camera")}
               photoLabel={t("chat.photo")}
               sendLabel={t("chat.send")}
-              hasImage={image !== null}
+              imagePreview={imagePreview}
               onChange={setDraft}
               onSubmit={sendToChat}
               onImageSelect={selectImage}
+              onRemoveImage={removeImage}
               onFocus={() => setIsChatFocused(true)}
               onBlur={() => setIsChatFocused(false)}
             />
@@ -262,32 +368,7 @@ function HomePage() {
               isChatFocused ? "max-h-4.5" : "max-h-45",
             )}
           >
-            <HomeCard
-              variant="consultation"
-              badge={
-                consultation
-                  ? t("consultation.badge", { days: consultation.daysLeft })
-                  : t("consultation.empty.badge")
-              }
-              caption={
-                consultation
-                  ? t("consultation.scheduled", { date: consultation.date })
-                  : t("consultation.empty.caption")
-              }
-              title={
-                consultation
-                  ? t("consultation.title")
-                  : t("consultation.empty.title")
-              }
-              onClick={() => navigate("/consultation")}
-            />
-
-            <HomeCard
-              badge={t("aftercare.badge", { day: dayOffset })}
-              caption={procedureName}
-              title={t("aftercare.title")}
-              onClick={() => navigate("/aftercare")}
-            />
+            {homeCards}
           </div>
         </>
       )}

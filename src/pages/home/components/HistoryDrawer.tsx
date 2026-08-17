@@ -46,6 +46,7 @@ function HistoryDrawer({ isOpen, onClose }: HistoryDrawerProps) {
   const { t } = useTranslation("settings");
 
   const openRoom = useChatStore((state) => state.openRoom);
+  const startNewChat = useChatStore((state) => state.startNewChat);
 
   const { data: rooms } = useQuery({
     queryKey: ["aiChat", "rooms"],
@@ -111,11 +112,21 @@ function HistoryDrawer({ isOpen, onClose }: HistoryDrawerProps) {
           isOpen ? "translate-x-0" : "-translate-x-full",
         )}
       >
-        <header className="flex items-center gap-3 px-5 pt-5 pb-4">
-          <img src={logoDark} alt="" aria-hidden className="size-7" />
-          <span className="text-heading font-semibold text-text-01">
-            allway
-          </span>
+        <header className="px-5 pt-5 pb-4">
+          <button
+            type="button"
+            tabIndex={isOpen ? 0 : -1}
+            onClick={() => {
+              startNewChat();
+              onClose();
+            }}
+            className="flex items-center gap-3"
+          >
+            <img src={logoDark} alt="" aria-hidden className="size-7" />
+            <span className="text-heading font-semibold text-text-01">
+              allway
+            </span>
+          </button>
         </header>
 
         {groups.map((group) => (
