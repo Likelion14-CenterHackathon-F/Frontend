@@ -15,6 +15,7 @@ import logoDark from "@/assets/logo-dark.svg";
 import sidebarLeft from "@/assets/sidebar-left.svg";
 import ChatBar from "@/components/ChatBar/ChatBar";
 import HomeCard from "@/components/HomeCard/HomeCard";
+import { HOME_TUTORIAL_SEEN_STORAGE_KEY } from "@/constants/storageKey";
 import { useChatStore } from "@/stores/useChatStore";
 import { usePreferencesStore } from "@/stores/usePreferencesStore";
 import { getDayOffset } from "@/utils/aftercare";
@@ -23,6 +24,7 @@ import { formatCalendarDate, formatCompactDate } from "@/utils/dateTime";
 
 import HistoryDrawer from "./components/HistoryDrawer";
 import HomeBackdrop from "./components/HomeBackdrop";
+import HomeTutorial from "./components/HomeTutorial";
 import AiAnswer from "./components/AiAnswer";
 import ChatComposer from "./components/ChatComposer";
 import PatientMessage from "./components/PatientMessage";
@@ -48,6 +50,28 @@ function HomePage() {
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
   const [isChatFocused, setIsChatFocused] = useState(false);
   const [showCards, setShowCards] = useState(false);
+  // 0·1은 진행 중인 안내 단계, null이면 이미 봤거나 다 본 상태
+  const [tutorialStep, setTutorialStep] = useState<0 | 1 | null>(() =>
+    localStorage.getItem(HOME_TUTORIAL_SEEN_STORAGE_KEY) === null ? 0 : null,
+  );
+
+  const goNextTutorialStep = () => {
+    if (tutorialStep === 0) {
+      setTutorialStep(1);
+      return;
+    }
+
+    localStorage.setItem(HOME_TUTORIAL_SEEN_STORAGE_KEY, "true");
+    setTutorialStep(null);
+  };
+
+  /*
+    강조할 요소를 오버레이(z-40) 위로 올려 그 부분만 밝게 보이게 한다.
+    pointer-events-none을 함께 줘서, 눌러도 카드로 이동하지 않고 아래 오버레이가 탭을 받아
+    다음 단계로 넘어가게 한다.
+  */
+  const spotlight = (isLit: boolean) =>
+    isLit ? "z-50 pointer-events-none" : undefined;
 
   const bottomRef = useRef<HTMLDivElement>(null);
   const cardsTimerRef = useRef<number | null>(null);
@@ -222,6 +246,10 @@ function HomePage() {
     >
       <HomeBackdrop />
 
+      {tutorialStep !== null && (
+        <HomeTutorial step={tutorialStep} onNext={goNextTutorialStep} />
+      )}
+
       <HistoryDrawer
         isOpen={isHistoryOpen}
         onClose={() => setIsHistoryOpen(false)}
@@ -232,7 +260,10 @@ function HomePage() {
           type="button"
           aria-label={t("menu")}
           onClick={() => setIsHistoryOpen(true)}
-          className="bg-neutral-white/70 flex size-14.5 items-center justify-center rounded-[30px]"
+          className={cn(
+            "bg-neutral-white/70 relative flex size-14.5 items-center justify-center rounded-[30px]",
+            spotlight(tutorialStep === 0),
+          )}
         >
           <img aria-hidden src={sidebarLeft} alt="" className="size-5.25" />
         </button>
@@ -344,7 +375,9 @@ function HomePage() {
             {t("disclaimer")}
           </p>
 
-          <div className="relative mt-6.25 px-5">
+          <div
+            className={cn("relative mt-6.25 px-5", spotlight(tutorialStep === 0))}
+          >
             <ChatBar
               value={draft}
               placeholder={t("chat.placeholder")}
@@ -366,6 +399,7 @@ function HomePage() {
             className={cn(
               "relative mt-2.5 flex gap-[9px] overflow-hidden px-5 transition-[max-height] duration-300 ease-out",
               isChatFocused ? "max-h-4.5" : "max-h-45",
+              spotlight(tutorialStep === 1),
             )}
           >
             {homeCards}
