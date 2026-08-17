@@ -241,7 +241,8 @@ function HomePage() {
     <div
       className={cn(
         "relative flex min-h-dvh flex-col",
-        !isConversationActive && "pb-10.5",
+        // viewport-fit=cover라 홈 인디케이터 높이만큼 더 띄운다
+        !isConversationActive && "pb-[calc(8px+env(safe-area-inset-bottom))]",
       )}
     >
       <HomeBackdrop />
@@ -318,7 +319,7 @@ function HomePage() {
 
                   <div className="flex w-50 flex-col gap-4">
                     <img aria-hidden src={logoDark} alt="" className="size-7" />
-                    <p className="bg-linear-to-r from-[#473787] from-27% to-[#c2b3fb] bg-clip-text text-[0.9375rem] leading-[1.4] font-medium tracking-tight text-transparent opacity-60">
+                    <p className="shimmer-text text-[0.9375rem] leading-[1.4] font-medium tracking-tight">
                       {t("aiChat:thinking")}
                     </p>
                   </div>
@@ -328,7 +329,11 @@ function HomePage() {
             <div ref={bottomRef} />
           </main>
 
-          <div className="sticky bottom-0 z-10 flex flex-col gap-2.5 px-5 pt-6 pb-10">
+          {/*
+            대화가 이 영역 뒤로 그대로 비쳐 카드가 떠 있는 것처럼 보여서,
+            바탕색으로 서서히 덮어 입력창·카드가 바닥에 붙어 보이게 한다.
+          */}
+          <div className="sticky bottom-0 z-10 flex flex-col gap-2.5 bg-linear-to-t from-[#fdfbff] from-55% to-transparent px-5 pt-10 pb-[calc(8px+env(safe-area-inset-bottom))]">
             <ChatComposer
               value={draft}
               placeholder={t("aiChat:inputPlaceholder")}
