@@ -22,6 +22,7 @@ import { useCancelConsultationAppointment } from "./hooks/useCancelConsultationA
 function ConsultationConfirmedPage() {
   const [isCancelSheetOpen, setIsCancelSheetOpen] = useState(false);
   const [cancelError, setCancelError] = useState<string | null>(null);
+  const [isLeaving, setIsLeaving] = useState(false);
   const { appointmentId: appointmentIdParam } = useParams();
   const appointmentId = Number(appointmentIdParam);
   const navigate = useNavigate();
@@ -41,7 +42,9 @@ function ConsultationConfirmedPage() {
     useCancelConsultationAppointment();
 
   if (!selectedSlot) {
-    return <Navigate to="/consultation/reservation/schedule" replace />;
+    return isLeaving ? null : (
+      <Navigate to="/consultation/reservation/schedule" replace />
+    );
   }
 
   const scheduledAt = formatConfirmedDateTime(selectedSlot.startsAt, {
@@ -94,6 +97,7 @@ function ConsultationConfirmedPage() {
       <ConsultationHeader
         title={t("schedule.headerTitle")}
         onBack={() => {
+          setIsLeaving(true);
           resetReservation();
           navigate("/consultation");
         }}
