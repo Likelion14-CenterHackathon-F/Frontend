@@ -21,6 +21,7 @@ import { usePreferencesStore } from "@/stores/usePreferencesStore";
 import { getDayOffset } from "@/utils/aftercare";
 import { cn } from "@/utils/cn";
 import { formatCalendarDate, formatCompactDate } from "@/utils/dateTime";
+import { resolveAssetUrl } from "@/utils/url";
 
 import HistoryDrawer from "./components/HistoryDrawer";
 import HomeBackdrop from "./components/HomeBackdrop";
@@ -293,8 +294,10 @@ function HomePage() {
                   <PatientMessage
                     key={message.messageId}
                     text={message.content}
-                    imageUrl={message.imageUrl ?? undefined}
+                    imageUrl={resolveAssetUrl(message.imageUrl)}
                     imageAlt={t("aiChat:attachedImage")}
+                    imageOpenLabel={t("aiChat:openImage")}
+                    imageCloseLabel={t("aiChat:closeImage")}
                     variant="home"
                   />
                 ) : (
@@ -313,6 +316,8 @@ function HomePage() {
                       text={sending.question}
                       imageUrl={sendingImagePreview ?? undefined}
                       imageAlt={t("aiChat:attachedImage")}
+                      imageOpenLabel={t("aiChat:openImage")}
+                      imageCloseLabel={t("aiChat:closeImage")}
                       variant="home"
                     />
                   )}

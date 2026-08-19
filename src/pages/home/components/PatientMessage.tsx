@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 
 import { getChatImage } from "@/apis/chat";
@@ -8,12 +8,16 @@ interface PatientMessageProps {
   text?: string;
   imageUrl?: string;
   imageAlt: string;
+  imageOpenLabel: string;
+  imageCloseLabel: string;
   variant?: "chat" | "home";
 }
 
 interface ChatImageProps {
   src: string;
   alt: string;
+  openLabel: string;
+  closeLabel: string;
   className: string;
 }
 
@@ -31,7 +35,14 @@ function requiresAuthenticatedFetch(src: string): boolean {
   }
 }
 
-function ChatImage({ src, alt, className }: ChatImageProps) {
+function ChatImage({
+  src,
+  alt,
+  openLabel,
+  closeLabel,
+  className,
+}: ChatImageProps) {
+  const [isExpanded, setIsExpanded] = useState(false);
   const needsAuthentication = requiresAuthenticatedFetch(src);
   const { data: image, isPending, isError } = useQuery({
     queryKey: ["aiChat", "image", src],
@@ -50,6 +61,23 @@ function ChatImage({ src, alt, className }: ChatImageProps) {
     },
     [objectUrl],
   );
+
+  useEffect(() => {
+    if (!isExpanded) return;
+
+    const previousOverflow = document.body.style.overflow;
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setIsExpanded(false);
+    };
+
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", closeOnEscape);
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", closeOnEscape);
+    };
+  }, [isExpanded]);
 
   if (needsAuthentication && isPending) {
     return (
@@ -77,13 +105,52 @@ function ChatImage({ src, alt, className }: ChatImageProps) {
     );
   }
 
-  return <img src={displayUrl} alt={alt} className={className} />;
+  return (
+    <>
+      <button
+        type="button"
+        aria-label={openLabel}
+        onClick={() => setIsExpanded(true)}
+        className="block cursor-zoom-in"
+      >
+        <img src={displayUrl} alt={alt} className={className} />
+      </button>
+
+      {isExpanded && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label={alt}
+          onClick={() => setIsExpanded(false)}
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/85 p-4"
+        >
+          <button
+            type="button"
+            autoFocus
+            aria-label={closeLabel}
+            onClick={() => setIsExpanded(false)}
+            className="absolute top-[calc(1rem+env(safe-area-inset-top))] right-4 flex size-11 items-center justify-center rounded-full bg-white/15 text-3xl leading-none text-white backdrop-blur-sm"
+          >
+            ×
+          </button>
+          <img
+            src={displayUrl}
+            alt={alt}
+            onClick={(event) => event.stopPropagation()}
+            className="max-h-[calc(100dvh-6rem)] max-w-[calc(100vw-2rem)] object-contain"
+          />
+        </div>
+      )}
+    </>
+  );
 }
 
 function PatientMessage({
   text,
   imageUrl,
   imageAlt,
+  imageOpenLabel,
+  imageCloseLabel,
   variant = "chat",
 }: PatientMessageProps) {
   const isHome = variant === "home";
@@ -113,6 +180,8 @@ function PatientMessage({
         <ChatImage
           src={imageUrl}
           alt={imageAlt}
+          openLabel={imageOpenLabel}
+          closeLabel={imageCloseLabel}
           className={imageClassName}
         />
       )}
