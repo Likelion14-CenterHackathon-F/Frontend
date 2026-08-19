@@ -1,4 +1,4 @@
-import logo from "@/assets/logo.svg";
+import logo from "@/assets/brand/logo.svg";
 import logoDark from "@/assets/logo-dark.svg";
 import { cn } from "@/utils/cn";
 

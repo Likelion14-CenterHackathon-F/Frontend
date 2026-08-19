@@ -12,7 +12,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getChatRoomMessages, postSymptomMessage } from "@/apis/chat";
 import { getAftercareHome } from "@/apis/patient";
 import logoDark from "@/assets/logo-dark.svg";
-import sidebarLeft from "@/assets/sidebar-left.svg";
+import sidebarLeft from "@/assets/home/sidebar-left.svg";
 import ChatBar from "@/components/ChatBar/ChatBar";
 import HomeCard from "@/components/HomeCard/HomeCard";
 import { HOME_TUTORIAL_SEEN_STORAGE_KEY } from "@/constants/storageKey";
