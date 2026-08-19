@@ -102,6 +102,7 @@
   --color-intro-title-end: #e5e9fb; /* 제목 그라데이션 끝 */
 
   --color-history: #e6e5f5; /* 질문 내역 배경 */
+  --color-logo-muted: rgba(106, 101, 129, 0.56); /* 질문 내역 헤더 로고·워드마크 */
 
   /* 홈 화면 */
   --color-home-from: #fdfbff;
