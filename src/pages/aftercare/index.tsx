@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 
 import { getAftercareDashboard } from "@/apis/patient";
-import backButton from "@/assets/back-button.svg";
+import backButton from "@/assets/aftercare/back-button.svg";
 import { usePreferencesStore } from "@/stores/usePreferencesStore";
 import { getWeekAround } from "@/utils/aftercare";
 import {

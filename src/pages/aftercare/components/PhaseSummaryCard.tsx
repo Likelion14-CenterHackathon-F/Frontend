@@ -1,7 +1,7 @@
-import calendarIcon from "@/assets/calendar.svg";
-import chevronIcon from "@/assets/chevron.svg";
-import phaseMoonIcon from "@/assets/phase-moon.svg";
-import procedureIcon from "@/assets/procedure.svg";
+import calendarIcon from "@/assets/aftercare/calendar.svg";
+import chevronIcon from "@/assets/aftercare/chevron.svg";
+import phaseMoonIcon from "@/assets/aftercare/phase-moon.svg";
+import procedureIcon from "@/assets/aftercare/procedure.svg";
 import { cn } from "@/utils/cn";
 
 interface PhaseSummaryCardProps {
