@@ -5,12 +5,11 @@ import { useQuery } from "@tanstack/react-query";
 
 import { getAftercareDashboard } from "@/apis/patient";
 import backButton from "@/assets/back-button.svg";
-import gradientTop from "@/assets/home-gradient-top.png";
 import { usePreferencesStore } from "@/stores/usePreferencesStore";
 import { getWeekAround } from "@/utils/aftercare";
 import {
+  formatDottedShortDate,
   formatMonthDay,
-  formatShortDate,
   parseCalendarDate,
 } from "@/utils/dateTime";
 
@@ -67,13 +66,13 @@ function AftercarePage() {
 
   return (
     <div className="bg-care-bg relative flex min-h-dvh flex-col overflow-hidden">
-      {/* 헤더와 경과일 뒤에 흐리게 번지는 장식. 홈 화면과 같은 그라데이션을 재사용한다 */}
-      <img
+      <div
         aria-hidden
-        src={gradientTop}
-        alt=""
-        className="pointer-events-none absolute left-1/2 max-w-none -translate-x-1/2"
-        style={{ top: -202, width: 650, height: 650 }}
+        className="pointer-events-none absolute -top-10.5 -left-7 size-112.5 rounded-full blur-[50px]"
+        style={{
+          backgroundImage:
+            "linear-gradient(197deg, #e1e9ff 29%, rgba(255,255,255,0.52) 100%)",
+        }}
       />
 
       <header className="relative flex items-center px-5 pt-4.5">
@@ -92,15 +91,15 @@ function AftercarePage() {
       </header>
 
       <div className="relative mt-11 flex items-start justify-between px-5">
-        <h2 className="text-care-title text-[1.75rem] leading-[1.25] font-semibold tracking-tight">
+        <h2 className="text-care-title text-title leading-[1.25] font-semibold tracking-tight">
           {t("dayCount", { day: dayOffset })}
         </h2>
 
-        <div className="text-right">
-          <p className="text-care-date text-body font-semibold tracking-tight">
+        <div className="w-21 text-right">
+          <p className="text-care-date text-[1.25rem] leading-[1.25] font-semibold tracking-[-0.035em]">
             {formatMonthDay(today, locale)}
           </p>
-          <p className="text-care-year text-body font-semibold tracking-tight">
+          <p className="text-care-year text-[1.25rem] leading-[1.25] font-semibold tracking-[-0.035em]">
             {today.getFullYear()}
           </p>
         </div>
@@ -110,13 +109,13 @@ function AftercarePage() {
         <WeekStrip days={weekDays} today={today} locale={locale} />
       </div>
 
-      <div className="relative mt-9.5 px-5">
+      <div className="relative mt-7.5 px-5">
         <PhaseSummaryCard
           label={currentGuide?.recoveryStage ?? ""}
           headline={currentGuide?.recoveryStage ?? ""}
           procedureDate={
             procedureDate
-              ? formatShortDate(parseCalendarDate(procedureDate), locale)
+              ? formatDottedShortDate(parseCalendarDate(procedureDate))
               : ""
           }
           procedureName={procedureName}
@@ -137,7 +136,7 @@ function AftercarePage() {
         </div>
       )}
 
-      <div className="relative mt-7.5 mb-8 px-5">
+      <div className="relative mt-4 mb-8 px-5">
         <ReportCard
           label={t("report.label")}
           title={t("report.title")}
