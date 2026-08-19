@@ -11,16 +11,18 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { getChatRoomMessages, postSymptomMessage } from "@/apis/chat";
 import { getAftercareHome } from "@/apis/patient";
-import logoDark from "@/assets/logo-dark.svg";
-import sidebarLeft from "@/assets/sidebar-left.svg";
+import logoGradient from "@/assets/brand/logo-gradient.svg";
+import sidebarLeft from "@/assets/home/sidebar-left.svg";
 import ChatBar from "@/components/ChatBar/ChatBar";
 import HomeCard from "@/components/HomeCard/HomeCard";
 import { HOME_TUTORIAL_SEEN_STORAGE_KEY } from "@/constants/storageKey";
 import { useChatStore } from "@/stores/useChatStore";
 import { usePreferencesStore } from "@/stores/usePreferencesStore";
+import type { ChatRoomDetailResponse } from "@/types/aiChat.type";
 import { getDayOffset } from "@/utils/aftercare";
 import { cn } from "@/utils/cn";
 import { formatCalendarDate, formatCompactDate } from "@/utils/dateTime";
+import { resolveAssetUrl } from "@/utils/url";
 
 import HistoryDrawer from "./components/HistoryDrawer";
 import HomeBackdrop from "./components/HomeBackdrop";
@@ -42,8 +44,7 @@ function HomePage() {
   const [draft, setDraft] = useState("");
   const [image, setImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
-  // 전송 중인 메시지 말풍선에 쓰는 미리보기. 전송 즉시 입력창 미리보기는 지워지지만
-  // 답변이 돌아올 때까지는 이걸로 계속 보여준다
+  // 전송 중인 이미지 미리보기는 답변이 올 때까지 유지한다
   const [sendingImagePreview, setSendingImagePreview] = useState<
     string | null
   >(null);
@@ -73,7 +74,7 @@ function HomePage() {
   const spotlight = (isLit: boolean) =>
     isLit ? "z-50 pointer-events-none" : undefined;
 
-  const bottomRef = useRef<HTMLDivElement>(null);
+  const sendingMessageRef = useRef<HTMLDivElement>(null);
   const cardsTimerRef = useRef<number | null>(null);
   const touchStartYRef = useRef<number | null>(null);
 
@@ -126,14 +127,53 @@ function HomePage() {
   const {
     mutate: send,
     isPending: isAnswering,
+    isError: hasSendError,
     variables: sending,
   } = useMutation({
     mutationFn: postSymptomMessage,
     onSuccess: (data) => {
       openRoom(data.roomId);
-      queryClient.setQueryData(["aiChat", "room", data.roomId], data);
+      queryClient.setQueryData<ChatRoomDetailResponse>(
+        ["aiChat", "room", data.roomId],
+        (currentRoom) => {
+          if (!currentRoom) return data;
+
+          const existingMessageIds = new Set(
+            currentRoom.messages.map((message) => message.messageId),
+          );
+          const newMessages = data.messages.filter(
+            (message) => !existingMessageIds.has(message.messageId),
+          );
+
+          return {
+            ...data,
+            messages: [...currentRoom.messages, ...newMessages],
+          };
+        },
+      );
+      // POST 응답은 신규 대화만 포함할 수 있으므로 전체 내역과 다시 동기화한다
+      void queryClient.invalidateQueries({
+        queryKey: ["aiChat", "room", data.roomId],
+      });
       // 마지막 대화 시각이 바뀌어 채팅방 목록 순서도 달라진다
       void queryClient.invalidateQueries({ queryKey: ["aiChat", "rooms"] });
+    },
+    onError: (_error, failedMessage) => {
+      setDraft((currentDraft) => currentDraft || failedMessage.question);
+
+      const failedImage = failedMessage.image;
+      if (!failedImage) return;
+
+      const restoredPreview = URL.createObjectURL(failedImage);
+      setImage((currentImage) => currentImage ?? failedImage);
+      setImagePreview((currentPreview) => {
+        if (currentPreview) {
+          URL.revokeObjectURL(restoredPreview);
+          return currentPreview;
+        }
+
+        return restoredPreview;
+      });
     },
     onSettled: () => {
       setSendingImagePreview((preview) => {
@@ -163,9 +203,13 @@ function HomePage() {
   }, [home?.consultationAppointment, locale, timeZone]);
 
   useEffect(() => {
-    if (!isConversationActive) return;
-    bottomRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
-  }, [messages, isAnswering, isConversationActive]);
+    if (!isAnswering || !sending) return;
+
+    sendingMessageRef.current?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+  }, [isAnswering, sending]);
 
   // 화면을 떠날 때 아직 안 보낸/안 지운 미리보기가 남아있으면 정리한다
   useEffect(() => {
@@ -293,8 +337,10 @@ function HomePage() {
                   <PatientMessage
                     key={message.messageId}
                     text={message.content}
-                    imageUrl={message.imageUrl ?? undefined}
+                    imageUrl={resolveAssetUrl(message.imageUrl)}
                     imageAlt={t("aiChat:attachedImage")}
+                    imageOpenLabel={t("aiChat:openImage")}
+                    imageCloseLabel={t("aiChat:closeImage")}
                     variant="home"
                   />
                 ) : (
@@ -309,16 +355,20 @@ function HomePage() {
               {isAnswering && (
                 <>
                   {sending && (
-                    <PatientMessage
-                      text={sending.question}
-                      imageUrl={sendingImagePreview ?? undefined}
-                      imageAlt={t("aiChat:attachedImage")}
-                      variant="home"
-                    />
+                    <div ref={sendingMessageRef} className="scroll-mt-6">
+                      <PatientMessage
+                        text={sending.question}
+                        imageUrl={sendingImagePreview ?? undefined}
+                        imageAlt={t("aiChat:attachedImage")}
+                        imageOpenLabel={t("aiChat:openImage")}
+                        imageCloseLabel={t("aiChat:closeImage")}
+                        variant="home"
+                      />
+                    </div>
                   )}
 
                   <div className="flex w-50 flex-col gap-4">
-                    <img aria-hidden src={logoDark} alt="" className="size-7" />
+                    <img aria-hidden src={logoGradient} alt="" className="size-7" />
                     <p className="shimmer-text text-[0.9375rem] leading-[1.4] font-medium tracking-tight">
                       {t("aiChat:thinking")}
                     </p>
@@ -326,7 +376,6 @@ function HomePage() {
                 </>
               )}
             </div>
-            <div ref={bottomRef} />
           </main>
 
           {/*
@@ -334,6 +383,12 @@ function HomePage() {
             바탕색으로 서서히 덮어 입력창·카드가 바닥에 붙어 보이게 한다.
           */}
           <div className="sticky bottom-0 z-10 flex flex-col gap-2.5 bg-linear-to-t from-[#fdfbff] from-55% to-transparent px-5 pt-10 pb-[calc(8px+env(safe-area-inset-bottom))]">
+            {hasSendError && (
+              <p role="alert" className="px-2 text-sm font-medium text-red-600">
+                {t("aiChat:sendError")}
+              </p>
+            )}
+
             <ChatComposer
               value={draft}
               placeholder={t("aiChat:inputPlaceholder")}
@@ -398,6 +453,14 @@ function HomePage() {
               onFocus={() => setIsChatFocused(true)}
               onBlur={() => setIsChatFocused(false)}
             />
+            {hasSendError && (
+              <p
+                role="alert"
+                className="mt-2 px-2 text-sm font-medium text-red-600"
+              >
+                {t("aiChat:sendError")}
+              </p>
+            )}
           </div>
 
           <div

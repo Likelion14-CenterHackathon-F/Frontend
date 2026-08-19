@@ -1,7 +1,7 @@
-import calendarIcon from "@/assets/calendar.svg";
-import chevronIcon from "@/assets/chevron.svg";
-import phaseMoonIcon from "@/assets/phase-moon.svg";
-import procedureIcon from "@/assets/procedure.svg";
+import calendarIcon from "@/assets/aftercare/calendar.svg";
+import chevronIcon from "@/assets/aftercare/chevron.svg";
+import phaseMoonIcon from "@/assets/aftercare/phase-moon.svg";
+import procedureIcon from "@/assets/aftercare/procedure.svg";
 import { cn } from "@/utils/cn";
 
 interface PhaseSummaryCardProps {
@@ -31,7 +31,7 @@ function PhaseSummaryCard({
       */
       style={{
         backgroundImage:
-          "radial-gradient(ellipse 50% 50% at 50% 50%, #c0b8f1 0%, #cfcaeb 46%, #e4e1f9 100%)",
+          "radial-gradient(circle at 50% 50%, #d0c2ff 0%, #d5c8ff 46%, #e8e2ff 100%)",
       }}
       className="rounded-3xl p-5"
     >
@@ -46,7 +46,7 @@ function PhaseSummaryCard({
         {headline}
       </h2>
 
-      <div className="mt-9 flex items-center justify-between">
+      <div className="mt-1 flex items-center justify-between">
         <div className="text-care-sub flex items-center gap-2.5 text-[0.9375rem] leading-[1.45] font-medium tracking-tight">
           <span className="flex items-center gap-1">
             <img aria-hidden src={calendarIcon} alt="" className="size-6" />

@@ -50,3 +50,12 @@ export async function postSymptomMessage({
 
   return data.data;
 }
+
+/** Bearer 인증이 필요한 채팅 첨부 이미지를 Blob으로 가져온다. */
+export async function getChatImage(imageUrl: string) {
+  const { data } = await axiosInstance.get<Blob>(imageUrl, {
+    responseType: "blob",
+  });
+
+  return data;
+}

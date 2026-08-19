@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { updatePatientSettings } from "@/apis/patient";
-import check from "@/assets/check.svg";
+import check from "@/assets/settings/language/check.svg";
 import PageHeader from "@/components/PageHeader/PageHeader";
 import { LANGUAGE_OPTIONS, LOCALE_TO_API_LANGUAGE } from "@/constants/settings";
 import { ACCESS_TOKEN_STORAGE_KEY } from "@/constants/storageKey";
