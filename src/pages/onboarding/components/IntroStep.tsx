@@ -1,10 +1,10 @@
 import { useTranslation } from "react-i18next";
 
-import bgStripe from "@/assets/splash/bg-stripe.png";
-import glow1 from "@/assets/splash/glow-1.svg";
-import glow2 from "@/assets/splash/glow-2.svg";
-import glow3 from "@/assets/splash/glow-3.svg";
-import glow5 from "@/assets/splash/glow-5.svg";
+import bgStripe from "@/assets/onboarding/bg-stripe.png";
+import glow1 from "@/assets/onboarding/glow-1.svg";
+import glow2 from "@/assets/onboarding/glow-2.svg";
+import glow3 from "@/assets/onboarding/glow-3.svg";
+import glow5 from "@/assets/onboarding/glow-5.svg";
 
 interface IntroStepProps {
   onStart: () => void;
