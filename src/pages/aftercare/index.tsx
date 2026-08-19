@@ -75,22 +75,22 @@ function AftercarePage() {
         }}
       />
 
-      <header className="relative flex items-center px-5 pt-4.5">
+      <header className="relative h-16.5">
         <button
           type="button"
           aria-label={t("back")}
           onClick={() => navigate("/home")}
-          className="flex size-14 items-center justify-center"
+          className="absolute top-1 left-1 flex size-14 items-center justify-center"
         >
           <img aria-hidden src={backButton} alt="" className="size-6" />
         </button>
 
-        <h1 className="text-care-title absolute left-1/2 -translate-x-1/2 text-body font-semibold tracking-tight">
+        <h1 className="text-care-title absolute top-5 left-1/2 -translate-x-1/2 text-[1.25rem] leading-[1.4] font-semibold tracking-[-0.025em]">
           {t("pageTitle")}
         </h1>
       </header>
 
-      <div className="relative mt-11 flex items-start justify-between px-5">
+      <div className="relative mt-10 flex items-start justify-between px-5">
         <h2 className="text-care-title text-title leading-[1.25] font-semibold tracking-tight">
           {t("dayCount", { day: dayOffset })}
         </h2>
