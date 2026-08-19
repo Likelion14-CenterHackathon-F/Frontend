@@ -1,0 +1,50 @@
+{
+  "menu": "打开菜单",
+  "changeLanguage": "更改语言",
+  "progress": {
+    "day": "第{{day}}天 · ",
+    "total": "共{{total}}天"
+  },
+  "greeting": "您好！",
+  "disclaimer": "此为参考指引而非医疗诊断。如出现危险症状请立即联系医院。",
+  "chat": {
+    "placeholder": "今天感觉怎么样？",
+    "attach": "添加照片",
+    "camera": "相机",
+    "photo": "照片",
+    "send": "发送"
+  },
+  "aftercare": {
+    "badge": "第{{day}}天",
+    "title": "我的术后管理"
+  },
+  "consultation": {
+    "badge": "D-{{days}}",
+    "scheduled": "预约 {{date}}",
+    "title": "医生视频咨询",
+    "empty": {
+      "badge": "视频咨询",
+      "caption": "暂无安排",
+      "title": "暂无预约的咨询"
+    }
+  },
+  "tutorial": {
+    "skip": "跳过",
+    "history": {
+      "title": "查看聊天记录",
+      "description": "向右滑动即可\n查看聊天记录"
+    },
+    "chat": {
+      "title": "有疑问随时提问",
+      "description": "可以放心向 AI 提问。"
+    },
+    "aftercare": {
+      "title": "查看您的恢复状态",
+      "description": "查看恢复阶段和今日状态，必要时还可使用紧急医疗报告。"
+    },
+    "consultation": {
+      "title": "与医生视频咨询",
+      "description": "回国后也可通过预约与医生进行视频咨询。"
+    }
+  }
+}

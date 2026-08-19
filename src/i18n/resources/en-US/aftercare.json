@@ -1,0 +1,27 @@
+{
+  "pageTitle": "My Aftercare",
+  "back": "Go back",
+  "dayCount": "Day {{day}}",
+  "today": "Today,",
+  "stageRange": "(Days {{from}}–{{to}})",
+  "stageRangeOpen": "(Day {{from}} onward)",
+  "toggle": {
+    "expand": "Show all recovery stages",
+    "collapse": "Collapse recovery stages"
+  },
+  "report": {
+    "label": "Medical document",
+    "title": "Emergency medical report",
+    "description": "An English medical summary to show local clinicians in an emergency."
+  },
+  "alert": {
+    "title": "Contact your clinic immediately"
+  },
+  "notice": {
+    "title": "Please note",
+    "items": [
+      "This guidance is not a medical diagnosis or prescription.",
+      "If symptoms worsen or warning signs appear, contact your clinic or emergency services immediately."
+    ]
+  }
+}

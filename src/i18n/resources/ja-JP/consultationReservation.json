@@ -1,0 +1,102 @@
+{
+  "schedule": {
+    "headerTitle": "相談予約",
+    "title": "予約日時を選択してください",
+    "instructions": {
+      "selectTime": "以下の予約可能な時間から1つ選択してください。",
+      "timezone": "上の時間はお客様の現地時間帯で表示されます。"
+    },
+    "localTime": "現地時間 {{time}}（{{offset}}）",
+    "emptySlots": "選択した日付に予約可能な時間はありません。",
+    "slotsLoading": "予約時間を読み込んでいます。",
+    "slotsLoadError": "予約時間を読み込めませんでした。",
+    "retry": "再試行",
+    "closed": "締切",
+    "next": "次へ"
+  },
+  "preConsultation": {
+    "title": {
+      "first": "正確な相談のために",
+      "second": "現在の状態を教えてください"
+    },
+    "description": "ご提出いただいた資料は、医療スタッフが相談前に確認します。",
+    "symptoms": {
+      "title": "症状の分類",
+      "description": "発症時期、経過、不快感の程度などをご記入ください。",
+      "inputLabel": "症状の詳細",
+      "placeholder": "・腫れやあざがあります\n・アレルギー反応が出たようです\n・その他の皮膚に関する特記事項",
+      "options": {
+        "pain": "痛み",
+        "swelling": "腫れ",
+        "redness": "赤み",
+        "heat": "熱感",
+        "bleeding": "出血",
+        "itching": "かゆみ",
+        "bruise": "あざ",
+        "other": "その他"
+      }
+    },
+    "photos": {
+      "title": "参考写真",
+      "description": "症状のある部位や服用中のお薬の写真などを添付してください。",
+      "add": "参考写真を追加",
+      "remove": "{{name}}を削除",
+      "helper": "JPG、PNG、MP4ファイルを1件あたり最大50MB、合計5件まで登録できます。",
+      "invalidFile": "50MB以下のJPG、PNG、MP4ファイルのみ添付できます。"
+    },
+    "notice": {
+      "title": "ご案内",
+      "items": {
+        "privacy": "ご提出いただいた資料は、担当の医療スタッフのみ閲覧できます。",
+        "disclaimer": "資料の提出は診断や処方に代わるものではなく、相談準備のための参考資料としてのみ使用されます。",
+        "emergency": "激しい出血、高熱、呼吸困難などの緊急症状がある場合は、直ちに病院または救急機関へご連絡ください。"
+      }
+    },
+    "confirm": {
+      "title": "予約情報に間違いはありませんか？",
+      "description": "確定する前に予約情報をご確認ください。",
+      "summary": {
+        "date": "予約日時",
+        "reason": "相談理由",
+        "doctor": "担当医"
+      },
+      "mockDoctor": "パク・ジテ医師",
+      "noticeTitle": "円滑な診療のための時間制限について",
+      "notice": "すべての患者様の待ち時間を短縮するため、相談は最大15分に制限され、時間を超えると自動的に終了する場合があります。",
+      "agreement": "［必須］上記の案内を確認し、同意します。",
+      "submit": "予約する"
+    },
+    "submit": "予約する"
+  },
+  "appointmentDetail": {
+    "title": "予定されている相談予約です",
+    "loading": "予約情報を読み込んでいます。",
+    "notFound": "予約情報が見つかりません。",
+    "retry": "もう一度試す"
+  },
+  "confirmed": {
+    "title": "相談予約が確定しました",
+    "entryNotice": "ビデオ相談には10分前から入室できます",
+    "infoTitle": "相談予約情報",
+    "summary": {
+      "date": "予約日時",
+      "reason": "相談理由",
+      "doctor": "担当医"
+    },
+    "mockDoctor": "パク・ジテ医師",
+    "cancel": "予約をキャンセル",
+    "cancelSheet": {
+      "title": "キャンセルの理由を教えてください",
+      "description": "キャンセル理由を選択してください。",
+      "reasons": {
+        "scheduleChange": "日程変更",
+        "symptomsImproved": "症状が改善した",
+        "changedMind": "都合が変わった",
+        "bookingMistake": "予約を間違えた",
+        "other": "その他"
+      },
+      "close": "閉じる",
+      "confirm": "キャンセルする"
+    }
+  }
+}

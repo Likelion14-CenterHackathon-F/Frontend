@@ -1,0 +1,14 @@
+{
+  "menu": "Question history",
+  "newChat": "New chat",
+  "greeting": "Hello",
+  "thinking": "Looking into how I can help",
+  "disclaimer": "This is general guidance, not a medical diagnosis. Contact your hospital right away if warning signs appear.",
+  "inputPlaceholder": "How are you feeling today?",
+  "attach": "Attach a photo",
+  "camera": "Camera",
+  "photo": "Photo",
+  "send": "Send",
+  "stop": "Stop responding",
+  "attachedImage": "Attached photo"
+}

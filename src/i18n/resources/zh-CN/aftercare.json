@@ -1,0 +1,27 @@
+{
+  "pageTitle": "我的术后管理",
+  "back": "返回",
+  "dayCount": "第 {{day}} 天",
+  "today": "今天，",
+  "stageRange": "({{from}}~{{to}}天)",
+  "stageRangeOpen": "({{from}}天以后)",
+  "toggle": {
+    "expand": "查看全部恢复阶段",
+    "collapse": "收起恢复阶段"
+  },
+  "report": {
+    "label": "医疗文件",
+    "title": "急救用医疗报告",
+    "description": "紧急情况下向医护人员出示的英文医疗摘要报告。"
+  },
+  "alert": {
+    "title": "请立即联系医院"
+  },
+  "notice": {
+    "title": "注意事项",
+    "items": [
+      "本指南不构成医学诊断或处方。",
+      "若症状加重或出现危险信号，请立即联系医院或急救机构。"
+    ]
+  }
+}

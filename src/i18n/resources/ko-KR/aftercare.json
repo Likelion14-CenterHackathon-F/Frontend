@@ -1,0 +1,27 @@
+{
+  "pageTitle": "나의 사후관리",
+  "back": "뒤로가기",
+  "dayCount": "{{day}}일째",
+  "today": "오늘,",
+  "toggle": {
+    "expand": "회복 단계 전체 보기",
+    "collapse": "회복 단계 접기"
+  },
+  "stageRange": "({{from}}~{{to}}일)",
+  "stageRangeOpen": "({{from}}일 이후)",
+  "report": {
+    "label": "의료 문서",
+    "title": "응급용 의료 리포트",
+    "description": "응급 상황 시 의료진에게 제시하는 영문 의료 요약 리포트입니다."
+  },
+  "alert": {
+    "title": "즉시 병원에 연락하세요"
+  },
+  "notice": {
+    "title": "유의사항",
+    "items": [
+      "이 안내는 의료적 진단이나 처방이 아닙니다.",
+      "증상이 악화되거나 위험 신호가 나타나면 즉시 병원 또는 응급 기관에 연락하세요."
+    ]
+  }
+}

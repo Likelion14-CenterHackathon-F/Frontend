@@ -1,0 +1,57 @@
+{
+  "header": {
+    "title": "问诊日程"
+  },
+  "tabs": {
+    "label": "问诊分类",
+    "history": "问诊记录",
+    "ongoing": "进行中"
+  },
+  "empty": {
+    "imageAlt": "暂无问诊记录",
+    "title": "暂无问诊记录",
+    "description": "与医护人员开始视频问诊吧。",
+    "reservationButton": "预约视频问诊"
+  },
+  "status": {
+    "completed": "问诊已完成",
+    "cancelled": "咨询已取消",
+    "reserved": "预约已确认",
+    "inProgress": "问诊进行中"
+  },
+  "staffRole": {
+    "doctor": "医生",
+    "nurse": "护士"
+  },
+  "reservation": {
+    "sectionTitle": "已预约问诊",
+    "scheduledSuffix": "预计问诊"
+  },
+  "guide": {
+    "title": "问诊方式说明",
+    "items": {
+      "video": {
+        "title": "实时视频问诊（与医护人员一对一连接）",
+        "description": "问诊内容将以字幕和摘要形式记录，仅指定医护人员和医院可查看。"
+      },
+      "requirements": {
+        "title": "所需条件",
+        "description": "稳定的网络连接（建议使用 Wi-Fi 或 5G）"
+      },
+      "agreement": {
+        "title": "记录与同意",
+        "description": "问诊期间的字幕和摘要将被保存。继续即表示您同意此记录。"
+      }
+    }
+  },
+  "notice": {
+    "title": "视频问诊前注意事项",
+    "items": {
+      "device": "请在光线充足的地方确认摄像头和麦克风后再进入问诊。",
+      "recording": "问诊内容将以字幕和摘要形式记录，仅指定医护人员和医院可查看。"
+    }
+  },
+  "footer": {
+    "enter": "进入"
+  }
+}

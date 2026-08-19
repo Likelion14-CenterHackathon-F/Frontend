@@ -1,0 +1,14 @@
+{
+  "menu": "질문 내역",
+  "newChat": "새 채팅",
+  "greeting": "안녕하세요, 무엇을 도와드릴까요?",
+  "thinking": "어떻게 도와드릴지 살펴보고 있어요",
+  "disclaimer": "의료적 진단이 아닌 참고 안내입니다. 위험 증상은 즉시 병원에 문의하세요.",
+  "inputPlaceholder": "오늘 상태는 어때요?",
+  "attach": "사진 첨부",
+  "camera": "카메라",
+  "photo": "사진",
+  "send": "보내기",
+  "stop": "답변 중단",
+  "attachedImage": "첨부한 사진"
+}

@@ -1,0 +1,50 @@
+{
+  "menu": "메뉴 열기",
+  "changeLanguage": "언어 변경",
+  "progress": {
+    "day": "{{day}}일차  ",
+    "total": "{{total}}일 중"
+  },
+  "greeting": "반가워요!",
+  "disclaimer": "의료적 진단이 아닌 참고 안내입니다. 위험 증상은 즉시 병원에 문의하세요.",
+  "chat": {
+    "placeholder": "오늘 상태는 어때요?",
+    "attach": "사진 첨부",
+    "camera": "카메라",
+    "photo": "사진",
+    "send": "보내기"
+  },
+  "aftercare": {
+    "badge": "{{day}}일 중",
+    "title": "나의 사후관리"
+  },
+  "consultation": {
+    "badge": "D-{{days}}",
+    "scheduled": "{{date}} 예정",
+    "title": "의료진 화상 상담",
+    "empty": {
+      "badge": "화상 상담",
+      "caption": "일정 없음",
+      "title": "예약한 상담이 없습니다"
+    }
+  },
+  "tutorial": {
+    "skip": "건너뛰기",
+    "history": {
+      "title": "채팅 내역을 확인해보세요",
+      "description": "오른쪽으로 스와이프 하면\n채팅 내역이 나타나요"
+    },
+    "chat": {
+      "title": "회복 중 궁금한 점을 물어보세요",
+      "description": "AI에게 편하게 질문해보세요."
+    },
+    "aftercare": {
+      "title": "나의 회복 상태를 확인해보세요",
+      "description": "회복 단계와 오늘의 상태를 확인하고, 필요 시 응급 의료 리포트도 이용할 수 있어요."
+    },
+    "consultation": {
+      "title": "의료진과 화상으로 상담해요",
+      "description": "귀국 후에도 예약을 통해 의료진과 화상 상담을 받을 수 있어요."
+    }
+  }
+}

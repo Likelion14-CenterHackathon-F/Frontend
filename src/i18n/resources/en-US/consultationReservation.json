@@ -1,0 +1,102 @@
+{
+  "schedule": {
+    "headerTitle": "Book a consultation",
+    "title": "Select a date and time",
+    "instructions": {
+      "selectTime": "Select one of the available times below.",
+      "timezone": "The times above are shown in your local time zone."
+    },
+    "localTime": "Local time {{time}} ({{offset}})",
+    "emptySlots": "There are no times available on the selected date.",
+    "slotsLoading": "Loading appointment times.",
+    "slotsLoadError": "Unable to load appointment times.",
+    "retry": "Try again",
+    "closed": "Closed",
+    "next": "Next"
+  },
+  "preConsultation": {
+    "title": {
+      "first": "For an accurate consultation,",
+      "second": "tell us about your current condition"
+    },
+    "description": "Your care team will review the information before the consultation.",
+    "symptoms": {
+      "title": "Symptoms",
+      "description": "Describe when they started, how they progressed, and how uncomfortable they are.",
+      "inputLabel": "Symptom details",
+      "placeholder": "· I have swelling or bruising\n· I think I am having an allergic reaction\n· Other skin-related concerns",
+      "options": {
+        "pain": "Pain",
+        "swelling": "Swelling",
+        "redness": "Redness",
+        "heat": "Warmth",
+        "bleeding": "Bleeding",
+        "itching": "Itching",
+        "bruise": "Bruising",
+        "other": "Other"
+      }
+    },
+    "photos": {
+      "title": "Reference photos",
+      "description": "Attach photos of the affected area or medication you are taking.",
+      "add": "Add a reference photo",
+      "remove": "Remove {{name}}",
+      "helper": "You can upload up to 5 JPG, PNG, or MP4 files, with a maximum size of 50 MB each.",
+      "invalidFile": "Only JPG, PNG, or MP4 files up to 50 MB can be attached."
+    },
+    "notice": {
+      "title": "Important information",
+      "items": {
+        "privacy": "Only the medical staff assigned to your consultation can view your submissions.",
+        "disclaimer": "Your submission does not replace a diagnosis or prescription and will only be used to prepare for the consultation.",
+        "emergency": "For emergency symptoms such as severe bleeding, high fever, or difficulty breathing, contact a hospital or emergency service immediately."
+      }
+    },
+    "confirm": {
+      "title": "Is your booking information correct?",
+      "description": "Please review your booking information before confirming.",
+      "summary": {
+        "date": "Date and time",
+        "reason": "Reason",
+        "doctor": "Doctor"
+      },
+      "mockDoctor": "Dr. Jitae Park",
+      "noticeTitle": "Time limit for a smooth consultation",
+      "notice": "To minimize wait times for all patients, consultations are limited to 15 minutes and may end automatically when the time limit is reached.",
+      "agreement": "[Required] I have read and agree to the notice above.",
+      "submit": "Book consultation"
+    },
+    "submit": "Book consultation"
+  },
+  "appointmentDetail": {
+    "title": "Your upcoming consultation",
+    "loading": "Loading your appointment details.",
+    "notFound": "We couldn't find this appointment.",
+    "retry": "Try again"
+  },
+  "confirmed": {
+    "title": "Your consultation is confirmed",
+    "entryNotice": "You can join the video consultation 10 minutes early",
+    "infoTitle": "Consultation details",
+    "summary": {
+      "date": "Date and time",
+      "reason": "Reason",
+      "doctor": "Doctor"
+    },
+    "mockDoctor": "Dr. Jitae Park",
+    "cancel": "Cancel consultation",
+    "cancelSheet": {
+      "title": "Why are you cancelling?",
+      "description": "Please select a reason for cancellation.",
+      "reasons": {
+        "scheduleChange": "Schedule change",
+        "symptomsImproved": "Symptoms improved",
+        "changedMind": "Changed my mind",
+        "bookingMistake": "Booking mistake",
+        "other": "Other"
+      },
+      "close": "Close",
+      "confirm": "Cancel booking"
+    }
+  }
+}

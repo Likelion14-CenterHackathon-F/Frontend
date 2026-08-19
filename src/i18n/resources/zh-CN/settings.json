@@ -1,0 +1,13 @@
+{
+  "back": "返回",
+  "language": {
+    "title": "语言",
+    "error": "语言设置保存失败，请重试。"
+  },
+  "history": {
+    "title": "提问记录",
+    "close": "关闭菜单",
+    "recent": "最近",
+    "older": "更早"
+  }
+}

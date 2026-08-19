@@ -1,0 +1,57 @@
+{
+  "header": {
+    "title": "Consultations"
+  },
+  "tabs": {
+    "label": "Consultation category",
+    "history": "History",
+    "ongoing": "Ongoing"
+  },
+  "empty": {
+    "imageAlt": "No consultation history",
+    "title": "You have no consultation history",
+    "description": "Start a video consultation with a medical professional.",
+    "reservationButton": "Book a video consultation"
+  },
+  "status": {
+    "completed": "Completed",
+    "cancelled": "Cancelled",
+    "reserved": "Confirmed",
+    "inProgress": "In progress"
+  },
+  "staffRole": {
+    "doctor": "Doctor",
+    "nurse": "Nurse"
+  },
+  "reservation": {
+    "sectionTitle": "Scheduled consultation",
+    "scheduledSuffix": "Scheduled"
+  },
+  "guide": {
+    "title": "How consultations work",
+    "items": {
+      "video": {
+        "title": "Live video consultation (1:1 with medical staff)",
+        "description": "Captions and a summary will be recorded and can only be viewed by the assigned medical staff and hospital."
+      },
+      "requirements": {
+        "title": "Requirements",
+        "description": "A stable internet connection (Wi-Fi or 5G recommended)"
+      },
+      "agreement": {
+        "title": "Recording and consent",
+        "description": "Captions and a summary will be saved during the consultation. By continuing, you agree to this recording."
+      }
+    }
+  },
+  "notice": {
+    "title": "Before your video consultation",
+    "items": {
+      "device": "Check your camera and microphone in a well-lit place before entering.",
+      "recording": "Captions and a summary will be recorded and can only be viewed by the assigned medical staff and hospital."
+    }
+  },
+  "footer": {
+    "enter": "Enter"
+  }
+}

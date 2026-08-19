@@ -1,14 +1,27 @@
 {
-  "welcome": "Welcome to K-Care Live Aftercare",
+  "previous": "Before",
+  "verifyError": "Verification failed. Please check your birth date and try again.",
+  "intro": {
+    "title": "allway, with you\nthrough recovery.",
+    "description": "Based on your procedure information, allway provides personalized guidance and support throughout your recovery.",
+    "start": "Get Started"
+  },
   "language": {
-    "title": "Select language",
-    "description": "AI guidance, captions, and consultation summaries will be provided in the selected language.",
-    "label": "Language"
+    "title": "Choose your\npreferred language.",
+    "description": "All guidance and consultation support will be provided in your selected language",
+    "confirm": "Next"
   },
-  "timezone": {
-    "title": "Set time zone",
-    "description": "Appointments and notifications will be displayed in the selected time zone.",
-    "label": "Time zone"
+  "region": {
+    "title": "Please confirm your\ncountry and time.",
+    "description": "These were set automatically based on your current location",
+    "confirm": "Yes"
   },
-  "start": "Get started"
+  "birthDate": {
+    "title": "Finally, please verify\nyour identity.",
+    "description": "A short additional check keeps your\nmedical information secure",
+    "confirm": "Get started",
+    "year": "Year",
+    "month": "Month",
+    "day": "Day"
+  }
 }

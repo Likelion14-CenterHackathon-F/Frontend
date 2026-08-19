@@ -1,0 +1,51 @@
+{
+  "header": {
+    "title": "相談待機室"
+  },
+  "preview": {
+    "connecting": "カメラに接続しています。",
+    "cameraOff": "カメラがオフになっています。",
+    "controls": {
+      "cameraOff": "カメラをオフにする",
+      "cameraOn": "カメラをオンにする",
+      "microphoneOff": "マイクをオフにする",
+      "microphoneOn": "マイクをオンにする",
+      "switchCamera": "前面・背面カメラを切り替える"
+    }
+  },
+  "checklist": {
+    "title": "入室前の確認事項",
+    "items": {
+      "purpose": "このビデオ相談は診断や処方ではなく、回復管理のための相談です。",
+      "recording": "字幕と相談要約はケア記録に保存されます。",
+      "orientation": "端末を横向きにしてください。"
+    }
+  },
+  "footer": {
+    "enter": "入室する",
+    "entering": "入室中..."
+  },
+  "mediaError": {
+    "unsupported": "このブラウザはカメラに対応していません。",
+    "unavailable": "この環境ではカメラを使用できません。",
+    "permissionDenied": "カメラとマイクへのアクセスを許可してください。",
+    "deviceNotFound": "使用可能なカメラまたはマイクが見つかりません。",
+    "deviceInUse": "他のアプリがカメラまたはマイクを使用していないか確認してください。",
+    "unsupportedSettings": "対応していないカメラ設定です。",
+    "startFailed": "カメラを起動できませんでした。"
+  },
+  "joinError": {
+    "invalidAppointment": "相談予約情報が正しくありません。",
+    "notJoinableTime": "現在は相談待機室に入室できる時間ではありません。",
+    "appointmentNotFound": "ビデオ相談の予約が見つかりません。",
+    "slotNotFound": "予約時間の情報が見つかりません。",
+    "alreadyCompleted": "このビデオ相談はすでに終了しています。",
+    "configMissing": "ビデオ相談サーバーの設定に問題が発生しました。",
+    "tokenIssueFailed": "ビデオ相談への接続に失敗しました。もう一度お試しください。",
+    "authRequired": "ログインが必要です。",
+    "accessTokenExpired": "ログイン情報の有効期限が切れました。もう一度ログインしてください。",
+    "invalidAccessToken": "ログイン情報が無効です。",
+    "invalidRequest": "相談室への入室リクエストが正しくありません。",
+    "unknown": "相談室への入室中に問題が発生しました。"
+  }
+}

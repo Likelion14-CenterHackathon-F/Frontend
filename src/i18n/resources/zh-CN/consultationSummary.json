@@ -1,0 +1,26 @@
+{
+  "close": "关闭",
+  "loading": "正在加载咨询摘要。",
+  "error": "无法加载咨询摘要。",
+  "retry": "重试",
+  "home": "返回首页",
+  "overview": {
+    "owner": "{{name}}的",
+    "title": "咨询摘要。",
+    "hospital": "首尔延世医院",
+    "appointmentDateTime": "预约时间",
+    "consultationReason": "咨询原因",
+    "medicalStaff": "负责医务人员"
+  },
+  "aiTitle": "AI咨询摘要",
+  "instructions": {
+    "title": "医务人员指导",
+    "itemTitle": "指导 {{number}}"
+  },
+  "reason": {
+    "title": "咨询原因",
+    "emptyTitle": "未提供咨询原因",
+    "emptyDescription": "没有提交事前咨询信息。",
+    "submissionMedia": "事前提交资料"
+  }
+}
