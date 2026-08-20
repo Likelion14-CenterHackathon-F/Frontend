@@ -8,7 +8,6 @@ import ConsultationWaitingPage from "@/pages/consultation-waiting";
 import ConsultationRoomPage from "@/pages/consultation-room";
 import ConsultationHubPage from "@/pages/consultation-hub";
 import OnboardingPage from "@/pages/onboarding";
-import SplashPreviewPage from "@/pages/onboarding/SplashPreviewPage";
 import LanguageSettingsPage from "@/pages/settings/language";
 import ConsultationReservationLayout from "@/pages/consultation-reservation/layout";
 import ConsultationSchedulePage from "@/pages/consultation-reservation/schedule";
@@ -96,10 +95,6 @@ const router = createBrowserRouter([
       {
         path: "/",
         element: <OnboardingPage />,
-      },
-      {
-        path: "/splash-preview",
-        element: <SplashPreviewPage />,
       },
       {
         // 백엔드가 만드는 매직링크 경로. 온보딩에서 token 쿼리를 그대로 읽는다

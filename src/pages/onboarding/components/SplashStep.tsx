@@ -14,7 +14,6 @@ import AnimatedWordmark from "./AnimatedWordmark";
 
 interface SplashStepProps {
   onFinish: () => void;
-  forceMotion?: boolean;
 }
 
 // 스플래시가 노출되는 최소 시간(ms)
@@ -43,7 +42,7 @@ const GLOWS: Glow[] = [
   { src: glow7, centerX: 347.5, centerY: 797, width: 413.4, height: 304.4, rotate: 180 },
 ];
 
-function SplashStep({ onFinish, forceMotion = false }: SplashStepProps) {
+function SplashStep({ onFinish }: SplashStepProps) {
   useEffect(() => {
     const timer = setTimeout(onFinish, SPLASH_DURATION);
     return () => clearTimeout(timer);
@@ -51,9 +50,12 @@ function SplashStep({ onFinish, forceMotion = false }: SplashStepProps) {
 
   return (
     <div
-      data-force-motion={forceMotion || undefined}
       className="relative flex min-h-dvh flex-col items-center justify-center overflow-hidden bg-linear-to-b from-white via-[#e1e9ff] via-[14%] to-white to-[89.8%]"
     >
+      <div aria-hidden className="pwa-splash-bridge">
+        <img src="/pwa-192x192.png" alt="" />
+      </div>
+
       {/* 아래쪽으로 뒤집혀 깔리는 첫 번째 줄무늬 레이어 */}
       <img
         aria-hidden
@@ -98,14 +100,6 @@ function SplashStep({ onFinish, forceMotion = false }: SplashStepProps) {
 
       <div className="relative flex flex-col items-center gap-4">
         <div className="relative flex size-15.5 items-center justify-center">
-          <div
-            aria-hidden
-            className="animate-logo-orbit pointer-events-none absolute size-24 rounded-full blur-[6px]"
-            style={{
-              background:
-                "conic-gradient(from 0deg, transparent 0deg, transparent 265deg, rgba(255,255,255,0.95) 300deg, transparent 335deg)",
-            }}
-          />
           <img
             src={logoMark}
             alt=""

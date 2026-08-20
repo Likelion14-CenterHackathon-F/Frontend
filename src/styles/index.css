@@ -172,13 +172,6 @@
   --tracking-tight: -0.025em;
 
   /* 스플래시 로고 주위를 도는 빛 효과 */
-  --animate-logo-orbit: logo-orbit 3s linear infinite;
-}
-
-@keyframes logo-orbit {
-  to {
-    rotate: 360deg;
-  }
 }
 
 .splash-reveal-ltr {
@@ -206,6 +199,40 @@
   animation: splash-reveal-ltr 1.4s cubic-bezier(0.22, 1, 0.36, 1) 0.15s
     forwards;
   will-change: mask-position, opacity, transform;
+}
+
+.pwa-splash-bridge {
+  display: none;
+}
+
+@keyframes pwa-splash-bridge-out {
+  0%,
+  45% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+@media (display-mode: standalone) {
+  .pwa-splash-bridge {
+    position: absolute;
+    inset: 0;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    background: #e1e9ff;
+    animation: pwa-splash-bridge-out 480ms ease-out forwards;
+  }
+
+  .pwa-splash-bridge img {
+    width: 103px;
+    height: 103px;
+  }
 }
 
 @keyframes splash-reveal-ltr {
@@ -285,7 +312,6 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .animate-logo-orbit,
   .splash-reveal-ltr,
   .splash-wordmark-stroke,
   .splash-wordmark-fill,
@@ -311,44 +337,3 @@
   }
 }
 
-/* The isolated preview must remain testable even when the OS reduces motion. */
-[data-force-motion="true"] .animate-logo-orbit {
-  animation: logo-orbit 3s linear infinite;
-}
-
-[data-force-motion="true"] .splash-reveal-ltr {
-  -webkit-mask-image: linear-gradient(
-    90deg,
-    #000 0%,
-    #000 42%,
-    transparent 58%,
-    transparent 100%
-  );
-  mask-image: linear-gradient(
-    90deg,
-    #000 0%,
-    #000 42%,
-    transparent 58%,
-    transparent 100%
-  );
-  -webkit-mask-size: 250% 100%;
-  mask-size: 250% 100%;
-  -webkit-mask-position: 100% 0;
-  mask-position: 100% 0;
-  opacity: 0;
-  animation: splash-reveal-ltr 1.4s cubic-bezier(0.22, 1, 0.36, 1) 0.15s
-    forwards;
-}
-
-[data-force-motion="true"] .splash-wordmark-stroke {
-  stroke-dashoffset: 1;
-  opacity: 0.95;
-  animation: splash-wordmark-draw 0.62s cubic-bezier(0.4, 0, 0.2, 1)
-    forwards;
-}
-
-[data-force-motion="true"] .splash-wordmark-fill {
-  opacity: 0;
-  filter: blur(1px);
-  animation: splash-wordmark-fill 0.32s ease-out forwards;
-}
