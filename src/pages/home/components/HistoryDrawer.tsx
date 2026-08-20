@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 
 import { getChatRooms } from "@/apis/chat.api";
 import logoMuted from "@/assets/brand/logo-muted.svg";
+import wordmarkMuted from "@/assets/brand/wordmark-muted.svg";
 import { useChatStore } from "@/stores/useChatStore";
 import type { ChatRoomSummary } from "@/types/aiChat.type";
 import { cn } from "@/utils/cn";
@@ -121,9 +122,7 @@ function HistoryDrawer({ isOpen, onClose }: HistoryDrawerProps) {
             className="flex items-center gap-3"
           >
             <img src={logoMuted} alt="" aria-hidden className="size-7" />
-            <span className="text-logo-muted text-heading font-semibold">
-              allway
-            </span>
+            <img src={wordmarkMuted} alt="allway" className="h-5.5 w-auto" />
           </button>
         </header>
 
