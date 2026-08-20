@@ -16,7 +16,7 @@
     "send": "보내기"
   },
   "aftercare": {
-    "badge": "{{day}}일 중",
+    "badge": "{{day}}일차",
     "title": "나의 사후관리"
   },
   "consultation": {
