@@ -1,4 +1,4 @@
-import type { SupportedLocale } from "@/types/preferences";
+import type { SupportedLocale } from "@/types/preferences.type";
 import { toDayKey } from "@/utils/aftercare";
 import { cn } from "@/utils/cn";
 import { formatWeekday } from "@/utils/dateTime";

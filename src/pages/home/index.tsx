@@ -11,8 +11,8 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-import { getChatRoomMessages, postSymptomMessage } from "@/apis/chat";
-import { getAftercareHome } from "@/apis/patient";
+import { getAftercareHome } from "@/apis/aftercare.api";
+import { getChatRoomMessages, postSymptomMessage } from "@/apis/chat.api";
 import logoGradient from "@/assets/brand/logo-gradient.svg";
 import sidebarLeft from "@/assets/home/sidebar-left.svg";
 import ChatBar from "@/components/ChatBar/ChatBar";

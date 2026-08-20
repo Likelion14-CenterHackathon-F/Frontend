@@ -24,7 +24,7 @@ import { useSttAgentStatus } from "./hooks/useSttAgentStatus";
 import { useCaptionBatch } from "./hooks/useCaptionBatch";
 import { useEndConsultation } from "./hooks/useEndConsultation";
 import { useCreateConsultationSummary } from "./hooks/useCreateConsultationSummary";
-import type { ApiErrorResponse } from "@/types/consultation.type";
+import type { ApiErrorResponse } from "@/types/api.type";
 import { usePreferencesStore } from "@/stores/usePreferencesStore";
 import { toSummaryRequestLanguage } from "@/pages/consultation-summary/utils/consultationSummary";
 

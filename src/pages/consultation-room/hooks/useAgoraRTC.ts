@@ -13,7 +13,7 @@ import type {
   ConsultationCaption,
   JoinConsultationResponse,
 } from "@/types/consultation.type";
-import { renewConsultationRtcToken } from "@/apis/consultation/consultation.api";
+import { renewConsultationRtcToken } from "@/apis/consultation/room.api";
 import {
   decodeSttMessage,
   type DecodedCaption,

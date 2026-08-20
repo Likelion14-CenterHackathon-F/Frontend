@@ -2,11 +2,11 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
-import { verifyAccessLink } from "@/apis/patient";
+import { verifyAccessLink } from "@/apis/patient.api";
 import { LOCALE_TO_API_LANGUAGE } from "@/constants/settings";
 import { ACCESS_TOKEN_STORAGE_KEY } from "@/constants/storageKey";
 import { usePreferencesStore } from "@/stores/usePreferencesStore";
-import type { SupportedLocale } from "@/types/preferences";
+import type { SupportedLocale } from "@/types/preferences.type";
 
 import BirthDateStep, { type BirthDate } from "./components/BirthDateStep";
 import IntroStep from "./components/IntroStep";

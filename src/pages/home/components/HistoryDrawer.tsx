@@ -2,7 +2,7 @@ import { useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useQuery } from "@tanstack/react-query";
 
-import { getChatRooms } from "@/apis/chat";
+import { getChatRooms } from "@/apis/chat.api";
 import logoMuted from "@/assets/brand/logo-muted.svg";
 import { useChatStore } from "@/stores/useChatStore";
 import type { ChatRoomSummary } from "@/types/aiChat.type";

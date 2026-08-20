@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 
-import { getChatImage } from "@/apis/chat";
+import { getChatImage } from "@/apis/chat.api";
 import { cn } from "@/utils/cn";
 
 interface PatientMessageProps {

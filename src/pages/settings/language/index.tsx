@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { updatePatientSettings } from "@/apis/patient";
+import { updatePatientSettings } from "@/apis/patient.api";
 import check from "@/assets/settings/language/check.svg";
 import { LANGUAGE_OPTIONS, LOCALE_TO_API_LANGUAGE } from "@/constants/settings";
 import { ACCESS_TOKEN_STORAGE_KEY } from "@/constants/storageKey";
 import { usePreferencesStore } from "@/stores/usePreferencesStore";
-import type { SupportedLocale } from "@/types/preferences";
+import type { SupportedLocale } from "@/types/preferences.type";
 import ConsultationHeader from "@/components/Header/ConsultationHeader";
 import { useNavigate } from "react-router-dom";
 
