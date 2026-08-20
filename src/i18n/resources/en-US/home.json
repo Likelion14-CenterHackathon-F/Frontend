@@ -6,6 +6,7 @@
     "total": "of {{total}}"
   },
   "greeting": "Hello!",
+  "greetingWithName": "Hello,\n{{name}}!",
   "disclaimer": "For guidance only. Contact your hospital if warning signs appear.",
   "chat": {
     "placeholder": "How are you feeling today?",
