@@ -42,6 +42,7 @@ function groupRooms(rooms: ChatRoomSummary[]) {
 function HistoryDrawer({ isOpen, onClose }: HistoryDrawerProps) {
   const { t } = useTranslation("settings");
 
+  const roomId = useChatStore((state) => state.roomId);
   const openRoom = useChatStore((state) => state.openRoom);
   const startNewChat = useChatStore((state) => state.startNewChat);
 
@@ -133,16 +134,17 @@ function HistoryDrawer({ isOpen, onClose }: HistoryDrawerProps) {
             </h2>
 
             <ul className="mt-2">
-              {group.rooms.map((room, index) => (
+              {group.rooms.map((room) => (
                 <li key={room.roomId}>
                   <button
                     type="button"
                     tabIndex={isOpen ? 0 : -1}
+                    aria-current={room.roomId === roomId ? "page" : undefined}
                     onClick={() => handleSelect(room.roomId)}
                     className={cn(
                       "text-body flex h-12 w-full items-center rounded-xl px-3 text-left text-text-history",
                       // 가장 최근 질문만 강조된다
-                      group.id === "recent" && index === 0 && "bg-primary-10",
+                      room.roomId === roomId && "bg-primary-10",
                     )}
                   >
                     <span className="truncate">{room.roomTitle}</span>
