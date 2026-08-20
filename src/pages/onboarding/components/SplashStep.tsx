@@ -9,14 +9,15 @@ import glow5 from "@/assets/onboarding/glow-5.svg";
 import glow6 from "@/assets/onboarding/glow-6.svg";
 import glow7 from "@/assets/onboarding/glow-7.svg";
 import logoMark from "@/assets/splash/logo-mark.svg";
-import wordmark from "@/assets/splash/wordmark.svg";
+
+import AnimatedWordmark from "./AnimatedWordmark";
 
 interface SplashStepProps {
   onFinish: () => void;
 }
 
 // 스플래시가 노출되는 최소 시간(ms)
-const SPLASH_DURATION = 1500;
+const SPLASH_DURATION = 2400;
 
 // 피그마 245:4367 프레임(393x852) 기준 좌표.
 // 각 글로우는 wrapper 박스가 아니라, 그 안의 inset(-N%)만큼 부풀려진 실제 블러 크기를 써야
@@ -48,7 +49,13 @@ function SplashStep({ onFinish }: SplashStepProps) {
   }, [onFinish]);
 
   return (
-    <div className="relative flex min-h-dvh flex-col items-center justify-center overflow-hidden bg-linear-to-b from-white via-[#e1e9ff] via-[14%] to-white to-[89.8%]">
+    <div
+      className="relative flex min-h-dvh flex-col items-center justify-center overflow-hidden bg-linear-to-b from-white via-[#e1e9ff] via-[14%] to-white to-[89.8%]"
+    >
+      <div aria-hidden className="pwa-splash-bridge">
+        <img src="/pwa-192x192.png" alt="" />
+      </div>
+
       {/* 아래쪽으로 뒤집혀 깔리는 첫 번째 줄무늬 레이어 */}
       <img
         aria-hidden
@@ -93,22 +100,14 @@ function SplashStep({ onFinish }: SplashStepProps) {
 
       <div className="relative flex flex-col items-center gap-4">
         <div className="relative flex size-15.5 items-center justify-center">
-          <div
-            aria-hidden
-            className="animate-logo-orbit pointer-events-none absolute size-24 rounded-full blur-[6px]"
-            style={{
-              background:
-                "conic-gradient(from 0deg, transparent 0deg, transparent 265deg, rgba(255,255,255,0.95) 300deg, transparent 335deg)",
-            }}
-          />
           <img
             src={logoMark}
             alt=""
             aria-hidden
-            className="relative size-15.5"
+            className="splash-reveal-ltr relative size-15.5"
           />
         </div>
-        <img src={wordmark} alt="allway" className="h-8" />
+        <AnimatedWordmark />
       </div>
     </div>
   );
