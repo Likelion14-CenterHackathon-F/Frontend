@@ -292,11 +292,11 @@
 }
 
 .onboarding-intro-copy {
-  animation-delay: 2.35s;
+  animation-delay: 4.35s;
 }
 
 .onboarding-intro-button {
-  animation-delay: 2.5s;
+  animation-delay: 4.5s;
 }
 
 @keyframes onboarding-content-rise {
