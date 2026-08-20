@@ -95,12 +95,17 @@ function OnboardingPage() {
     void setLocale(nextLocale);
   };
 
-  if (step === "splash") {
-    return <SplashStep onFinish={() => void goNext()} />;
-  }
-
-  if (step === "intro") {
-    return <IntroStep onStart={goNext} />;
+  if (step === "splash" || step === "intro") {
+    return (
+      <div className="relative min-h-dvh overflow-hidden">
+        <IntroStep onStart={goNext} />
+        {step === "splash" && (
+          <div className="fixed inset-0 z-50">
+            <SplashStep onFinish={() => void goNext()} />
+          </div>
+        )}
+      </div>
+    );
   }
 
   return (
