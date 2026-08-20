@@ -1,13 +1,27 @@
-import coldIcon from "@/assets/icons/consultation-summary/cold.svg";
-import pillIcon from "@/assets/icons/consultation-summary/pill.svg";
-import sunnyIcon from "@/assets/icons/consultation-summary/sunny.svg";
+import instructionIcon1 from "@/assets/icons/consultation-summary/1.svg";
+import instructionIcon2 from "@/assets/icons/consultation-summary/2.svg";
+import instructionIcon3 from "@/assets/icons/consultation-summary/3.svg";
+import instructionIcon4 from "@/assets/icons/consultation-summary/4.svg";
+import instructionIcon5 from "@/assets/icons/consultation-summary/5.svg";
+import instructionIcon6 from "@/assets/icons/consultation-summary/6.svg";
+import instructionIcon7 from "@/assets/icons/consultation-summary/7.svg";
+
+import type { SummaryInstruction } from "@/types/consultation.type";
 
 interface MedicalInstructionsCardProps {
-  instructions: { instructionId: number; title: string; content: string }[];
+  instructions: SummaryInstruction[];
   title: string;
 }
 
-const instructionIcons = [pillIcon, coldIcon, sunnyIcon];
+const instructionIcons: Record<NonNullable<SummaryInstruction["icon"]>, string> = {
+  1: instructionIcon1,
+  2: instructionIcon2,
+  3: instructionIcon3,
+  4: instructionIcon4,
+  5: instructionIcon5,
+  6: instructionIcon6,
+  7: instructionIcon7,
+};
 
 export default function MedicalInstructionsCard({
   instructions,
@@ -22,14 +36,14 @@ export default function MedicalInstructionsCard({
         {title}
       </h2>
       <ul className="mt-[14px] flex snap-x gap-[10px] overflow-x-auto px-5 pb-1">
-        {instructions.map((instruction, index) => (
+        {instructions.map((instruction) => (
           <li
             key={instruction.instructionId}
             className="flex h-[227px] w-[171px] shrink-0 snap-start flex-col rounded-[28px] bg-white px-5 py-6 shadow-[0_4px_4px_rgba(0,0,0,0.03)]"
           >
             <div className="flex h-[95px] items-center justify-center">
               <img
-                src={instructionIcons[index % instructionIcons.length]}
+                src={instructionIcons[instruction.icon ?? 1] ?? instructionIcon1}
                 alt=""
                 className="size-[42px]"
               />

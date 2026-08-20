@@ -105,7 +105,7 @@ function HistoryDrawer({ isOpen, onClose }: HistoryDrawerProps) {
       <aside
         aria-label={t("history.title")}
         className={cn(
-          "bg-history absolute inset-y-0 left-0 w-[85%] max-w-90 overflow-y-auto",
+          "bg-care-bg absolute inset-y-0 left-0 w-[85%] max-w-90 overflow-y-auto",
           "transition-transform duration-300 ease-out",
           isOpen ? "translate-x-0" : "-translate-x-full",
         )}
@@ -133,7 +133,7 @@ function HistoryDrawer({ isOpen, onClose }: HistoryDrawerProps) {
               {t(`history.${group.id}`)}
             </h2>
 
-            <ul className="mt-2">
+            <ul className="mt-2.5">
               {group.rooms.map((room) => (
                 <li key={room.roomId}>
                   <button
@@ -142,7 +142,7 @@ function HistoryDrawer({ isOpen, onClose }: HistoryDrawerProps) {
                     aria-current={room.roomId === roomId ? "page" : undefined}
                     onClick={() => handleSelect(room.roomId)}
                     className={cn(
-                      "text-body flex h-12 w-full items-center rounded-xl px-3 text-left text-text-history",
+                      "text-body flex h-15 w-full items-center rounded-[20px] px-3 text-left text-text-history",
                       // 가장 최근 질문만 강조된다
                       room.roomId === roomId && "bg-primary-10",
                     )}

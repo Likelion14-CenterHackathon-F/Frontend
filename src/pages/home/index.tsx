@@ -564,8 +564,17 @@ function HomePage() {
               {t("progress.day", { day: dayOffset })}
               {t("progress.total", { total: cautionDays })}
             </p>
-            <h1 className="text-title text-greeting font-bold tracking-tight">
-              {t("greeting")}
+            <h1
+              className={cn(
+                "text-greeting font-bold tracking-tight whitespace-pre-line",
+                locale === "ko-KR"
+                  ? "text-[1.875rem] leading-[1.3]"
+                  : "text-title",
+              )}
+            >
+              {home?.patientName
+                ? t("greetingWithName", { name: home.patientName })
+                : t("greeting")}
             </h1>
           </div>
 
