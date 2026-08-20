@@ -95,14 +95,24 @@
   --color-onboarding-previous-text: #6a6581;
   --color-onboarding-card-title: #414141; /* 국가/시간 카드 본문 */
   --color-onboarding-card-sub: #717171; /* 국가/시간 카드 보조 텍스트 */
-  --color-onboarding-wheel-muted: rgba(224, 224, 224, 0.41); /* 생년월일 휠의 선택 안 된 항목 */
+  --color-onboarding-wheel-muted: rgba(
+    224,
+    224,
+    224,
+    0.41
+  ); /* 생년월일 휠의 선택 안 된 항목 */
 
   /* 인트로 화면 */
   --color-intro-haze: #e1dff5; /* 상단 안개 */
   --color-intro-title-end: #e5e9fb; /* 제목 그라데이션 끝 */
 
   --color-history: #e6e5f5; /* 질문 내역 배경 */
-  --color-logo-muted: rgba(106, 101, 129, 0.56); /* 질문 내역 헤더 로고·워드마크 */
+  --color-logo-muted: rgba(
+    106,
+    101,
+    129,
+    0.56
+  ); /* 질문 내역 헤더 로고·워드마크 */
 
   /* 홈 화면 */
   --color-home-from: #fdfbff;
@@ -259,8 +269,7 @@
   stroke-dasharray: 1;
   stroke-dashoffset: 1;
   opacity: 0.95;
-  animation: splash-wordmark-draw 0.8s cubic-bezier(0.4, 0, 0.2, 1)
-    forwards;
+  animation: splash-wordmark-draw 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
 .splash-wordmark-fill {
@@ -292,11 +301,11 @@
 }
 
 .onboarding-intro-copy {
-  animation-delay: 4.35s;
+  animation-delay: 3.35s;
 }
 
 .onboarding-intro-button {
-  animation-delay: 4.5s;
+  animation-delay: 3.5s;
 }
 
 @keyframes onboarding-content-rise {
@@ -367,4 +376,3 @@
     transform: none;
   }
 }
-
