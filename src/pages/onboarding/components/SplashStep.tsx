@@ -17,7 +17,7 @@ interface SplashStepProps {
 }
 
 // 스플래시가 노출되는 최소 시간(ms)
-const SPLASH_DURATION = 5000;
+const SPLASH_DURATION = 4000;
 const SPLASH_FADE_DURATION = 500;
 
 // 피그마 245:4367 프레임(393x852) 기준 좌표.
