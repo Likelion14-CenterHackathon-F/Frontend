@@ -2,7 +2,7 @@ import { DayPicker, getDefaultClassNames } from "@daypicker/react";
 import { enUS, ja, ko, zhCN } from "@daypicker/react/locale";
 
 import type { AvailableConsultationDate } from "@/types/consultationReservation.type";
-import type { SupportedLocale } from "@/types/preferences";
+import type { SupportedLocale } from "@/types/preferences.type";
 import { cn } from "@/utils/cn";
 import { parseCalendarDate } from "@/utils/dateTime";
 

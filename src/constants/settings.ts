@@ -3,7 +3,7 @@ import flagJp from "@/assets/settings/language/flag-jp.svg";
 import flagKr from "@/assets/settings/language/flag-kr.svg";
 import flagUs from "@/assets/settings/language/flag-us.svg";
 import type { SupportedLanguageLabel } from "@/types/patient.type";
-import type { SupportedLocale } from "@/types/preferences";
+import type { SupportedLocale } from "@/types/preferences.type";
 
 export const LANGUAGE_OPTIONS: {
   value: SupportedLocale;
