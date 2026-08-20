@@ -112,6 +112,7 @@ export interface CreateConsultationSummaryRequest {
 
 export interface SummaryInstruction {
   instructionId: number;
+  title: string;
   content: string;
   sortOrder: number;
   patientCompleted: boolean;
