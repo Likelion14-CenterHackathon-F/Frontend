@@ -100,7 +100,7 @@ function OnboardingPage() {
       <div className="relative min-h-dvh overflow-hidden">
         <IntroStep onStart={goNext} />
         {step === "splash" && (
-          <div className="fixed inset-0 z-50">
+          <div className="fixed inset-y-0 left-1/2 z-50 w-full max-w-app -translate-x-1/2 overflow-hidden">
             <SplashStep onFinish={() => void goNext()} />
           </div>
         )}
