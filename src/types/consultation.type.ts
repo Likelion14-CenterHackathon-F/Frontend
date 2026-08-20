@@ -114,6 +114,7 @@ export interface SummaryInstruction {
   instructionId: number;
   title: string;
   content: string;
+  icon?: 1 | 2 | 3 | 4 | 5 | 6 | 7;
   sortOrder: number;
   patientCompleted: boolean;
   completedAt: string | null;

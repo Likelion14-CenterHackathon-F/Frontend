@@ -70,6 +70,7 @@ function ConsultationRoomPage() {
   const {
     localVideoTrack,
     remoteVideoTrack,
+    remoteCameraOff,
     microphoneOn,
     cameraOn,
     speakerOn,
@@ -261,6 +262,7 @@ function ConsultationRoomPage() {
     >
       <RemoteVideo
         track={remoteVideoTrack}
+        cameraOff={remoteCameraOff}
         isConnecting={
           connectionState === "IDLE" || connectionState === "CONNECTING"
         }
