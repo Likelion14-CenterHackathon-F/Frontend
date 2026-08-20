@@ -22,7 +22,7 @@ function WeekStrip({ days, today, locale }: WeekStripProps) {
   const todayKey = toDayKey(today);
 
   return (
-    <ul className="flex items-center gap-1.75 px-5">
+    <ul className="flex items-center justify-center gap-1.75 px-5">
       {days.map((day) => {
         const key = toDayKey(day);
         const isToday = key === todayKey;
