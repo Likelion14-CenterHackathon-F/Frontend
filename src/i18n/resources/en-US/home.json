@@ -32,7 +32,7 @@
     "skip": "Skip",
     "history": {
       "title": "Check your chat history",
-      "description": "Swipe right to see\nyour chat history"
+      "description": "Review your past consultations\nand find what you need, fast."
     },
     "chat": {
       "title": "Ask anything about your recovery",
@@ -44,7 +44,7 @@
     },
     "consultation": {
       "title": "Talk to your doctor by video",
-      "description": "Even after returning home, you can book a video consultation with your doctor."
+      "description": "Even after returning home, you can book a video consultation."
     }
   }
 }

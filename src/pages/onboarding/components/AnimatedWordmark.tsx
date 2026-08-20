@@ -34,7 +34,7 @@ function AnimatedWordmark() {
       className="h-8 overflow-visible"
     >
       {GLYPHS.map((glyph, index) => {
-        const drawDelay = 0.38 + index * 0.17;
+        const drawDelay = 0.3 + index * 0.27;
 
         return (
           <g key={`${glyph.transform}-${index}`} transform={glyph.transform}>
@@ -47,7 +47,7 @@ function AnimatedWordmark() {
             <path
               d={glyph.d}
               className="splash-wordmark-fill"
-              style={{ animationDelay: `${drawDelay + 0.38}s` }}
+              style={{ animationDelay: `${drawDelay + 0.6}s` }}
             />
           </g>
         );

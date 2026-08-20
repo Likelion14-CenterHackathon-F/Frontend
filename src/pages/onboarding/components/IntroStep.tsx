@@ -90,7 +90,7 @@ function IntroStep({ onStart }: IntroStepProps) {
         />
       ))}
 
-      <div className="relative mt-auto flex flex-col gap-3 px-5">
+      <div className="onboarding-intro-copy relative mt-auto flex flex-col gap-3 px-5">
         <h1 className="font-display text-onboarding-title text-[2.5rem] leading-[1.4] font-medium tracking-tight whitespace-pre-line">
           {t("intro.title")}
         </h1>
@@ -102,7 +102,7 @@ function IntroStep({ onStart }: IntroStepProps) {
       <button
         type="button"
         onClick={onStart}
-        className="text-onboarding-title text-body bg-surface-soft relative mx-5 mt-11 mb-15.5 h-15.5 rounded-full font-semibold"
+        className="onboarding-intro-button text-onboarding-title text-body bg-surface-soft relative mx-5 mt-11 mb-15.5 h-15.5 rounded-full font-semibold"
       >
         {t("intro.start")}
       </button>

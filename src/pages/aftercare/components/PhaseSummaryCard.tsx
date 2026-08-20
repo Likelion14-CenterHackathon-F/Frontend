@@ -33,7 +33,7 @@ function PhaseSummaryCard({
         backgroundImage:
           "radial-gradient(circle at 50% 50%, #d0c2ff 0%, #d5c8ff 46%, #e8e2ff 100%)",
       }}
-      className="relative h-43 rounded-3xl px-5 pt-6 pb-5"
+      className="relative h-43 rounded-3xl px-5 pt-6 pb-5 min-h-[174px]"
     >
       <div className="flex items-center gap-2.5">
         <img aria-hidden src={phaseMoonIcon} alt="" className="size-6" />

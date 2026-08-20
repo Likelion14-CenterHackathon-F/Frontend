@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import bgStripe from "@/assets/onboarding/bg-stripe.png";
 import glow1 from "@/assets/onboarding/glow-1.svg";
@@ -17,7 +17,8 @@ interface SplashStepProps {
 }
 
 // 스플래시가 노출되는 최소 시간(ms)
-const SPLASH_DURATION = 2400;
+const SPLASH_DURATION = 3000;
+const SPLASH_FADE_DURATION = 500;
 
 // 피그마 245:4367 프레임(393x852) 기준 좌표.
 // 각 글로우는 wrapper 박스가 아니라, 그 안의 inset(-N%)만큼 부풀려진 실제 블러 크기를 써야
@@ -32,25 +33,93 @@ interface Glow {
 }
 
 const GLOWS: Glow[] = [
-  { src: glow1, centerX: 164.4, centerY: 329.6, width: 340, height: 331.6, rotate: 116.71 },
-  { src: glow2, centerX: 247.7, centerY: 410.7, width: 432.7, height: 331.6, rotate: 116.71 },
-  { src: glow3, centerX: 196, centerY: 857, width: 645.6, height: 695.6, rotate: 90 },
-  { src: glow4, centerX: 173.5, centerY: 513, width: 558.6, height: 419.6, rotate: 0 },
-  { src: glow5, centerX: 32.7, centerY: 618.6, width: 413.1, height: 339.6, rotate: 93.91 },
-  { src: glow5, centerX: 32.7, centerY: 673.6, width: 413.1, height: 339.6, rotate: 93.91 },
-  { src: glow6, centerX: 196.5, centerY: 659, width: 413.4, height: 304.4, rotate: 180 },
-  { src: glow7, centerX: 347.5, centerY: 797, width: 413.4, height: 304.4, rotate: 180 },
+  {
+    src: glow1,
+    centerX: 164.4,
+    centerY: 329.6,
+    width: 340,
+    height: 331.6,
+    rotate: 116.71,
+  },
+  {
+    src: glow2,
+    centerX: 247.7,
+    centerY: 410.7,
+    width: 432.7,
+    height: 331.6,
+    rotate: 116.71,
+  },
+  {
+    src: glow3,
+    centerX: 196,
+    centerY: 857,
+    width: 645.6,
+    height: 695.6,
+    rotate: 90,
+  },
+  {
+    src: glow4,
+    centerX: 173.5,
+    centerY: 513,
+    width: 558.6,
+    height: 419.6,
+    rotate: 0,
+  },
+  {
+    src: glow5,
+    centerX: 32.7,
+    centerY: 618.6,
+    width: 413.1,
+    height: 339.6,
+    rotate: 93.91,
+  },
+  {
+    src: glow5,
+    centerX: 32.7,
+    centerY: 673.6,
+    width: 413.1,
+    height: 339.6,
+    rotate: 93.91,
+  },
+  {
+    src: glow6,
+    centerX: 196.5,
+    centerY: 659,
+    width: 413.4,
+    height: 304.4,
+    rotate: 180,
+  },
+  {
+    src: glow7,
+    centerX: 347.5,
+    centerY: 797,
+    width: 413.4,
+    height: 304.4,
+    rotate: 180,
+  },
 ];
 
 function SplashStep({ onFinish }: SplashStepProps) {
+  const [isExiting, setIsExiting] = useState(false);
+
   useEffect(() => {
-    const timer = setTimeout(onFinish, SPLASH_DURATION);
-    return () => clearTimeout(timer);
+    const fadeTimer = setTimeout(
+      () => setIsExiting(true),
+      SPLASH_DURATION - SPLASH_FADE_DURATION,
+    );
+    const finishTimer = setTimeout(onFinish, SPLASH_DURATION);
+
+    return () => {
+      clearTimeout(fadeTimer);
+      clearTimeout(finishTimer);
+    };
   }, [onFinish]);
 
   return (
     <div
-      className="relative flex min-h-dvh flex-col items-center justify-center overflow-hidden bg-linear-to-b from-white via-[#e1e9ff] via-[14%] to-white to-[89.8%]"
+      className={`relative flex min-h-dvh flex-col items-center justify-center overflow-hidden bg-linear-to-b from-white via-[#e1e9ff] via-[14%] to-white to-[89.8%] transition-opacity duration-500 ease-out motion-reduce:transition-none ${
+        isExiting ? "opacity-0" : "opacity-100"
+      }`}
     >
       <div aria-hidden className="pwa-splash-bridge">
         <img src="/pwa-192x192.png" alt="" />

@@ -1,5 +1,7 @@
 import {
+  useCallback,
   useEffect,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState,
@@ -27,6 +29,9 @@ import { resolveAssetUrl } from "@/utils/url";
 import HistoryDrawer from "./components/HistoryDrawer";
 import HomeBackdrop from "./components/HomeBackdrop";
 import HomeTutorial from "./components/HomeTutorial";
+import TutorialCallout from "./components/TutorialCallout";
+import pointer from "./components/tutorial-assets/pointer.svg";
+import pointerAlt from "./components/tutorial-assets/pointer-alt.svg";
 import AiAnswer from "./components/AiAnswer";
 import ChatComposer from "./components/ChatComposer";
 import PatientMessage from "./components/PatientMessage";
@@ -45,20 +50,23 @@ function HomePage() {
   const [image, setImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   // 전송 중인 이미지 미리보기는 답변이 올 때까지 유지한다
-  const [sendingImagePreview, setSendingImagePreview] = useState<
-    string | null
-  >(null);
+  const [sendingImagePreview, setSendingImagePreview] = useState<string | null>(
+    null,
+  );
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
   const [isChatFocused, setIsChatFocused] = useState(false);
   const [showCards, setShowCards] = useState(false);
-  // 0·1은 진행 중인 안내 단계, null이면 이미 봤거나 다 본 상태
-  const [tutorialStep, setTutorialStep] = useState<0 | 1 | null>(() =>
+  const [tutorialStep, setTutorialStep] = useState<0 | 1 | 2 | null>(() =>
     localStorage.getItem(HOME_TUTORIAL_SEEN_STORAGE_KEY) === null ? 0 : null,
   );
 
   const goNextTutorialStep = () => {
     if (tutorialStep === 0) {
       setTutorialStep(1);
+      return;
+    }
+    if (tutorialStep === 1) {
+      setTutorialStep(2);
       return;
     }
 
@@ -73,6 +81,47 @@ function HomePage() {
   */
   const spotlight = (isLit: boolean) =>
     isLit ? "z-50 pointer-events-none" : undefined;
+
+  const rootRef = useRef<HTMLDivElement>(null);
+  const sidebarRef = useRef<HTMLButtonElement>(null);
+  const chatBarRef = useRef<HTMLDivElement>(null);
+  const consultCardRef = useRef<HTMLDivElement>(null);
+  const aftercareCardRef = useRef<HTMLDivElement>(null);
+
+  type Anchor = { top: number; left: number };
+  const [anchors, setAnchors] = useState<{
+    sidebar: Anchor | null;
+    chatBar: Anchor | null;
+    consultCard: Anchor | null;
+    aftercareCard: Anchor | null;
+  }>({ sidebar: null, chatBar: null, consultCard: null, aftercareCard: null });
+
+  const measureTutorialAnchors = useCallback(() => {
+    const root = rootRef.current;
+    if (!root) return;
+    const rootRect = root.getBoundingClientRect();
+
+    const relativeAnchor = (el: HTMLElement | null): Anchor | null => {
+      if (!el) return null;
+      const rect = el.getBoundingClientRect();
+      return { top: rect.top - rootRect.top, left: rect.left - rootRect.left };
+    };
+
+    setAnchors({
+      sidebar: relativeAnchor(sidebarRef.current),
+      chatBar: relativeAnchor(chatBarRef.current),
+      consultCard: relativeAnchor(consultCardRef.current),
+      aftercareCard: relativeAnchor(aftercareCardRef.current),
+    });
+  }, []);
+
+  useLayoutEffect(() => {
+    if (tutorialStep === null) return;
+
+    measureTutorialAnchors();
+    window.addEventListener("resize", measureTutorialAnchors);
+    return () => window.removeEventListener("resize", measureTutorialAnchors);
+  }, [tutorialStep, measureTutorialAnchors]);
 
   const sendingMessageRef = useRef<HTMLDivElement>(null);
   const cardsTimerRef = useRef<number | null>(null);
@@ -254,35 +303,115 @@ function HomePage() {
 
   const homeCards = (
     <>
-      <HomeCard
-        variant="consultation"
-        badge={
-          consultation
-            ? t("consultation.badge", { days: consultation.daysLeft })
-            : t("consultation.empty.badge")
-        }
-        caption={
-          consultation
-            ? t("consultation.scheduled", { date: consultation.date })
-            : t("consultation.empty.caption")
-        }
-        title={
-          consultation ? t("consultation.title") : t("consultation.empty.title")
-        }
-        onClick={() => navigate("/consultation")}
-      />
+      <div
+        ref={consultCardRef}
+        className={cn("relative flex flex-1", spotlight(tutorialStep === 1))}
+      >
+        <HomeCard
+          variant="consultation"
+          badge={
+            consultation
+              ? t("consultation.badge", { days: consultation.daysLeft })
+              : t("consultation.empty.badge")
+          }
+          caption={
+            consultation
+              ? t("consultation.scheduled", { date: consultation.date })
+              : t("consultation.empty.caption")
+          }
+          title={
+            consultation
+              ? t("consultation.title")
+              : t("consultation.empty.title")
+          }
+          onClick={() => navigate("/consultation")}
+        />
+      </div>
 
-      <HomeCard
-        badge={t("aftercare.badge", { day: dayOffset })}
-        caption={procedureName}
-        title={t("aftercare.title")}
-        onClick={() => navigate("/aftercare")}
-      />
+      <div
+        ref={aftercareCardRef}
+        className={cn("relative flex flex-1", spotlight(tutorialStep === 2))}
+      >
+        <HomeCard
+          badge={t("aftercare.badge", { day: dayOffset })}
+          caption={procedureName}
+          title={t("aftercare.title")}
+          onClick={() => navigate("/aftercare")}
+        />
+      </div>
     </>
+  );
+
+  const tutorialCallouts = (
+    <div className="pointer-events-none absolute inset-0 z-50">
+      {tutorialStep === 0 && anchors.sidebar && (
+        <TutorialCallout
+          anchor={anchors.sidebar}
+          arrowSrc={pointerAlt}
+          arrowOffset={{ top: 86.8, left: 57.8 }}
+          arrowSize={{ width: 28.976, height: 39.574 }}
+          arrowTransformClassName="-scale-y-100 rotate-[-4.21deg]"
+          textOffset={{ top: 84, left: 76 }}
+          textWidth={219}
+          textGapClassName="gap-2"
+          title={t("tutorial.history.title")}
+          description={t("tutorial.history.description")}
+          preserveLineBreaks
+        />
+      )}
+
+      {tutorialStep === 0 && anchors.chatBar && (
+        <TutorialCallout
+          anchor={anchors.chatBar}
+          arrowSrc={pointer}
+          arrowOffset={{ top: -33.96, left: 184.96 }}
+          arrowSize={{ width: 22.584, height: 38.28 }}
+          arrowTransformClassName="-scale-y-100 rotate-[169.25deg]"
+          textOffset={{ top: -84, left: 8 }}
+          textWidth={189}
+          textGapClassName="gap-0.5"
+          title={t("tutorial.chat.title")}
+          description={t("tutorial.chat.description")}
+        />
+      )}
+
+      {tutorialStep === 1 && anchors.consultCard && (
+        <TutorialCallout
+          anchor={anchors.consultCard}
+          arrowSrc={pointer}
+          arrowOffset={{ top: -35.54, left: 29 }}
+          arrowSize={{ width: 22.59, height: 38.28 }}
+          arrowTransformClassName="rotate-[-15.5deg]"
+          textOffset={{ top: -134, left: 23 }}
+          textWidth={198}
+          textGapClassName="gap-0.5"
+          title={t("tutorial.consultation.title")}
+          description={t("tutorial.consultation.description")}
+          titleNoWrap
+        />
+      )}
+
+      {tutorialStep === 2 && anchors.aftercareCard && (
+        <TutorialCallout
+          anchor={anchors.aftercareCard}
+          arrowSrc={pointer}
+          arrowOffset={{ top: -1.79, left: -26.9 }}
+          arrowSize={{ width: 22.59, height: 38.28 }}
+          arrowTransformClassName="rotate-[-65.54deg]"
+          textOffset={{ top: -98, left: -74 }}
+          textWidth={236}
+          textGapClassName="gap-0.5"
+          title={t("tutorial.aftercare.title")}
+          description={t("tutorial.aftercare.description")}
+          titleNoWrap
+        />
+      )}
+    </div>
   );
 
   return (
     <div
+      ref={rootRef}
       className={cn(
         "relative flex min-h-dvh flex-col",
         // viewport-fit=cover라 홈 인디케이터 높이만큼 더 띄운다
@@ -292,7 +421,10 @@ function HomePage() {
       <HomeBackdrop />
 
       {tutorialStep !== null && (
-        <HomeTutorial step={tutorialStep} onNext={goNextTutorialStep} />
+        <>
+          <HomeTutorial onNext={goNextTutorialStep} />
+          {tutorialCallouts}
+        </>
       )}
 
       <HistoryDrawer
@@ -302,6 +434,7 @@ function HomePage() {
 
       <header className="relative flex items-center justify-between px-5 pt-6">
         <button
+          ref={sidebarRef}
           type="button"
           aria-label={t("menu")}
           onClick={() => setIsHistoryOpen(true)}
@@ -368,7 +501,12 @@ function HomePage() {
                   )}
 
                   <div className="flex w-50 flex-col gap-4">
-                    <img aria-hidden src={logoGradient} alt="" className="size-7" />
+                    <img
+                      aria-hidden
+                      src={logoGradient}
+                      alt=""
+                      className="size-7"
+                    />
                     <p className="shimmer-text text-[0.9375rem] leading-[1.4] font-medium tracking-tight">
                       {t("aiChat:thinking")}
                     </p>
@@ -435,24 +573,27 @@ function HomePage() {
             {t("disclaimer")}
           </p>
 
-          <div
-            className={cn("relative mt-6.25 px-5", spotlight(tutorialStep === 0))}
-          >
-            <ChatBar
-              value={draft}
-              placeholder={t("chat.placeholder")}
-              attachLabel={t("chat.attach")}
-              cameraLabel={t("chat.camera")}
-              photoLabel={t("chat.photo")}
-              sendLabel={t("chat.send")}
-              imagePreview={imagePreview}
-              onChange={setDraft}
-              onSubmit={sendToChat}
-              onImageSelect={selectImage}
-              onRemoveImage={removeImage}
-              onFocus={() => setIsChatFocused(true)}
-              onBlur={() => setIsChatFocused(false)}
-            />
+          <div className="relative mt-6.25 px-5">
+            <div
+              ref={chatBarRef}
+              className={cn("relative", spotlight(tutorialStep === 0))}
+            >
+              <ChatBar
+                value={draft}
+                placeholder={t("chat.placeholder")}
+                attachLabel={t("chat.attach")}
+                cameraLabel={t("chat.camera")}
+                photoLabel={t("chat.photo")}
+                sendLabel={t("chat.send")}
+                imagePreview={imagePreview}
+                onChange={setDraft}
+                onSubmit={sendToChat}
+                onImageSelect={selectImage}
+                onRemoveImage={removeImage}
+                onFocus={() => setIsChatFocused(true)}
+                onBlur={() => setIsChatFocused(false)}
+              />
+            </div>
             {hasSendError && (
               <p
                 role="alert"
@@ -467,7 +608,6 @@ function HomePage() {
             className={cn(
               "relative mt-2.5 flex gap-[9px] overflow-hidden px-5 transition-[max-height] duration-300 ease-out",
               isChatFocused ? "max-h-4.5" : "max-h-45",
-              spotlight(tutorialStep === 1),
             )}
           >
             {homeCards}
