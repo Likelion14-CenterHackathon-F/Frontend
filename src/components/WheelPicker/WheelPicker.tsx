@@ -68,6 +68,8 @@ function WheelPicker({ label, options, value, onChange }: WheelPickerProps) {
         onScroll={handleScroll}
         className={cn(
           "flex w-full snap-x snap-mandatory overflow-x-auto overscroll-x-contain",
+          // 세로 페이지 안에서도 가로 스와이프를 유지한다
+          "touch-pan-x",
           "scrollbar-none px-[calc(50%-44px)] [&::-webkit-scrollbar]:hidden",
         )}
       >

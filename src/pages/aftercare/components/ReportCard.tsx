@@ -1,4 +1,4 @@
-import medicalDocIcon from "@/assets/medical-doc.svg";
+import medicalDocIcon from "@/assets/aftercare/medical-doc.svg";
 
 interface ReportCardProps {
   label: string;

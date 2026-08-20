@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useQuery } from "@tanstack/react-query";
 
 import { getChatRooms } from "@/apis/chat";
-import logoDark from "@/assets/logo-dark.svg";
+import logoMuted from "@/assets/brand/logo-muted.svg";
 import { useChatStore } from "@/stores/useChatStore";
 import type { ChatRoomSummary } from "@/types/aiChat.type";
 import { cn } from "@/utils/cn";
@@ -17,10 +17,7 @@ const DAY_MS = 24 * 60 * 60 * 1000;
 
 type GroupId = "recent" | "older";
 
-/*
-  서버에서 채팅방을 최근 대화순으로 받고 화면에 필요한 "최근 / 이전" 구분은 여기서 나눈다.
-  자정이 아니라 마지막 대화 시점으로부터 7일이 지났는지로 가른다.
-*/
+// 마지막 대화가 7일 이내인지에 따라 채팅방을 나눈다.
 function groupRooms(rooms: ChatRoomSummary[]) {
   const now = Date.now();
 
@@ -122,8 +119,8 @@ function HistoryDrawer({ isOpen, onClose }: HistoryDrawerProps) {
             }}
             className="flex items-center gap-3"
           >
-            <img src={logoDark} alt="" aria-hidden className="size-7" />
-            <span className="text-heading font-semibold text-text-01">
+            <img src={logoMuted} alt="" aria-hidden className="size-7" />
+            <span className="text-logo-muted text-heading font-semibold">
               allway
             </span>
           </button>

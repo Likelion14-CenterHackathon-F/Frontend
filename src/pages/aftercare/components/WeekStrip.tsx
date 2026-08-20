@@ -33,7 +33,7 @@ function WeekStrip({ days, today, locale }: WeekStripProps) {
           <li key={key} className="flex flex-col items-center gap-1">
             <span
               className={cn(
-                "text-caption font-medium",
+                "text-caption leading-[1.25] font-medium tracking-[-0.025em]",
                 isFuture ? "text-week-past" : "text-week-upcoming",
               )}
             >
