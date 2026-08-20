@@ -181,6 +181,81 @@
   }
 }
 
+.splash-reveal-ltr {
+  -webkit-mask-image: linear-gradient(
+    90deg,
+    #000 0%,
+    #000 42%,
+    transparent 58%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    90deg,
+    #000 0%,
+    #000 42%,
+    transparent 58%,
+    transparent 100%
+  );
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: 250% 100%;
+  mask-size: 250% 100%;
+  -webkit-mask-position: 100% 0;
+  mask-position: 100% 0;
+  opacity: 0;
+  animation: splash-reveal-ltr 1.4s cubic-bezier(0.22, 1, 0.36, 1) 0.15s
+    forwards;
+  will-change: mask-position, opacity, transform;
+}
+
+@keyframes splash-reveal-ltr {
+  from {
+    -webkit-mask-position: 100% 0;
+    mask-position: 100% 0;
+    opacity: 0;
+    transform: translateX(-6px);
+  }
+  to {
+    -webkit-mask-position: 0 0;
+    mask-position: 0 0;
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.splash-wordmark-stroke {
+  fill: transparent;
+  stroke: #fdfdff;
+  stroke-width: 1.15;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  opacity: 0.95;
+  animation: splash-wordmark-draw 0.62s cubic-bezier(0.4, 0, 0.2, 1)
+    forwards;
+}
+
+.splash-wordmark-fill {
+  fill: #fdfdff;
+  opacity: 0;
+  filter: blur(1px);
+  animation: splash-wordmark-fill 0.32s ease-out forwards;
+}
+
+@keyframes splash-wordmark-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes splash-wordmark-fill {
+  to {
+    opacity: 1;
+    filter: blur(0);
+  }
+}
+
 /*
   답변을 기다리는 동안 글자 위로 밝은 띠가 훑고 지나가며 로딩 중임을 알린다.
   글자마다 opacity를 따로 주는 대신, 글자에 clip한 그라데이션을 옆으로 흘려 같은 효과를 낸다.
@@ -211,7 +286,69 @@
 
 @media (prefers-reduced-motion: reduce) {
   .animate-logo-orbit,
+  .splash-reveal-ltr,
+  .splash-wordmark-stroke,
+  .splash-wordmark-fill,
   .shimmer-text {
     animation: none;
   }
+
+  .splash-reveal-ltr {
+    -webkit-mask-image: none;
+    mask-image: none;
+    opacity: 1;
+    filter: none;
+    transform: none;
+  }
+
+  .splash-wordmark-stroke {
+    opacity: 0;
+  }
+
+  .splash-wordmark-fill {
+    opacity: 1;
+    filter: none;
+  }
+}
+
+/* The isolated preview must remain testable even when the OS reduces motion. */
+[data-force-motion="true"] .animate-logo-orbit {
+  animation: logo-orbit 3s linear infinite;
+}
+
+[data-force-motion="true"] .splash-reveal-ltr {
+  -webkit-mask-image: linear-gradient(
+    90deg,
+    #000 0%,
+    #000 42%,
+    transparent 58%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    90deg,
+    #000 0%,
+    #000 42%,
+    transparent 58%,
+    transparent 100%
+  );
+  -webkit-mask-size: 250% 100%;
+  mask-size: 250% 100%;
+  -webkit-mask-position: 100% 0;
+  mask-position: 100% 0;
+  opacity: 0;
+  animation: splash-reveal-ltr 1.4s cubic-bezier(0.22, 1, 0.36, 1) 0.15s
+    forwards;
+}
+
+[data-force-motion="true"] .splash-wordmark-stroke {
+  stroke-dashoffset: 1;
+  opacity: 0.95;
+  animation: splash-wordmark-draw 0.62s cubic-bezier(0.4, 0, 0.2, 1)
+    forwards;
+}
+
+[data-force-motion="true"] .splash-wordmark-fill {
+  opacity: 0;
+  filter: blur(1px);
+  animation: splash-wordmark-fill 0.32s ease-out forwards;
 }
