@@ -66,7 +66,8 @@ function VerticalWheelPicker<T extends string>({
     }
 
     setCenteredIndex(selectedIndex);
-    list.scrollTo({ top: selectedIndex * ITEM_HEIGHT, behavior: "smooth" });
+    //behavior : smooth -> auto (ios 버그 수정용)
+    list.scrollTo({ top: selectedIndex * ITEM_HEIGHT, behavior: "auto" });
   }, [selectedIndex]);
 
   const handleScroll = () => {

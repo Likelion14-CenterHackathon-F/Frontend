@@ -32,7 +32,8 @@ function WheelPicker({ label, options, value, onChange }: WheelPickerProps) {
       return;
     }
 
-    list.scrollTo({ left: selectedIndex * ITEM_WIDTH, behavior: "smooth" });
+    //behavior : smooth -> auto (ios 버그 수정용)
+    list.scrollTo({ left: selectedIndex * ITEM_WIDTH, behavior: "auto" });
   }, [selectedIndex]);
 
   const settleTimerRef = useRef<number>(undefined);
