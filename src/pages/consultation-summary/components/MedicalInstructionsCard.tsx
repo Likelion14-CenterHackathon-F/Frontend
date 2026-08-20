@@ -3,7 +3,7 @@ import pillIcon from "@/assets/icons/consultation-summary/pill.svg";
 import sunnyIcon from "@/assets/icons/consultation-summary/sunny.svg";
 
 interface MedicalInstructionsCardProps {
-  instructions: { instructionId: number; content: string }[];
+  instructions: { instructionId: number; title: string; content: string }[];
   title: string;
 }
 
@@ -35,9 +35,14 @@ export default function MedicalInstructionsCard({
               />
             </div>
 
-            <p className="mt-3 line-clamp-3 text-sm leading-[1.5] tracking-[-0.35px] text-[#65646D]">
-              {instruction.content}
-            </p>
+            <div className="mt-2 flex w-full flex-col gap-3">
+              <h3 className="line-clamp-1 text-base font-bold leading-[1.4] tracking-[-0.4px] text-[#4B4B4E]">
+                {instruction.title}
+              </h3>
+              <p className="line-clamp-2 text-sm leading-[1.5] tracking-[-0.35px] text-[#65646D]">
+                {instruction.content}
+              </p>
+            </div>
           </li>
         ))}
       </ul>
