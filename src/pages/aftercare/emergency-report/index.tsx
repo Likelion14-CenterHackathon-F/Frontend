@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 
-import { getEmergencyMedicalReport } from "@/apis/patient";
+import { getEmergencyMedicalReport } from "@/apis/aftercare.api";
 import xIcon from "@/assets/aftercare/x.svg";
 import gradientTop from "@/assets/shared/home-gradient-top.png";
 

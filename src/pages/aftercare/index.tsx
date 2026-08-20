@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 
-import { getAftercareDashboard } from "@/apis/patient";
+import { getAftercareDashboard } from "@/apis/aftercare.api";
 import backButton from "@/assets/aftercare/back-button.svg";
 import { usePreferencesStore } from "@/stores/usePreferencesStore";
 import { getWeekAround } from "@/utils/aftercare";
